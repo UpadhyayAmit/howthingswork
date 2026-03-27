@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useState, useEffect } from "react";
 import {
   ReactFlow,
   Background,
@@ -57,8 +57,16 @@ function radial(count: number, rx: number, ry: number) {
   });
 }
 
+interface NodeParams {
+  size: number;
+  fontSize: number;
+  titleSize: number;
+  iconSize: number;
+}
+
 /* ─────────────────────── Center node ─────────────────────── */
-function CenterNode() {
+function CenterNode({ data }: { data: { params: NodeParams } }) {
+  const { size, titleSize, fontSize } = data.params;
   return (
     <motion.div
       animate={{
@@ -70,8 +78,8 @@ function CenterNode() {
       }}
       transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
       style={{
-        width: 180,
-        height: 180,
+        width: size,
+        height: size,
         borderRadius: "50%",
         background: "radial-gradient(circle at center, #1b2735 0%, #0b0f19 100%)",
         border: "1.5px solid rgba(6,182,212,0.4)",
@@ -87,19 +95,13 @@ function CenterNode() {
         transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
         className="absolute inset-2 rounded-full border border-dashed border-cyan-500/15"
       />
-      <motion.div 
-        animate={{ rotate: -360 }}
-        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-8 rounded-full border border-dotted border-blue-500/10"
-      />
-
       <div className="z-10 text-center select-none">
         <h1
           style={{
             color: "#ffffff",
             fontFamily: "var(--font-heading, sans-serif)",
             fontWeight: 900,
-            fontSize: 15,
+            fontSize: fontSize,
             lineHeight: 1.1,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
@@ -107,33 +109,27 @@ function CenterNode() {
         >
           How Things
           <br />
-          <span className="gradient-text" style={{ fontSize: 22 }}>WORK</span>
+          <span className="gradient-text" style={{ fontSize: titleSize }}>WORK</span>
         </h1>
-        <div style={{ width: 28, height: 1.5, background: "rgba(6,182,212,0.4)", margin: "10px auto 0" }} />
       </div>
-
-      <motion.div 
-        animate={{ scale: [1, 1.3, 1], opacity: [0.1, 0.3, 0.1] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute w-20 h-20 rounded-full bg-cyan-400/20 blur-2xl z-0"
-      />
     </motion.div>
   );
 }
 
 /* ─────────────────────── Category node ─────────────────────── */
-type CatData = { label: string; color: string; icon: string; slug: string; prefix: string; delay: number };
+type CatData = { label: string; color: string; icon: string; slug: string; prefix: string; delay: number; params: NodeParams };
 
 function CategoryNode({ data }: { data: CatData }) {
   const isText = data.icon.length <= 2 && !/\p{Emoji_Presentation}/u.test(data.icon);
-  
+  const { size, fontSize, iconSize } = data.params;
+
   return (
     <motion.div
       whileHover={{ scale: 1.12, translateY: -6 }}
       whileTap={{ scale: 0.94 }}
       animate={{ 
-        x: [0, 8, 0, -8, 0],
-        y: [0, -4, -8, -4, 0],
+        x: [0, 6, 0, -6, 0],
+        y: [0, -3, -6, -3, 0],
       }}
       transition={{
         duration: 14 + (data.delay * 1.5),
@@ -142,47 +138,38 @@ function CategoryNode({ data }: { data: CatData }) {
         delay: data.delay,
       }}
       style={{
-        width: 130, 
-        height: 130,
-        borderRadius: 40,
-        background: `rgba(17, 24, 39, 0.88)`,
+        width: size, 
+        height: size,
+        borderRadius: size * 0.3,
+        background: `rgba(17, 24, 39, 0.9)`,
         border: `1.5px solid ${data.color}66`,
-        boxShadow: `0 14px 36px rgba(0, 0, 0, 0.6), 0 0 20px ${data.color}25`,
+        boxShadow: `0 12px 30px rgba(0, 0, 0, 0.6), 0 0 15px ${data.color}20`,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         cursor: "pointer",
-        backdropFilter: "blur(24px)",
-        transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+        backdropFilter: "blur(20px)",
         userSelect: "none",
       }}
     >
-      <div className="mb-2">
+      <div className="mb-1.5">
         {isText ? (
-          <div
-            style={{
-              fontSize: 32,
-              fontWeight: 950,
-              color: data.color,
-              fontFamily: "var(--font-heading, sans-serif)",
-            }}
-          >
+          <div style={{ fontSize: iconSize * 0.7, fontWeight: 950, color: data.color }}>
             {data.icon}
           </div>
         ) : (
-          <div style={{ fontSize: 50, filter: "drop-shadow(0 0 12px rgba(255,255,255,0.2))" }}>{data.icon}</div>
+          <div style={{ fontSize: iconSize }}>{data.icon}</div>
         )}
       </div>
 
       <div
         style={{
           color: "#ffffff",
-          fontFamily: "var(--font-heading, sans-serif)",
           fontWeight: 900,
-          fontSize: 14.5,
+          fontSize: fontSize,
           textAlign: "center",
-          padding: "0 10px",
+          padding: "0 8px",
           textShadow: "0 2px 4px rgba(0,0,0,1)",
         }}
       >
@@ -203,8 +190,36 @@ export default function DashboardFlow() {
   const locale = useLocale();
   const prefix = locale === routing.defaultLocale ? "" : `/${locale}`;
 
-  // Compact circular layout for a more consolidated "hub" feeling
-  const positions = useMemo(() => radial(CATEGORIES.length, 320, 260), []);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Responsive params: Optimized for Narrow screens (Fix for clipping in Screenshots)
+  const rx = isMobile ? 170 : 320;
+  const ry = isMobile ? 330 : 260;
+  const centerSize = isMobile ? 130 : 180;
+  const catSize = isMobile ? 88 : 130;
+  
+  const nodeParams: NodeParams = {
+    size: catSize,
+    fontSize: isMobile ? 10.5 : 14.5,
+    titleSize: isMobile ? 16 : 22,
+    iconSize: isMobile ? 34 : 50,
+  };
+
+  const centerParams = {
+    size: centerSize,
+    fontSize: isMobile ? 12 : 15,
+    titleSize: isMobile ? 18 : 22,
+    iconSize: 0,
+  };
+
+  const positions = useMemo(() => radial(CATEGORIES.length, rx, ry), [rx, ry]);
 
   const onNodeClick = useCallback((_: any, node: Node) => {
     if (node.id === "center") return;
@@ -217,19 +232,19 @@ export default function DashboardFlow() {
       {
         id: "center",
         type: "center",
-        position: { x: -90, y: -90 },
-        data: {},
+        position: { x: -(centerSize/2), y: -(centerSize/2) },
+        data: { params: centerParams },
         draggable: false, selectable: false,
       },
       ...CATEGORIES.map((cat, i) => ({
         id: cat.key,
         type: "category",
-        position: { x: positions[i].x - 65, y: positions[i].y - 65 },
-        data: { label: cat.label, color: cat.color, icon: cat.icon, slug: cat.slug, prefix, delay: i * 0.9 },
+        position: { x: positions[i].x - (catSize/2), y: positions[i].y - (catSize/2) },
+        data: { label: cat.label, color: cat.color, icon: cat.icon, slug: cat.slug, prefix, delay: i * 0.9, params: nodeParams },
         draggable: false, selectable: false,
       })),
     ],
-    [positions, prefix]
+    [positions, prefix, centerSize, catSize, isMobile]
   );
 
   const edges: Edge[] = useMemo(
@@ -239,9 +254,9 @@ export default function DashboardFlow() {
         source: "center",
         target: cat.key,
         animated: true,
-        style: { stroke: cat.color + "77", strokeWidth: 2.5 },
+        style: { stroke: cat.color + "77", strokeWidth: isMobile ? 1.5 : 2.5 },
       })),
-    []
+    [isMobile]
   );
 
   return (
@@ -263,8 +278,8 @@ export default function DashboardFlow() {
         nodesConnectable={false}
         
         fitView
-        fitViewOptions={{ padding: 0.15 }}
-        minZoom={1}
+        fitViewOptions={{ padding: isMobile ? 0.02 : 0.15 }}
+        minZoom={isMobile ? 0.6 : 1}
         maxZoom={1}
         
         proOptions={{ hideAttribution: true }}

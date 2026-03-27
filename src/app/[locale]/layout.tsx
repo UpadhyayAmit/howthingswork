@@ -42,14 +42,16 @@ export default async function LocaleLayout({ children, params }: Props) {
     <NextIntlClientProvider locale={locale} messages={messages}>
       <ThemeProvider>
         <ResizableLayout sidebar={<Sidebar />}>
-          {/* Floating top controls */}
-          <div className="absolute top-4 right-10 z-50">
+          {/* Floating top controls - Responsive Positioning */}
+          <div className="absolute top-4 right-4 lg:right-10 z-[100]">
             <LocaleSwitcher />
           </div>
 
-          <main className="flex-1 p-8 pb-24 relative overflow-y-auto min-h-screen">
-            <div className="w-full px-4 lg:px-8">
-              {children}
+          <main className="flex-1 flex flex-col relative overflow-hidden h-full">
+            <div className="flex-1 overflow-y-auto w-full p-4 pb-20 lg:p-10 lg:pb-24">
+              <div className="w-full h-full max-w-[100vw] overflow-x-hidden">
+                {children}
+              </div>
             </div>
           </main>
         </ResizableLayout>

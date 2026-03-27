@@ -326,12 +326,12 @@ export default function ConcurrentRenderingVisualizer() {
           <div className="space-y-2">
             <p className="text-xs text-text-secondary mb-3">Add tasks to lanes:</p>
             {(Object.entries(LANE_CONFIG) as [Task["lane"], typeof LANE_CONFIG.sync][]).map(([lane, cfg]) => (
-              <Button key={lane} variant="secondary" size="sm" onClick={() => addTask(lane)} className="w-full">
+              <Button key={lane} variant="secondary" size="sm" onClick={() => addTask(lane)} className="visualizer-content-scroll">
                 <span className="w-2 h-2 rounded-full mr-2 inline-block" style={{ background: cfg.color }} />
                 {cfg.label.replace("Lane", "")}
               </Button>
             ))}
-            <Button size="sm" onClick={runScheduler} disabled={tasks.length === 0} className="w-full">
+            <Button size="sm" onClick={runScheduler} disabled={tasks.length === 0} className="visualizer-content-scroll">
               Run Scheduler
             </Button>
             <div className="mt-2 px-2 py-1.5 rounded bg-[#0D0D0D] border border-border">

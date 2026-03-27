@@ -250,7 +250,7 @@ export default function ServerComponentsVisualizer() {
               </span>
             </div>
 
-            <svg viewBox="0 0 600 260" className="w-full" style={{ height: 220 }}>
+            <svg viewBox="0 0 600 260" className="visualizer-content-scroll" style={{ height: 220 }}>
               {/* Client boundary glow */}
               <motion.rect
                 x={310}

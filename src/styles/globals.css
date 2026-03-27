@@ -113,3 +113,31 @@ body {
 .glow-cyan {
   box-shadow: 0 0 40px rgba(6, 182, 212, 0.08), 0 0 80px rgba(6, 182, 212, 0.04);
 }
+
+/* Responsive Visualizer Scroll Container Support */
+.visualizer-content-scroll {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .visualizer-content-scroll {
+    width: auto;
+    min-width: 600px; /* Force minimum width on mobile to enable scroll */
+    padding-bottom: 0.5rem;
+  }
+}
+
+/* Custom scrollbar for horizontal containers */
+.scrollbar-thin::-webkit-scrollbar {
+  height: 4px;
+  width: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 10px;
+}

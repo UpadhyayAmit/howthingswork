@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   ReactFlow,
   Background,
@@ -370,29 +370,42 @@ export default function CategoryConceptTree({
     }));
   }, [conceptNodes, groupColors, accentColor]);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const displayHeight = isMobile ? 420 : height;
+
   return (
     <div
-      className="concept-tree-container rounded-xl border border-[#374151] overflow-hidden mb-8"
+      className="concept-tree-container rounded-xl border border-border/60 overflow-hidden mb-8 shadow-2xl relative"
       style={{ background: "#0d1117" }}
     >
-      {/* Inject CSS reset for React Flow node wrappers */}
       <style dangerouslySetInnerHTML={{ __html: rfNodeResetCSS }} />
 
-      {/* Flow */}
-      <div style={{ height }}>
-        <ReactFlow
-          nodes={rfNodes}
-          edges={rfEdges}
-          nodeTypes={nodeTypes}
-          fitView
-          fitViewOptions={{ padding: 0.12 }}
-          panOnDrag
-          zoomOnScroll={false}
-          zoomOnPinch
-          nodesDraggable={false}
-          nodesConnectable={false}
-          proOptions={{ hideAttribution: true }}
-        >
+      {/* Horizontal scroll wrapper for mobile */}
+      <div className="overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-border">
+        <div style={{ height: displayHeight, minWidth: isMobile ? 700 : "100%" }}>
+          <ReactFlow
+            nodes={rfNodes}
+            edges={rfEdges}
+            nodeTypes={nodeTypes}
+            fitView
+            fitViewOptions={{ padding: 0.05 }}
+            panOnDrag
+            zoomOnScroll={false}
+            zoomOnPinch
+            nodesDraggable={false}
+            nodesConnectable={false}
+            minZoom={0.4}
+            maxZoom={1}
+            proOptions={{ hideAttribution: true }}
+          >
           <Background color="#1a2332" gap={24} size={1} />
           <Controls
             showInteractive={false}
@@ -406,5 +419,6 @@ export default function CategoryConceptTree({
         </ReactFlow>
       </div>
     </div>
+  </div>
   );
 }

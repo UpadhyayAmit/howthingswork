@@ -113,7 +113,7 @@ export default function RenderingPipelineVisualizer() {
           <svg
             viewBox={`0 0 ${TOTAL_WIDTH + 40} 130`}
             style={{ minWidth: TOTAL_WIDTH + 40 }}
-            className="w-full"
+            className="visualizer-content-scroll"
           >
             {/* Connector line */}
             <line

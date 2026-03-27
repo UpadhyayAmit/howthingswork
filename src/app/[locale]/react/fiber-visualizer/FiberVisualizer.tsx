@@ -112,7 +112,7 @@ export default function FiberVisualizer() {
       </div>
 
       <Panel title="Fiber Tree — Depth-First Traversal">
-        <svg width="620" height="300" className="w-full">
+        <svg width="620" height="300" className="visualizer-content-scroll">
           {/* Edges */}
           {allEdges.map(([fromId, toId, x1, y1, x2, y2]) => (
             <line
