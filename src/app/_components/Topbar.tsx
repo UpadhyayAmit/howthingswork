@@ -1,7 +1,8 @@
 "use client";
 
 import LocaleSwitcher from "./LocaleSwitcher";
-import Image from "next/image";
+import { Link } from "@/i18n/navigation";
+import { SITE_TITLE } from "@/lib/constants";
 
 export default function Topbar() {
   return (
@@ -9,13 +10,11 @@ export default function Topbar() {
       {/* Accent gradient line at the very top */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
 
-      <Image
-        src="/logo.png"
-        alt="HowThingsWork logo"
-        width={32}
-        height={32}
-        priority
-      />
+      <Link href="/" className="flex items-center gap-2 group">
+        <h1 className="text-sm font-medium text-text-secondary tracking-wide group-hover:text-text-primary transition-colors">
+          {SITE_TITLE}
+        </h1>
+      </Link>
 
       <div className="ml-auto flex items-center gap-4">
         <LocaleSwitcher />

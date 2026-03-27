@@ -20,11 +20,11 @@ const conceptNodes: ConceptNode[] = [
   { id: "async-await", label: "Async/Await",     x: 800, y: 110, group: "async",  shape: "rounded" },
   { id: "closures",    label: "Closures",        x: 0,   y: 230, group: "scope",  shape: "diamond" },
   { id: "scope-chain", label: "Scope Chain",     x: 100, y: 350, group: "scope",  shape: "pill" },
-  { id: "this",        label: "this",            x: 330, y: 350, group: "scope",  shape: "circle" },
+  { id: "this",        label: "this",            x: 329, y: 350, group: "scope",  shape: "circle" },
   { id: "prototypes",  label: "Prototypes",      x: 0,   y: 460, group: "oop",    shape: "hexagon" },
-  { id: "modules",     label: "Modules",         x: 250, y: 460, group: "oop",    shape: "rounded" },
+  { id: "modules",     label: "Modules",         x: 249, y: 460, group: "oop",    shape: "rounded" },
   { id: "gc",          label: "GC (V8)",         x: 560, y: 370, group: "memory", shape: "diamond" },
-  { id: "memory",      label: "Memory Leaks",   x: 770, y: 370, group: "memory", shape: "pill" },
+  { id: "memory",      label: "Memory Leaks",   x: 769, y: 370, group: "memory", shape: "pill" },
 ];
 
 const conceptEdges: ConceptEdge[] = [

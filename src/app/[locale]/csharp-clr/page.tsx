@@ -7,9 +7,9 @@ import Card from "@/app/_components/Card";
 import CategoryConceptTree, { type ConceptNode, type ConceptEdge } from "@/app/_ui/CategoryConceptTree";
 
 const conceptNodes: ConceptNode[] = [
-  { id: "clr",         label: "CLR",                 x: 350, y: 0,   group: "core",     shape: "hexagon" },
-  { id: "jit",         label: "JIT Compiler",        x: 50,  y: 120, group: "core",     shape: "diamond" },
-  { id: "gc",          label: "GC",                  x: 350, y: 120, group: "core",     shape: "circle" },
+  { id: "clr",         label: "CLR",                 x: 349, y: 0,   group: "core",     shape: "hexagon" },
+  { id: "jit",         label: "JIT Compiler",        x: 49,  y: 120, group: "core",     shape: "diamond" },
+  { id: "gc",          label: "GC",                  x: 349, y: 120, group: "core",     shape: "circle" },
   { id: "val-ref",     label: "Value vs Ref",        x: 620, y: 120, group: "core",     shape: "pill" },
   { id: "async",       label: "async/await",         x: 0,   y: 270, group: "features", shape: "rounded" },
   { id: "linq",        label: "LINQ",                x: 220, y: 270, group: "features", shape: "hexagon" },

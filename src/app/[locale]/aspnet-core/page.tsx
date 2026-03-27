@@ -13,7 +13,7 @@ const conceptNodes: ConceptNode[] = [
   { id: "auth",        label: "Auth",              x: 80,  y: 70,  group: "security",   shape: "pill" },
   { id: "authz",       label: "Authorization",     x: 80,  y: 190, group: "security",   shape: "rounded" },
   { id: "di",          label: "DI Container",      x: 680, y: 70,  group: "services",   shape: "hexagon" },
-  { id: "config",      label: "Configuration",     x: 750, y: 190, group: "services",   shape: "rounded" },
+  { id: "config",      label: "Configuration",     x: 749, y: 190, group: "services",   shape: "rounded" },
   { id: "model",       label: "Model Binding",     x: 120, y: 340, group: "processing", shape: "rounded" },
   { id: "filters",     label: "Filters",           x: 380, y: 370, group: "processing", shape: "diamond" },
   { id: "logging",     label: "Logging",           x: 680, y: 310, group: "services",   shape: "circle" },

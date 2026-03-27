@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { Inter, JetBrains_Mono } from "next/font/google";
 
@@ -12,6 +13,13 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   display: "swap",
 });
+
+export const metadata: Metadata = {
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
+};
 
 // Minimal root layout — locale-specific layout lives in [locale]/layout.tsx
 export default function RootLayout({

@@ -12,10 +12,10 @@ const conceptNodes: ConceptNode[] = [
   { id: "api-gateway",  label: "API Gateway",       x: 520, y: 0,   group: "networking",  shape: "hexagon" },
   { id: "discovery",    label: "Discovery",         x: 780, y: 0,   group: "networking",  shape: "circle" },
   { id: "communication",label: "Communication",     x: 100, y: 150, group: "patterns",    shape: "pill" },
-  { id: "circuit",      label: "Circuit Breaker",   x: 370, y: 150, group: "resilience",  shape: "hexagon" },
+  { id: "circuit",      label: "Circuit Breaker",   x: 369, y: 150, group: "resilience",  shape: "hexagon" },
   { id: "saga",         label: "Saga",              x: 600, y: 150, group: "patterns",    shape: "diamond" },
   { id: "event-driven", label: "Event-Driven",      x: 100, y: 300, group: "patterns",    shape: "rounded" },
-  { id: "containers",   label: "Containers",        x: 370, y: 300, group: "infra",       shape: "pill" },
+  { id: "containers",   label: "Containers",        x: 369, y: 300, group: "infra",       shape: "pill" },
   { id: "observability",label: "Observability",     x: 600, y: 300, group: "monitoring",  shape: "circle" },
   { id: "data-mgmt",    label: "Data Mgmt",         x: 800, y: 150, group: "data",        shape: "rounded" },
 ];

@@ -378,28 +378,6 @@ export default function CategoryConceptTree({
       {/* Inject CSS reset for React Flow node wrappers */}
       <style dangerouslySetInnerHTML={{ __html: rfNodeResetCSS }} />
 
-      {/* Header */}
-      <div className="px-4 py-2.5 border-b border-[#374151] flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full" style={{ background: accentColor }} />
-          <span className="text-xs font-semibold tracking-wider uppercase text-[#9CA3AF]">
-            {title}
-          </span>
-        </div>
-        {/* Legend */}
-        <div className="flex items-center gap-3 flex-wrap">
-          {legend.map((l) => (
-            <div key={l.name} className="flex items-center gap-1.5">
-              <span
-                className="w-2.5 h-2.5 rounded-sm"
-                style={{ background: l.color }}
-              />
-              <span className="text-[10px] text-[#6B7280] capitalize">{l.name}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Flow */}
       <div style={{ height }}>
         <ReactFlow
@@ -407,7 +385,7 @@ export default function CategoryConceptTree({
           edges={rfEdges}
           nodeTypes={nodeTypes}
           fitView
-          fitViewOptions={{ padding: 0.08 }}
+          fitViewOptions={{ padding: 0.12 }}
           panOnDrag
           zoomOnScroll={false}
           zoomOnPinch
@@ -415,7 +393,7 @@ export default function CategoryConceptTree({
           nodesConnectable={false}
           proOptions={{ hideAttribution: true }}
         >
-          <Background color="#1f2937" gap={20} size={1} />
+          <Background color="#1a2332" gap={24} size={1} />
           <Controls
             showInteractive={false}
             position="bottom-right"

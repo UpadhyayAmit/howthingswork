@@ -14,10 +14,10 @@ const conceptNodes: ConceptNode[] = [
   { id: "jest",        label: "Jest & RTL",       x: 300, y: 150, group: "tools",      shape: "rounded" },
   { id: "playwright",  label: "Playwright",      x: 600, y: 150, group: "tools",      shape: "pill" },
   { id: "mocking",     label: "Mocking",         x: 100, y: 300, group: "techniques", shape: "circle" },
-  { id: "tdd",         label: "TDD",             x: 370, y: 300, group: "techniques", shape: "diamond" },
-  { id: "coverage",    label: "Coverage",        x: 650, y: 300, group: "quality",    shape: "circle" },
-  { id: "contract",    label: "Contract Tests",  x: 370, y: 430, group: "advanced",   shape: "pill" },
-  { id: "perf",        label: "Perf Testing",    x: 650, y: 430, group: "advanced",   shape: "hexagon" },
+  { id: "tdd",         label: "TDD",             x: 369, y: 300, group: "techniques", shape: "diamond" },
+  { id: "coverage",    label: "Coverage",        x: 649, y: 300, group: "quality",    shape: "circle" },
+  { id: "contract",    label: "Contract Tests",  x: 369, y: 430, group: "advanced",   shape: "pill" },
+  { id: "perf",        label: "Perf Testing",    x: 649, y: 430, group: "advanced",   shape: "hexagon" },
 ];
 
 const conceptEdges: ConceptEdge[] = [

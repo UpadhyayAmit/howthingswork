@@ -20,7 +20,7 @@ const conceptNodes: ConceptNode[] = [
   { id: "hooks",         label: "Hooks",            x: 120, y: 330, group: "hooks",   shape: "hexagon" },
   { id: "useeffect",     label: "useEffect",        x: 0,   y: 440, group: "hooks",   shape: "circle" },
   { id: "state",         label: "State & Batching", x: 260, y: 440, group: "hooks",   shape: "rounded" },
-  { id: "memo",          label: "Memoization",      x: 130, y: 540, group: "hooks",   shape: "rounded" },
+  { id: "memo",          label: "Memoization",      x: 129, y: 540, group: "hooks",   shape: "rounded" },
   { id: "refs",          label: "Refs",             x: 380, y: 330, group: "hooks",   shape: "circle" },
   { id: "context",       label: "Context",          x: 560, y: 330, group: "data",    shape: "diamond" },
   { id: "events",        label: "Events",           x: 760, y: 330, group: "data",    shape: "rounded" },

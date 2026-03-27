@@ -9,15 +9,15 @@ import CategoryConceptTree, { type ConceptNode, type ConceptEdge } from "@/app/_
 const conceptNodes: ConceptNode[] = [
   { id: "oop",              label: "OOP Pillars",     x: 0,   y: 0,   group: "foundation",   shape: "hexagon" },
   { id: "solid",            label: "SOLID",           x: 280, y: 0,   group: "foundation",   shape: "diamond" },
-  { id: "clean-arch",       label: "Clean Arch",      x: 530, y: 0,   group: "architecture", shape: "hexagon" },
+  { id: "clean-arch",       label: "Clean Arch",      x: 529, y: 0,   group: "architecture", shape: "hexagon" },
   { id: "ddd",              label: "DDD",             x: 780, y: 0,   group: "architecture", shape: "circle" },
   { id: "repository",       label: "Repository",      x: 100, y: 150, group: "patterns",     shape: "rounded" },
-  { id: "cqrs",             label: "CQRS",            x: 370, y: 150, group: "patterns",     shape: "diamond" },
+  { id: "cqrs",             label: "CQRS",            x: 369, y: 150, group: "patterns",     shape: "diamond" },
   { id: "event-sourcing",   label: "Event Sourcing",  x: 620, y: 150, group: "patterns",     shape: "pill" },
-  { id: "mediator",         label: "Mediator",        x: 250, y: 300, group: "patterns",     shape: "circle" },
+  { id: "mediator",         label: "Mediator",        x: 249, y: 300, group: "patterns",     shape: "circle" },
   { id: "design-patterns",  label: "GoF Patterns",    x: 0,   y: 300, group: "patterns",     shape: "pill" },
   { id: "decorator",        label: "Decorator",       x: 500, y: 300, group: "patterns",     shape: "rounded" },
-  { id: "anti-patterns",    label: "Anti-Patterns",   x: 750, y: 300, group: "quality",      shape: "hexagon" },
+  { id: "anti-patterns",    label: "Anti-Patterns",   x: 749, y: 300, group: "quality",      shape: "hexagon" },
 ];
 
 const conceptEdges: ConceptEdge[] = [

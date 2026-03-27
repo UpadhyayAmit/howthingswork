@@ -15,7 +15,7 @@ export default function Section({
   subtitle,
 }: SectionProps) {
   return (
-    <section className={cn("mb-8", className)}>
+    <section className={cn("p-6 mb-8", className)}>
       {title && (
         <div className="mb-4">
           <h2 className="text-2xl font-bold text-text-primary">{title}</h2>
