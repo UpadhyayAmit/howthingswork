@@ -1,0 +1,1303 @@
+{
+  "nav": {
+    "react": "React",
+    "azureFunctions": "Azure 函数",
+    "csharpClr": "C# / CLR",
+    "fiberArchitecture": "Fiber 架构",
+    "virtualDom": "虚拟DOM与Diffing",
+    "reconciliation": "协调算法",
+    "renderingPipeline": "渲染管道",
+    "componentLifecycle": "组件生命周期",
+    "hooksInternals": "Hooks 内部原理",
+    "useeffectLifecycle": "useEffect 生命周期",
+    "stateBatching": "状态与批处理",
+    "memoization": "记忆化",
+    "reactMemo": "React.memo 与重新渲染",
+    "contextApi": "Context API",
+    "eventSystem": "事件系统",
+    "refsDom": "Refs 与 DOM",
+    "keysLists": "键与列表",
+    "errorBoundaries": "错误边界",
+    "portals": "传送门",
+    "suspense": "Suspense 与 Lazy",
+    "concurrentMode": "并发渲染",
+    "transitions": "过渡",
+    "serverComponents": "服务端组件"
+  },
+  "home": {
+    "title": "工作原理",
+    "highlight": "原理",
+    "subtitle": "以可视化、交互式的方式解释技术的底层工作原理。",
+    "reactTitle": "React 内部原理",
+    "reactDesc": "Fiber架构、Hooks生命周期、协调算法和虚拟DOM差异比较。",
+    "javascriptTitle": "JavaScript Engine",
+    "javascriptDesc": "Event loop, closures, prototypal inheritance, promises, and V8 garbage collection.",
+    "csharpTitle": "C# / .NET Runtime",
+    "csharpDesc": "CLR architecture, JIT compilation, garbage collection, async state machines, and generics.",
+    "aspnetTitle": "ASP.NET Core",
+    "aspnetDesc": "Middleware pipeline, routing, authentication, model binding, and dependency injection.",
+    "efTitle": "Entity Framework Core",
+    "efDesc": "DbContext, change tracker, LINQ-to-SQL pipeline, migrations, and loading strategies.",
+    "azureTitle": "Azure Cloud",
+    "azureDesc": "Functions, App Service, Service Bus, Cosmos DB, Key Vault, and managed identity.",
+    "architectureTitle": "Architecture & Patterns",
+    "architectureDesc": "SOLID principles, clean architecture, DDD, CQRS, and Gang of Four design patterns.",
+    "microservicesTitle": "Microservices",
+    "microservicesDesc": "API gateway, circuit breaker, saga pattern, event-driven architecture, and containers.",
+    "testingTitle": "Testing Strategies",
+    "testingDesc": "Unit testing, Jest, xUnit, Playwright E2E, TDD, mocking, and contract testing.",
+    "systemdesignTitle": "System Design",
+    "systemdesignDesc": "Scalability, load balancing, caching, sharding, message queues, and CDN.",
+    "aimlTitle": "AI & Machine Learning",
+    "aimlDesc": "Neural networks, transformers, RAG, embeddings, AI agents, and model serving.",
+    "comingSoon": "Explore 98+ interactive visualizers across 11 technology tracks."
+  },
+  "common": {
+    "triggerRender": "触发渲染",
+    "reset": "重置",
+    "play": "播放",
+    "pause": "暂停",
+    "howItWorks": "工作原理",
+    "keyConcepts": "核心概念",
+    "whyItMatters": "为什么重要",
+    "commonPitfalls": "常见陷阱"
+  },
+  "pages": {
+    "fiberVisualizer": {
+      "title": "React Fiber 可视化",
+      "subtitle": "观察 React 如何在协调过程中使用深度优先搜索遍历 Fiber 树。",
+      "explainer": {
+        "overview": "Fiber 是 React 的内部协调引擎，在 React 16 中引入。应用中的每个组件都有一个对应的 Fiber 节点 — 一个 JavaScript 对象，存储组件类型、props、state、关联的 DOM 节点，以及指向父节点、子节点和兄弟节点的指针。这种链式结构使 React 能够在多个帧之间暂停、恢复和调度工作。",
+        "howItWorks": [
+          {
+            "title": "每个组件映射到一个 Fiber 节点",
+            "body": "当 React 渲染组件树时，它为每个元素创建一个 Fiber 节点。节点存储：type（函数/类/字符串）、props、state、effect hooks，以及上一次渲染的 work-in-progress 状态。"
+          },
+          {
+            "title": "Fiber 形成链表树，而非调用栈",
+            "body": "与递归调用栈不同（无法暂停），Fiber 以链表形式连接：每个节点有 child 指针（第一个子节点）、sibling 指针（下一个兄弟节点）和 return 指针（父节点）。这使 React 可以迭代地遍历树。"
+          },
+          {
+            "title": "深度优先遍历：beginWork → completeWork",
+            "body": "React 以深度优先方式遍历 Fiber 树。向下时调用 beginWork（父 → 子），向上时调用 completeWork（子 → 父）。这种双遍历方式让 React 自底向上构建 effect 列表。"
+          },
+          {
+            "title": "双缓冲：current 与 work-in-progress",
+            "body": "React 同时维护两棵 Fiber 树：current 树（屏幕上显示的）和 work-in-progress 树（正在构建的）。每个 Fiber 节点都有一个 alternate 指针连接另一棵树中的对应节点。"
+          },
+          {
+            "title": "提交后，work-in-progress 树变为 current 树",
+            "body": "当 commit 阶段完成后，React 通过将根节点的 current 指针指向 work-in-progress 树来原子性地交换两棵树。旧的 current 树成为下次渲染的新 work-in-progress 树。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Fiber Node",
+            "icon": "🧵",
+            "definition": "代表一个组件工作单元的 JS 对象。包含 type、key、ref、props、state、hooks 列表、effect 标签和树指针。"
+          },
+          {
+            "term": "Work-in-Progress Tree",
+            "icon": "🌱",
+            "definition": "协调过程中正在构建的 Fiber 树。在 commit 阶段完成并与 current 树交换之前，用户不可见。"
+          },
+          {
+            "term": "beginWork / completeWork",
+            "icon": "🔽🔼",
+            "definition": "React 遍历 Fiber 树时调用的两个函数。beginWork 在向下时处理节点；completeWork 在向上时最终化节点。"
+          },
+          {
+            "term": "Effect Tag",
+            "icon": "🏷️",
+            "definition": "Fiber 节点上的位掩码标志，指示需要执行的 DOM 操作：Placement（插入）、Update（更新属性）、Deletion（删除）。"
+          },
+          {
+            "term": "Alternate Pointer",
+            "icon": "↔️",
+            "definition": "每个 Fiber 都有一个 alternate 字段，指向另一棵树（current ↔ work-in-progress）中的对应节点。实现双缓冲机制。"
+          }
+        ],
+        "codeLabel": "Fiber 节点的内部结构",
+        "whyItMatters": "Fiber 架构使 React 的并发特性成为可能。由于工作以数据结构（而非调用栈）的形式表示，React 可以在任意 Fiber 节点处暂停协调，将控制权交还给浏览器处理用户输入等高优先级任务，然后从上次中断处恢复。这是 Suspense、transitions 和自动批处理的基础。",
+        "pitfalls": [
+          "永远不要直接读取或修改 React 内部的 Fiber 节点 — 它们是私有的实现细节，在不同 React 版本之间可能发生变化。",
+          "深度优先遍历意味着深层嵌套的组件树会增加 React 将控制权让给浏览器之前的时间。尽量扁平化组件层次结构。",
+          "Fiber 节点在渲染之间持久存在（被复用而不是重建）。这就是 hooks 能工作的原因 — useState 将值存储在 Fiber 节点上，而不是函数本身内部。"
+        ]
+      }
+    },
+    "virtualDom": {
+      "title": "虚拟DOM与Diffing",
+      "subtitle": "React 如何创建虚拟表示并进行差异比较以找到最小DOM变更。",
+      "explainer": {
+        "overview": "虚拟 DOM 是一个轻量级的 JavaScript 对象树，映射真实 DOM。React 保留两份副本：当前树和每次渲染时构建的 work-in-progress 树。React 不会立即操作真实 DOM，而是对两棵虚拟树进行 diff，计算出所需的最小变更集，然后一次性批量应用。",
+        "howItWorks": [
+          {
+            "title": "JSX 编译为 React.createElement() 调用",
+            "body": "当你编写 JSX 时，Babel（或 React 编译器）将其转换为 React.createElement(type, props, ...children) 调用。这些调用返回普通的 JavaScript 对象，称为 React 元素 — 而不是真实的 DOM 节点。"
+          },
+          {
+            "title": "React 构建虚拟 DOM 树",
+            "body": "React.createElement() 返回一个嵌套的对象树，如 { type: 'div', props: { className: 'box', children: [...] } }。这就是虚拟 DOM — 描述 UI 外观的廉价内存表示。"
+          },
+          {
+            "title": "更新时，React 构建新的虚拟 DOM 树",
+            "body": "当 state 或 props 发生变化时，React 再次调用组件函数，产生一个全新的虚拟 DOM 树来表示新的期望 UI。"
+          },
+          {
+            "title": "Diffing 算法比较新旧树",
+            "body": "React 的 diffing 算法（O(n) 启发式）同时遍历两棵树。它假设不同类型的元素产生不同的树，并使用 key prop 跨渲染匹配列表项。"
+          },
+          {
+            "title": "只将差异应用于真实 DOM",
+            "body": "Diff 之后，React 得到一个变更列表：更新这个 prop、插入这个节点、删除那个节点。这些变更在 commit 阶段应用到真实 DOM — 最小化回流和重绘。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "React Element",
+            "icon": "📦",
+            "definition": "React.createElement() 返回的普通 JS 对象。描述 type、props 和 children。不是真实的 DOM 节点。"
+          },
+          {
+            "term": "Diffing Algorithm",
+            "icon": "🔍",
+            "definition": "React 比较两棵虚拟树的 O(n) 启发式算法。假设相同位置的元素是相同类型，除非 key 不同。"
+          },
+          {
+            "term": "Reconciliation",
+            "icon": "⚖️",
+            "definition": "比较新旧虚拟树并确定所需最小 DOM 操作集的过程。"
+          },
+          {
+            "term": "key prop",
+            "icon": "🔑",
+            "definition": "列表项的稳定标识。让 React 即使在位置改变的情况下也能匹配新旧列表元素。"
+          },
+          {
+            "term": "Batched Updates",
+            "icon": "📦",
+            "definition": "React 收集协调过程中所有的 DOM 变更并一次性应用，减少浏览器回流。"
+          }
+        ],
+        "codeLabel": "从 JSX 到虚拟 DOM",
+        "whyItMatters": "直接操作 DOM 代价高昂，因为浏览器必须重新计算布局并重绘。通过在 JavaScript 中进行 diff（快速）并批量执行 DOM 写入（慢速），React 将昂贵浏览器操作的次数降至最低。这就是为什么即使面对复杂 UI，React 应用也感觉流畅的原因。",
+        "pitfalls": [
+          "永远不要直接修改虚拟 DOM 对象 — React 假设不可变性以高效检测变更。",
+          "避免在动态列表中使用数组索引作为 key。如果列表重新排序，React 将按位置而非标识匹配项，导致不必要的卸载和重挂载。",
+          "虚拟 DOM 并非免费 — 创建元素对象是有成本的。对于没有 state 的非常简单的 UI，纯 HTML 可能更快。"
+        ]
+      }
+    },
+    "reconciliation": {
+      "title": "协调算法",
+      "subtitle": "React 如何比较新旧 Fiber 树来决定更新、插入或删除什么。",
+      "explainer": {
+        "overview": "协调是 React 在 state 或 props 变化时高效更新 UI 的算法。React 不是重新渲染整个 DOM 树，而是比较先前的虚拟 DOM 树和新渲染的树，计算所需操作的最小数量。它使用两个关键启发式规则将时间复杂度控制在 O(n) 而非 O(n³)。",
+        "howItWorks": [
+          {
+            "title": "两个启发式规则使 Diffing 达到 O(n)",
+            "body": "React 假设：(1) 不同类型的元素产生完全不同的树 — 因此 React 卸载旧子树并挂载全新的。(2) 开发者可以通过 key prop 在渲染之间提示稳定的标识。"
+          },
+          {
+            "title": "相同类型 → 原地更新",
+            "body": "当两个元素具有相同类型（如都是 <div>）时，React 保留现有 DOM 节点，只更新变更的属性/props。这避免了不必要地销毁和重建 DOM 节点。"
+          },
+          {
+            "title": "不同类型 → 拆除并重建",
+            "body": "如果类型变更（如 <div> 变为 <span>），React 会完全卸载旧组件树（运行所有清理操作）并重新挂载新树。State 会丢失。"
+          },
+          {
+            "title": "列表使用 key 实现稳定标识",
+            "body": "对于子列表，React 通过 key 匹配新旧项。没有 key 时，React 使用位置 — 当项目重新排序时可能导致不必要的卸载。key 让 React 高效地移动现有 DOM 节点。"
+          },
+          {
+            "title": "Effects 列表跟踪待处理工作",
+            "body": "当 React 遍历两棵树时，它构建一个 effect 列表 — 一个包含待处理工作（更新、插入、删除）的 Fiber 链表。commit 阶段遍历此列表并将变更应用于真实 DOM。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Fiber",
+            "icon": "🧵",
+            "definition": "React 协调引擎中的工作单元。每个组件都有一个 Fiber 节点，存储 type、props、state 以及指向父/子/兄弟 Fiber 的指针。"
+          },
+          {
+            "term": "Work-in-Progress Tree",
+            "icon": "🌳",
+            "definition": "协调过程中 React 应用变更的 current Fiber 树副本。只有在 commit 阶段完成后才会提升为 current。"
+          },
+          {
+            "term": "Effect List",
+            "icon": "📋",
+            "definition": "协调过程中构建的、具有待处理 DOM 变更的 Fiber 扁平链表，在 commit 阶段遍历执行。"
+          },
+          {
+            "term": "Bailout",
+            "icon": "⚡",
+            "definition": "当 React 检测到某个 Fiber 的 props 和 context 没有变化时，可以完全跳过该子树的渲染 — 这是一项关键的性能优化。"
+          }
+        ],
+        "codeLabel": "key 如何影响协调",
+        "whyItMatters": "协调使 React 的声明式模型具有实用性。你描述 UI 应该是什么样的，React 找出所需的最小 DOM 变更集。Fiber 架构使协调可以被中断 — React 可以在树的中途暂停协调，稍后再恢复，从而实现 Suspense 和 transitions 等并发特性。",
+        "pitfalls": [
+          "使用不稳定的 key（如 Math.random() 或动态列表中的数组索引）会迫使 React 在每次渲染时卸载并重新挂载组件，破坏本地 state。",
+          "更改组件类型（在同一位置切换组件 A 和组件 B）总会导致完全的卸载/重挂载 — 即使它们渲染相同的 DOM 输出。",
+          "深层嵌套的条件渲染可能改变组件类型并触发意外的卸载。优先使用条件 props 而非条件组件类型。"
+        ]
+      }
+    },
+    "renderingPipeline": {
+      "title": "React 渲染管道",
+      "subtitle": "从 JSX 到像素的完整旅程 — 触发渲染并观察每个阶段的执行。",
+      "explainer": {
+        "overview": "每次 React 渲染都经历一个可预测的两阶段管道：渲染阶段和提交阶段。渲染阶段是纯粹且可中断的 — React 调用组件并构建新的 Fiber 树。提交阶段是同步且有副作用的 — React 将计算好的变更应用于真实 DOM 并触发 effects。",
+        "howItWorks": [
+          {
+            "title": "JSX 被转换为 React.createElement() 调用",
+            "body": "在构建时，像 <Button color='blue'>Click</Button> 这样的 JSX 变成 React.createElement(Button, { color: 'blue' }, 'Click')。这产生一个普通的对象树 — 虚拟 DOM。"
+          },
+          {
+            "title": "渲染阶段：React 调用你的组件",
+            "body": "React 遍历 Fiber 树，调用每个组件函数（或 render() 方法）。这个阶段是纯粹的，不产生副作用 — 在并发模式下，React 可以随时中断并重启它。"
+          },
+          {
+            "title": "协调：diff 新旧 Fiber 树",
+            "body": "React 将新输出与之前的 Fiber 树进行比较。它用 effect 标签标记每个 Fiber：Update、Placement（插入）或 Deletion。结果是一个 effect 列表 — 包含待处理工作的 Fiber 扁平列表。"
+          },
+          {
+            "title": "提交阶段 — beforeMutation：快照",
+            "body": "React 在类组件上调用 getSnapshotBeforeUpdate() 并调度被动 effects。这个子阶段在任何 DOM 变更发生之前运行。"
+          },
+          {
+            "title": "提交阶段 — mutation：应用 DOM 变更",
+            "body": "React 遍历 effect 列表并同步应用所有 DOM 变更：插入、更新、删除。此后，DOM 反映新的 UI。"
+          },
+          {
+            "title": "提交阶段 — layout：同步 effects",
+            "body": "useLayoutEffect 回调在 DOM 变更后、浏览器绘制前同步运行。然后浏览器绘制。最后，useEffect 回调在绘制后异步运行。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Render Phase",
+            "icon": "🔄",
+            "definition": "纯粹、无副作用的阶段，React 调用组件并构建新的 Fiber 树。在并发模式下可以被中断。"
+          },
+          {
+            "term": "Commit Phase",
+            "icon": "✅",
+            "definition": "同步阶段，React 应用 DOM 变更并触发生命周期方法/effects。不能被中断。"
+          },
+          {
+            "term": "useLayoutEffect",
+            "icon": "⚡",
+            "definition": "在 DOM 变更后、浏览器绘制前同步触发。用于 DOM 测量，会阻塞绘制。"
+          },
+          {
+            "term": "useEffect",
+            "icon": "🕐",
+            "definition": "在浏览器绘制后异步触发。不阻塞绘制 — 适合订阅、数据获取和非视觉副作用。"
+          },
+          {
+            "term": "Double Render (Strict Mode)",
+            "icon": "🔁",
+            "definition": "在开发环境中，React 在渲染阶段渲染组件两次以检测副作用。只有一次提交发生。"
+          }
+        ],
+        "codeLabel": "Effect 时序参考",
+        "whyItMatters": "理解管道有助于将代码放在正确的位置。DOM 测量必须在 useLayoutEffect 中（绘制前）。数据获取在 useEffect 中（绘制后，非阻塞）。必须在第一次渲染前发生的初始化在 useState 初始化器或 useMemo 中。弄错这些会导致视觉闪烁、布局跳动或渲染缺失。",
+        "pitfalls": [
+          "将 DOM 测量放在 useEffect 中（绘制后）会导致闪烁 — 浏览器以错误的尺寸绘制一次，然后 useEffect 纠正它并触发另一次绘制。改用 useLayoutEffect。",
+          "没有依赖数组的 useEffect 在每次渲染后运行。这通常是一个 bug — 你可能想要 [] 表示仅挂载时执行，或 [specificDep] 控制受控重新运行。",
+          "避免在渲染阶段进行昂贵的同步工作 — 它会阻塞主线程并延迟绘制。将繁重计算移至 useMemo 或 web worker。"
+        ]
+      }
+    },
+    "componentLifecycle": {
+      "title": "组件生命周期",
+      "subtitle": "挂载、更新和卸载阶段 — 查看每个阶段触发的 Hooks 和副作用。",
+      "explainer": {
+        "overview": "每个 React 组件都经历三个生命周期阶段：挂载（第一次渲染进入 DOM）、更新（由 state 或 prop 变化引起的重新渲染）和卸载（从 DOM 中移除）。使用 hooks 时，这些阶段通过 useEffect、useLayoutEffect 和清理函数来表达，而非类生命周期方法。",
+        "howItWorks": [
+          {
+            "title": "挂载：组件第一次渲染",
+            "body": "React 调用函数组件，计算 JSX，并将生成的 DOM 节点插入。useState 初始化器运行，useRef 对象被创建。DOM 插入后，useLayoutEffect 同步运行，然后 useEffect 在绘制后异步运行。"
+          },
+          {
+            "title": "更新：state 或 props 变化触发重新渲染",
+            "body": "当 setState 或新的 prop 到达时，React 将重新渲染加入队列。重新渲染期间，hooks 按挂载时相同的顺序被调用。React 比较新旧输出并修补 DOM。在重新运行 effects 之前，React 会运行上一次渲染的 effects 清理函数。"
+          },
+          {
+            "title": "下次 effect 运行前的清理",
+            "body": "在每次 effect 重新运行之前（以及卸载时），React 调用上一个 effect 的清理函数。这对于清除定时器、取消获取请求和取消订阅事件至关重要。"
+          },
+          {
+            "title": "卸载：组件从树中移除",
+            "body": "当组件被移除（条件渲染、路由切换等）时，React 运行所有清理函数 — useEffect 清理，然后是 useLayoutEffect 清理。DOM 节点从文档中移除。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "useEffect(() => {}, [])",
+            "icon": "🏔️",
+            "definition": "空的 deps 数组：挂载后运行一次。清理在卸载时运行。等同于 componentDidMount + componentWillUnmount。"
+          },
+          {
+            "term": "useEffect(() => {}, [dep])",
+            "icon": "🔄",
+            "definition": "挂载后运行，且每当 dep 变化时运行。清理在每次重新运行前和卸载时运行。"
+          },
+          {
+            "term": "useEffect(() => {})",
+            "icon": "♾️",
+            "definition": "没有 deps 数组：每次渲染后运行。这很少是你想要的 — 如果它触发 state 变化会导致无限循环。"
+          },
+          {
+            "term": "useLayoutEffect",
+            "icon": "⚡",
+            "definition": "与 useEffect 签名相同，但在 DOM 变更后、绘制前同步触发。用于 DOM 测量。"
+          },
+          {
+            "term": "Cleanup Function",
+            "icon": "🧹",
+            "definition": "从 useEffect 回调返回的函数。React 在下次 effect 运行前和卸载时调用它。"
+          }
+        ],
+        "codeLabel": "使用 hooks 的完整生命周期",
+        "whyItMatters": "理解生命周期时序可以防止最常见的 React bug：获取数据不带清理（导致在已卸载组件上调用 setState 的警告）、忘记清除定时器（导致内存泄漏）、以及由于误用依赖数组而过多或过少运行 effects。",
+        "pitfalls": [
+          "从 useEffect 返回非函数值会导致运行时错误。只能返回 undefined 或清理函数。",
+          "deps 数组中遗漏依赖会创建陈旧闭包 — 你的 effect 捕获了旧值并永远不会更新。使用 ESLint 的 exhaustive-deps 规则来捕获这个问题。",
+          "在没有 deps 的 useEffect 内无条件设置 state 会创建无限循环：渲染 → effect → setState → 渲染 → effect → ..."
+        ]
+      }
+    },
+    "hooksVisualizer": {
+      "title": "React Hooks 可视化",
+      "subtitle": "了解 React 如何将 Hooks 管理为链表、处理状态更新并重新渲染。",
+      "explainer": {
+        "overview": "Hooks 以单向链表的形式存储在 Fiber 节点上。当组件渲染时，React 按顺序遍历此列表 — 将每个 hook 调用（useState、useEffect、useRef 等）与其存储的 state 匹配。这就是 Hooks 规则存在的原因：如果你有条件地调用 hooks，列表顺序会改变，React 会为错误的 hook 读取错误的 state。",
+        "howItWorks": [
+          {
+            "title": "第一次渲染：React 构建 hooks 链表",
+            "body": "每个 hook 调用（useState、useEffect、useRef、useMemo…）都创建一个带有 memoizedState 字段和 next 指针的 Hook 对象。React 按调用顺序将每个对象追加到列表中。该列表存储在 Fiber 节点的 memoizedState 字段上。"
+          },
+          {
+            "title": "useState 存储 state 值和更新队列",
+            "body": "useState hook 对象存储：memoizedState（当前值）、queue（待处理 setState 调用的链表）和 dispatch（你在组件中使用的 setState 函数）。dispatch 函数是稳定的 — 它在渲染之间永不改变。"
+          },
+          {
+            "title": "调用 setState 将更新加入队列",
+            "body": "当你调用 setState(newValue) 时，React 不会立即更新 state。而是将一个 Update 对象追加到 hook 的队列中，并调度 Fiber 的重新渲染。同一事件处理器中的多个 setState 调用会被批处理为一次重新渲染。"
+          },
+          {
+            "title": "重新渲染：React 处理更新队列",
+            "body": "在下次渲染时，React 再次遍历 hooks 列表。对于每个 useState hook，它按顺序处理所有排队的更新（或调用 useReducer 的 reducer 函数）。最终计算的值成为新的 memoizedState。"
+          },
+          {
+            "title": "useEffect hooks 存储 destroy 和 create 函数",
+            "body": "effect hook 对象存储：create（你传递的回调）、destroy（上次返回的清理函数）、deps（依赖数组）和一个标签，指示是 useEffect、useLayoutEffect 还是 useInsertionEffect。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Hooks Linked List",
+            "icon": "🔗",
+            "definition": "Hooks 以单向链表形式存储在 Fiber 节点上。调用顺序 = 列表顺序。条件 hooks 会破坏列表。"
+          },
+          {
+            "term": "memoizedState",
+            "icon": "💾",
+            "definition": "Hook 对象上存储当前值的字段。对于 useState：state 值。对于 useRef：{ current: value }。对于 useMemo：缓存结果。"
+          },
+          {
+            "term": "Update Queue",
+            "icon": "📬",
+            "definition": "每个 hook 对象上存储待处理 setState 调用的循环链表。在每批结束时刷新 — 所有更新按顺序应用。"
+          },
+          {
+            "term": "Dispatcher",
+            "icon": "🚦",
+            "definition": "React 根据渲染阶段切换 hook 实现。第一次渲染时：HooksDispatcherOnMount。重新渲染时：HooksDispatcherOnUpdate。这就是为什么 hooks 不能在组件外调用。"
+          },
+          {
+            "term": "Rules of Hooks",
+            "icon": "📏",
+            "definition": "只在顶层调用 hooks（绝不在条件/循环内），且只从 React 函数调用。这些规则存在是因为 React 通过 hooks 在链表中的位置来识别它们。"
+          }
+        ],
+        "codeLabel": "hooks 链表的内部结构",
+        "whyItMatters": "理解 hooks 内部机制解释了为什么 Hooks 规则不是任意限制，而是技术必要性。它还解释了为什么 useState setter 函数总是稳定的（它附加到队列，而不是值），为什么 hooks 跨渲染工作（它们持久化在 Fiber 上），以及为什么你可以构建自定义 hooks — 它们只是调用其他 hooks 的函数，向列表添加更多节点。",
+        "pitfalls": [
+          "在 if/else 或循环中调用 hooks 会导致 hooks 列表与你的 hook 调用之间的不匹配 — React 会静默地为错误的 hook 读取错误的 state。",
+          "useState setter 引用稳定（永不改变），但 state 值不稳定。effects 内部的闭包在渲染时捕获值 — 使用函数式更新形式 setState(prev => prev + 1) 以始终访问最新值。",
+          "每个 hook 调用都有成本（链表遍历）。如果 hook 的值不是每次渲染都需要，不要在渲染密集型组件中无条件调用 hooks — useMemo 可以帮助跳过不必要的重新计算。"
+        ]
+      }
+    },
+    "useeffectLifecycle": {
+      "title": "useEffect 生命周期",
+      "subtitle": "副作用的执行时机、清理时序和依赖项追踪。",
+      "explainer": {
+        "overview": "useEffect 是将 React 组件与外部系统同步的主要 hook — 浏览器 API、第三方库、网络请求和订阅。它在浏览器绘制屏幕后运行，使其成为非阻塞的。每个 effect 可选地返回一个清理函数，React 在再次运行 effect 之前以及组件卸载时调用它。",
+        "howItWorks": [
+          {
+            "title": "Effects 在浏览器绘制后运行",
+            "body": "React 提交 DOM 变更，浏览器绘制屏幕，然后 React 异步运行你的 useEffect 回调。这个顺序意味着 effects 永远不会阻塞初始渲染 — 用户立即看到内容。"
+          },
+          {
+            "title": "依赖数组控制 effects 何时重新运行",
+            "body": "React 使用 Object.is() 相等性将当前 deps 数组与上一次渲染的 deps 进行比较。如果任何 dep 发生变化，该 effect 将被调度重新运行。没有 deps 数组 = 每次渲染后运行。空数组 [] = 挂载后运行一次。"
+          },
+          {
+            "title": "清理在下次 effect 前和卸载时运行",
+            "body": "如果你的 effect 返回一个函数，React 将其存储为清理函数。在再次运行 effect 之前（因为 dep 变化），React 首先调用上一次的清理。当组件卸载时，React 调用最后一次清理。"
+          },
+          {
+            "title": "React 18 StrictMode 在开发环境中运行 effects 两次",
+            "body": "在 StrictMode 中，React 故意挂载 → 卸载 → 重新挂载每个组件，以暴露没有正确清理的 effects。双重调用只在开发环境中发生。这就是为什么适当的清理是不可妥协的。"
+          },
+          {
+            "title": "useLayoutEffect 在绘制前同步触发",
+            "body": "useLayoutEffect 与 useEffect 的语义相同，但在 DOM 变更后、浏览器绘制前同步触发。当你的 effect 需要读取 DOM 测量并在用户看到任何内容之前应用修正时使用它。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "deps Array",
+            "icon": "📋",
+            "definition": "控制重新运行频率。[] = 仅挂载时。[a, b] = 当 a 或 b 变化时。没有数组 = 每次渲染。React 使用 Object.is() 比较 — 避免将对象/数组作为 deps。"
+          },
+          {
+            "term": "Cleanup Function",
+            "icon": "🧹",
+            "definition": "从 effect 返回的函数。在 effect 重新运行（dep 变化）前和组件卸载时调用。用于取消获取、清除定时器、取消订阅。"
+          },
+          {
+            "term": "Stale Closure",
+            "icon": "🕸️",
+            "definition": "当 effect 捕获了旧渲染中的 state/props 但永远不重新运行以获取更新值时。通过将变量添加到 deps 或使用 ref 来修复。"
+          },
+          {
+            "term": "useLayoutEffect",
+            "icon": "⚡",
+            "definition": "在 DOM 变更后、绘制前同步触发。阻塞绘制 — 保持快速。用于 DOM 测量（getBoundingClientRect、滚动位置）。"
+          },
+          {
+            "term": "useInsertionEffect",
+            "icon": "💉",
+            "definition": "在任何 DOM 变更之前触发。供 CSS-in-JS 库在布局前同步注入样式规则。不适用于一般应用代码。"
+          }
+        ],
+        "codeLabel": "Effect 模式及其清理",
+        "whyItMatters": "useEffect 是 React 中最常被误用的 hook。正确使用 effects — 正确的 deps、适当的清理、正确的时机 — 是构建不泄漏内存、不发出额外网络请求、不存在陈旧数据 bug 的应用的关键。心智模型的转变是：\"effects 是同步机制\"，而不是\"生命周期事件\"。你告诉 React 如何与外部世界保持同步，而不是挂入挂载/更新/卸载回调。",
+        "pitfalls": [
+          "deps 数组中遗漏依赖会创建陈旧闭包，你的 effect 永远读取旧值。始终将 effect 内部使用的所有值包含在 deps 数组中，或使用 ref 来存储不应触发重新运行的值。",
+          "不为订阅和事件监听器提供清理会导致内存泄漏。每个 addEventListener 必须在清理中有对应的 removeEventListener。",
+          "直接将对象或数组字面量放入 deps 数组会导致 effect 在每次渲染时重新运行：[{ id: 1 }] 在每次渲染时创建一个新对象（即使值相同也是不同引用）。解构基础类型或使用 useMemo 稳定引用。"
+        ]
+      }
+    },
+    "stateBatching": {
+      "title": "状态批处理",
+      "subtitle": "React 如何将多个 setState 调用合并为单次重新渲染以提升性能。",
+      "explainer": {
+        "overview": "状态批处理意味着 React 收集同一同步块中的多个 setState 调用，并在单次重新渲染过程中处理它们。React 不会在每个 setState 后重新渲染，而是等到当前批次结束，一次性应用所有更新，然后恰好渲染一次。React 18 将自动批处理扩展到异步代码和原生事件监听器。",
+        "howItWorks": [
+          {
+            "title": "一个事件处理器中的多个 setState 调用 = 一次渲染",
+            "body": "当你在点击处理器中调用 setA(1) 和 setB(2) 时，React 不会在 setA 后立即重新渲染。它将两个更新排入队列并调度单次重新渲染。你的组件以两个新值同时应用的状态渲染一次。"
+          },
+          {
+            "title": "React 将更新排入 Fiber 的 hook 更新队列",
+            "body": "每个 setState 调用将一个 Update 对象追加到 hook 的循环队列中。React 将 Fiber 标记为有待处理工作，并调度一个微任务（或回调）来刷新队列 — 但只在当前同步代码完成后。"
+          },
+          {
+            "title": "React 17 与 React 18：异步批处理",
+            "body": "在 React 17 中，批处理只发生在 React 事件处理器内部。setTimeout、Promise 或 fetch 回调中的 setState 调用会触发单独的重新渲染。React 18 自动批处理所有更新，无论来源如何。"
+          },
+          {
+            "title": "flushSync() 退出批处理",
+            "body": "如果你需要同步 DOM 更新（例如在 state 变化后测量布局），调用 ReactDOM.flushSync(() => setState(...))。这迫使 React 立即同步刷新更新，绕过批处理。"
+          },
+          {
+            "title": "函数式更新确保正确的顺序",
+            "body": "当多个 setState 调用依赖上一个值时，使用函数形式：setState(prev => prev + 1)。React 按队列顺序应用这些更新，因此每次更新都能看到上一次的结果 — 而不是渲染时的值。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Automatic Batching",
+            "icon": "📦",
+            "definition": "React 18 特性：所有 setState 调用都被批处理，即使在 setTimeout、Promise 和原生事件监听器中。减少不必要的重新渲染。"
+          },
+          {
+            "term": "Update Queue",
+            "icon": "📬",
+            "definition": "每个 hook 对象上的循环链表，存储待处理的 setState 调用。在每批结束时刷新 — 所有更新按顺序应用。"
+          },
+          {
+            "term": "flushSync()",
+            "icon": "⚡",
+            "definition": "强制 React 同步立即刷新待处理的 state 更新。绕过批处理。仅在需要在 state 变化后测量 DOM 时使用。"
+          },
+          {
+            "term": "Functional Update",
+            "icon": "🔧",
+            "definition": "setState(prev => newValue)。保证接收最新的 state 值，即使更新被批处理或异步排队。"
+          },
+          {
+            "term": "Render Count",
+            "icon": "🔢",
+            "definition": "批处理减少渲染次数。没有批处理：N 次 setState 调用 = N 次渲染。有批处理：N 次 setState 调用 = 1 次渲染。"
+          }
+        ],
+        "codeLabel": "跨 React 版本的批处理行为",
+        "whyItMatters": "批处理是 React 最重要的性能优化之一。没有它，触发 3 次 state 更新的单次用户交互将导致 3 次完整的渲染 + 协调 + 提交周期。有了批处理，始终只有 1 次。React 18 的自动批处理对异步代码尤其有价值 — 服务器响应、WebSocket 消息和定时器不再会频繁触发渲染器。",
+        "pitfalls": [
+          "不要依赖 setState 是同步的。即使使用 flushSync，在渲染中途调用 setState 也是被禁止的。从下次渲染中读取更新后的值，而不是在调用 setState 后立即读取。",
+          "在一个批次中多次使用直接值形式 setState(count + 1) 是一个 bug：每次调用都会封闭相同的陈旧 count 值。对于累积更新，始终使用函数形式 setState(prev => prev + 1)。",
+          "在 React 事件处理器或生命周期内使用 flushSync 在开发环境中会抛出错误。它用于将 React 与非 React 代码桥接，而不是在 React 内部强制同步 state。"
+        ]
+      }
+    },
+    "memoization": {
+      "title": "记忆化 (useMemo & useCallback)",
+      "subtitle": "React 如何缓存计算值和函数引用以跳过昂贵的重新计算。",
+      "explainer": {
+        "overview": "记忆化是一种缓存技术，React 存储昂贵计算的结果，并在后续渲染中返回缓存结果 — 当输入未变化时完全跳过计算。useMemo 缓存计算值。useCallback 缓存函数引用。两者都使用依赖数组来决定何时重新计算。",
+        "howItWorks": [
+          {
+            "title": "useMemo 缓存函数的返回值",
+            "body": "useMemo(() => expensiveComputation(a, b), [a, b]) 在第一次渲染时调用函数并存储结果。在后续渲染时，React 检查 a 或 b 是否变化。如果没有，它返回缓存结果而不再调用函数。"
+          },
+          {
+            "title": "useCallback 缓存函数引用本身",
+            "body": "useCallback(fn, [deps]) 等同于 useMemo(() => fn, [deps])。它不是缓存返回值，而是缓存函数对象本身。这很重要，因为 JavaScript 在每次渲染时都会创建新的函数对象 — 这会破坏子组件 props 的引用相等性。"
+          },
+          {
+            "title": "React 使用 Object.is() 比较 deps",
+            "body": "React 使用 Object.is()（严格相等）比较每个 dep 值。基础类型值（数字、字符串、布尔值）按值比较。对象和数组按引用比较 — 因此 deps 中的新对象字面量 {} 总会触发重新计算。"
+          },
+          {
+            "title": "缓存命中：返回存储的值",
+            "body": "如果所有 deps 都与上次渲染的 deps 相等，React 立即返回记忆化的值而不调用工厂函数。组件仍然重新渲染 — 但昂贵的计算被跳过了。"
+          },
+          {
+            "title": "缓存未命中：重新计算并存储新值",
+            "body": "如果任何 dep 发生变化，React 再次调用工厂函数，存储新结果并返回它。旧的缓存值被丢弃。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "useMemo",
+            "icon": "💾",
+            "definition": "缓存计算的返回值。仅在 deps 变化时重新计算。适用于从 props/state 派生的昂贵计算。"
+          },
+          {
+            "term": "useCallback",
+            "icon": "🔗",
+            "definition": "缓存函数引用。等同于 useMemo(() => fn, deps)。在向记忆化子组件传递回调时至关重要。"
+          },
+          {
+            "term": "Referential Equality",
+            "icon": "⚖️",
+            "definition": "两个对象/数组只有在指向相同内存地址时才相等。{} === {} 为 false。useMemo/useCallback 在渲染之间保持标识。"
+          },
+          {
+            "term": "Dependency Array",
+            "icon": "📋",
+            "definition": "useMemo/useCallback 的第二个参数。React 在渲染之间比较这些值以决定是否重新计算。"
+          },
+          {
+            "term": "React.memo",
+            "icon": "🛡️",
+            "definition": "记忆化组件渲染输出的高阶组件。与 useCallback 结合使用效果最佳，以稳定回调 props。"
+          }
+        ],
+        "codeLabel": "useMemo + useCallback 协同工作",
+        "whyItMatters": "没有记忆化，每次父组件重新渲染都会创建新的对象/函数引用，导致使用 React.memo 包裹的子组件不必要地重新渲染。useMemo 和 useCallback 保持引用稳定性，使 React.memo 有效，并防止大型组件树中的级联重新渲染。",
+        "pitfalls": [
+          "不要记忆化所有内容 — useMemo 和 useCallback 有成本（缓存的内存、每次渲染时的比较）。只用于昂贵的计算或为记忆化子组件稳定 props 时。",
+          "在 deps 数组中包含对象或数组字面量会使记忆化失效：useMemo(() => x, [{}]) 在每次渲染时重新计算，因为 {} !== {} 每次都创建新引用。",
+          "useMemo 不是语义上的保证 — React 将来可能丢弃缓存值（例如为屏幕外组件释放内存）。不要依赖它来产生副作用。"
+        ]
+      }
+    },
+    "reactMemo": {
+      "title": "React.memo 与重新渲染",
+      "subtitle": "React.memo 如何使用浅比较跳过未变更子组件的渲染。",
+      "explainer": {
+        "overview": "默认情况下，每当父组件重新渲染时，React 都会重新渲染子组件 — 无论子组件自身的 props 是否发生变化。React.memo 是一个高阶组件，它包裹函数组件并记忆化其渲染输出。它对新旧 props 进行浅比较，如果相等则跳过重新渲染。",
+        "howItWorks": [
+          {
+            "title": "父组件重新渲染默认触发所有子组件",
+            "body": "当父组件的 state 变化时，React 调用父组件函数，然后处理所有返回的 JSX 子组件 — 即使它们的 props 完全相同也会调用其函数。这种情况沿树向下级联。"
+          },
+          {
+            "title": "React.memo 用 props 比较包裹组件",
+            "body": "React.memo(Component) 返回一个新组件。在调用 Component 函数之前，React 检查新 props 是否与上一次 props 浅相等。如果是，React 复用上一次的渲染输出 — 完全跳过函数调用。"
+          },
+          {
+            "title": "浅比较使用 Object.is() 检查每个 prop",
+            "body": "对于每个 prop 键，React 比较 oldProp === newProp。基础类型（字符串、数字、布尔值）按值比较。对象和函数按引用比较 — props 中的新对象字面量 {} 总会使相等性检查失败。"
+          },
+          {
+            "title": "自定义比较函数实现精细控制",
+            "body": "React.memo(Component, arePropsEqual) 接受第二个参数 — 一个自定义比较函数。返回 true 跳过重新渲染（props 相等），返回 false 允许重新渲染。适用于深度相等性检查或忽略特定 props。"
+          },
+          {
+            "title": "Context 变化仍会触发重新渲染",
+            "body": "React.memo 只跳过由 prop 变化引起的重新渲染。如果组件调用了 useContext()，当 context 值变化时它仍会重新渲染 — 无论 React.memo 如何。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "React.memo",
+            "icon": "🛡️",
+            "definition": "记忆化组件渲染输出的 HOC。当 props 与上一次渲染浅相等时跳过重新渲染。"
+          },
+          {
+            "term": "Shallow Comparison",
+            "icon": "🔍",
+            "definition": "使用 Object.is() 比较每个 prop。对基础类型有效。对象和函数必须在渲染之间保持相同引用。"
+          },
+          {
+            "term": "Render Bailout",
+            "icon": "⚡",
+            "definition": "当 React.memo 确定 props 相等时，返回上一次渲染输出并跳过组件函数的调用。"
+          },
+          {
+            "term": "Referential Stability",
+            "icon": "⚓",
+            "definition": "在渲染之间保持相同的对象/函数引用。React.memo 与非基础类型 props 正确工作的必要条件。"
+          },
+          {
+            "term": "Unnecessary Re-render",
+            "icon": "♻️",
+            "definition": "输出与上一次渲染完全相同的重新渲染。当 props 在逻辑上没有变化时，React.memo 可以防止这种情况。"
+          }
+        ],
+        "codeLabel": "React.memo 与稳定 props",
+        "whyItMatters": "在拥有复杂组件的大型 React 树中，不必要的重新渲染积累成真实的性能问题 — 交互缓慢、丢帧、动画卡顿。React.memo 让你有针对性地防止特定组件重新渲染，在应用其余部分自由更新时保持昂贵子树的稳定。",
+        "pitfalls": [
+          "如果你直接将新的对象/数组/函数字面量作为 props 传递，React.memo 毫无用处 — 它们在每次父渲染时创建新引用。始终将 React.memo 与 useMemo 和 useCallback 配对使用。",
+          "不要将每个组件都用 React.memo 包裹 — 比较本身有成本。只记忆化真正渲染昂贵或渲染非常频繁的组件。",
+          "React.memo 比较的是 props，而不是 state 或 context。被记忆化的组件在其自身 state 变化或消费的 context 更新时仍会重新渲染。"
+        ]
+      }
+    },
+    "contextApi": {
+      "title": "Context API",
+      "subtitle": "React 如何在组件树中传播值而无需属性透传。",
+      "explainer": {
+        "overview": "Context API 让你无需在每一层传递 props（属性透传）就能在组件树中共享数据。Provider 组件包裹一个子树并提供一个值。任何后代组件都可以用 useContext 访问该值 — 并在值变化时自动重新渲染。",
+        "howItWorks": [
+          {
+            "title": "用 createContext() 创建 context",
+            "body": "React.createContext(defaultValue) 创建一个带有 Provider 和 Consumer 的 Context 对象。当组件在树中没有匹配的 Provider 时，使用 defaultValue。"
+          },
+          {
+            "title": "用 Provider 包裹子树",
+            "body": "Provider 组件接受一个 value prop。子树中的所有组件都可以访问该值。你可以嵌套同一 context 的多个 Provider — 最近的祖先 Provider 胜出。"
+          },
+          {
+            "title": "消费者用 useContext() 读取值",
+            "body": "useContext(MyContext) 返回调用组件上方最近 Provider 的当前 context 值。它使组件订阅 context 变化。"
+          },
+          {
+            "title": "Provider 值变化触发所有消费者",
+            "body": "当 Provider 的 value prop 变化（按引用）时，React 重新渲染子树中所有调用 useContext(MyContext) 的组件 — 无论它们实际消费的值是否真的变化了。"
+          },
+          {
+            "title": "Provider 和消费者之间的组件不会重新渲染",
+            "body": "这是关键的效率：不调用 useContext 的中间组件不会被重新渲染。Context 会跳过它们。只有实际的消费者会被重新渲染。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "createContext",
+            "icon": "🏭",
+            "definition": "创建一个 context 对象。接受一个默认值，当树中没有 Provider 在消费者上方时使用。"
+          },
+          {
+            "term": "Provider",
+            "icon": "📡",
+            "definition": "向所有后代消费者广播值。嵌套的 Provider 覆盖外层的。值应该被记忆化以防止不必要的重新渲染。"
+          },
+          {
+            "term": "useContext",
+            "icon": "🔌",
+            "definition": "使组件订阅 context 的 hook。每当 context 值变化时重新渲染。"
+          },
+          {
+            "term": "Context Propagation",
+            "icon": "🌊",
+            "definition": "Context 直接跳转到消费者 — 中间组件不会重新渲染，除非它们也调用了 useContext。"
+          },
+          {
+            "term": "Reference Equality",
+            "icon": "⚖️",
+            "definition": "React 使用 Object.is() 比较 context 值。每次渲染时传递新的对象字面量 {} 会触发所有消费者重新渲染，即使内容相同。"
+          }
+        ],
+        "codeLabel": "Context 的设置和消费",
+        "whyItMatters": "Context 解决了属性透传的问题 — 仅仅为了将数据传递给深层嵌套的子组件就需要在许多层组件中传递 props。但 context 最适合真正全局或广泛共享的数据（认证、主题、语言）。对于频繁变化的值，优先使用 Zustand 或 Redux，以避免在每次变化时重新渲染所有消费者。",
+        "pitfalls": [
+          "直接向 Provider value={} 传递新的对象或数组字面量会导致所有消费者在每次父渲染时重新渲染。用 useMemo 包裹或提升到 ref 中。",
+          "Context 不是状态管理解决方案 — 它是一个数据传输机制。对于有许多更新的复杂 state，将 context 与 useReducer 结合或使用外部 store。",
+          "useContext 只从最近的 Provider 读取，而不是特定的一个。如果你有同一 context 的多个 Provider，最近的祖先总是胜出。"
+        ]
+      }
+    },
+    "eventSystem": {
+      "title": "事件系统与合成事件",
+      "subtitle": "React 的事件委托、合成事件封装以及从根节点冒泡的机制。",
+      "explainer": {
+        "overview": "React 不会将事件监听器直接附加到 DOM 元素上。相反，它使用事件委托 — 在根容器（调用 ReactDOM.createRoot() 的 div）附加单个监听器。当任何原生事件冒泡到根时，React 拦截它，将其包装在 SyntheticEvent 对象中，并通过 React 组件树分发。",
+        "howItWorks": [
+          {
+            "title": "React 为每种事件类型注册一个根监听器",
+            "body": "当你在 JSX 中写 onClick={handleClick} 时，React 不会在该 DOM 节点上调用 addEventListener。相反，它在根容器上注册 click 事件的单个监听器 — 为整个应用只做一次，而不是每个组件一次。"
+          },
+          {
+            "title": "原生事件冒泡到根",
+            "body": "当你点击一个按钮时，浏览器在按钮上触发原生 click 事件，该事件通过真实 DOM 树冒泡到文档根 — React 的监听器在那里等待。"
+          },
+          {
+            "title": "React 创建 SyntheticEvent 包装器",
+            "body": "React 将原生事件包装在 SyntheticEvent 中 — 一个跨浏览器规范化的事件对象，无论浏览器如何都暴露相同的 API。在旧版 React 中，SyntheticEvents 为了性能被池化和复用。"
+          },
+          {
+            "title": "React 模拟通过 Fiber 树的冒泡",
+            "body": "React 从目标元素向上遍历 Fiber 树直到根，在每个 Fiber 上调用找到的 onClick（或其他事件）处理器。这在 React 的虚拟树中模拟了浏览器冒泡。"
+          },
+          {
+            "title": "捕获阶段先运行（自顶向下）",
+            "body": "就像原生事件一样，React 通过 onClickCapture 支持捕获阶段处理器。这些处理器自顶向下触发（根 → 目标），在冒泡阶段处理器自底向上触发（目标 → 根）之前。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Event Delegation",
+            "icon": "🎯",
+            "definition": "根上的单个监听器处理该类型的所有事件。比在每个交互元素上附加监听器高效得多。"
+          },
+          {
+            "term": "SyntheticEvent",
+            "icon": "🎁",
+            "definition": "React 的跨浏览器事件包装器。规范化浏览器之间的不一致性。暴露 nativeEvent 属性用于原始访问。"
+          },
+          {
+            "term": "Bubbling Phase",
+            "icon": "⬆️",
+            "definition": "事件从目标元素向上通过祖先元素传播。大多数 React 事件处理器的默认阶段。"
+          },
+          {
+            "term": "Capture Phase",
+            "icon": "⬇️",
+            "definition": "事件在冒泡前从根向下传播到目标。使用 onClickCapture 进行捕获阶段处理。"
+          },
+          {
+            "term": "stopPropagation()",
+            "icon": "🚧",
+            "definition": "停止事件在 React 模拟树中的进一步传播。除非在 e.nativeEvent 上调用，否则不会停止原生事件。"
+          }
+        ],
+        "codeLabel": "事件委托实战",
+        "whyItMatters": "事件委托使 React 高度高效 — 无论应用中有多少按钮，每种事件类型只有一个原生事件监听器。这也意味着 React 可以拦截和处理动态添加组件的事件，并使 React 的合成事件系统在所有浏览器中一致工作。",
+        "pitfalls": [
+          "在 React 17+ 中，事件委托到根容器而非 document。这意味着手动调用 document.addEventListener 会在 React 处理器之后触发（而不是像 React 16 那样在之前）。",
+          "e.stopPropagation() 停止 React 的模拟冒泡，但原生事件已经到达根。要停止原生传播，使用 e.nativeEvent.stopImmediatePropagation()。",
+          "在旧版 React 中（事件池化），SyntheticEvent 属性在事件处理器返回后被置空。同步访问属性或在 React 16 中调用 e.persist()。"
+        ]
+      }
+    },
+    "refsDom": {
+      "title": "Refs 与 DOM 访问",
+      "subtitle": "useRef 如何跨渲染保持可变值并提供直接的 DOM 访问。",
+      "explainer": {
+        "overview": "useRef 返回一个可变对象 { current: value }，它在组件的整个生命周期中持久存在。与 state 不同，改变 ref.current 不会触发重新渲染。React 还将 refs 用作直接 DOM 访问的逃生舱口 — 在 commit 阶段之后，React 将 ref.current 设置为实际 DOM 节点，让你可以命令式地访问浏览器 API。",
+        "howItWorks": [
+          {
+            "title": "useRef 创建一个持久的可变盒子",
+            "body": "第一次渲染时，useRef(initialValue) 创建对象 { current: initialValue } 并将其存储在 Fiber 的 hooks 列表上。在每次后续渲染中，React 返回相同的对象 — 因此 ref.current 始终指向同一个盒子。"
+          },
+          {
+            "title": "改变 ref.current 是副作用 — 不触发重新渲染",
+            "body": "React 不跟踪 ref.current 的改变。当你写 ref.current = 5 时，React 不知道它改变了，也不会调度重新渲染。这使 refs 非常适合你想持久化但不需要显示的值。"
+          },
+          {
+            "title": "DOM refs：React 在 commit 后填充 ref.current",
+            "body": "当你将 ref 传递给 JSX 元素（<input ref={myRef} />）时，React 不会在渲染阶段设置 ref.current。它等到 commit 阶段 — DOM 节点存在后 — 才设置 ref.current = domNode。"
+          },
+          {
+            "title": "卸载时，ref.current 被设置回 null",
+            "body": "当组件卸载时，React 在运行清理 effects 之前将 ref.current = null。这防止你的 effects 访问已分离的 DOM 节点。"
+          },
+          {
+            "title": "forwardRef 将 refs 传过组件边界",
+            "body": "默认情况下，refs 不能附加到函数组件。使用 forwardRef 接受 ref prop 并将其转发到 DOM 元素，或通过 useImperativeHandle 暴露命令式方法。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "{ current }",
+            "icon": "📦",
+            "definition": "ref 对象。React 在每次渲染时给你相同的对象。自由地改变 current — 不会发生重新渲染。"
+          },
+          {
+            "term": "DOM Ref",
+            "icon": "🖱️",
+            "definition": "将 ref 传递给 JSX 元素，以在 commit 后在 ref.current 中获取底层 DOM 节点。适用于聚焦、滚动和测量。"
+          },
+          {
+            "term": "forwardRef",
+            "icon": "➡️",
+            "definition": "包裹函数组件以接受 ref prop 并将其转发到内部元素或通过 useImperativeHandle 暴露。"
+          },
+          {
+            "term": "useImperativeHandle",
+            "icon": "🎛️",
+            "definition": "自定义父组件访问子组件 ref 时看到的内容。你可以暴露特定方法而不是 DOM 节点。"
+          },
+          {
+            "term": "Ref vs State",
+            "icon": "⚖️",
+            "definition": "对影响 UI 的值使用 state（触发重新渲染）。对不影响渲染的值使用 refs：定时器、DOM 节点、之前的值、标志。"
+          }
+        ],
+        "codeLabel": "常见 ref 模式",
+        "whyItMatters": "Refs 是 React 命令式代码的官方逃生舱口。它们让你能够将 React 的声明式世界与需要命令式调用的浏览器 API（聚焦、滚动、动画、第三方 DOM 库）桥接起来。它们还解决了 effects 中的陈旧闭包问题 — 通过保持 ref 与最新 state 同步，你可以在长时间运行的异步操作中安全地访问当前值。",
+        "pitfalls": [
+          "不要在渲染期间读取或写入 ref.current — refs 不是响应式的，所以当值变化时 React 不会重新渲染，导致 UI 陈旧。",
+          "避免过度使用 refs 作为避免重新渲染的方式。如果一个值需要在 UI 中显示，它应该是 state。Refs 只用于副作用和命令式 DOM 操作。",
+          "在组件挂载之前访问 ref.current（例如在 useState 初始化器中）将为 null — React 只在 commit 阶段之后设置 DOM refs。"
+        ]
+      }
+    },
+    "keysLists": {
+      "title": "键与列表渲染",
+      "subtitle": "key 属性如何使 React 识别列表项并最小化 DOM 变更。",
+      "explainer": {
+        "overview": "当 React 渲染元素列表时，它需要知道在两次渲染之间哪些项目发生了变化、被添加或被删除。没有 key prop，React 使用基于位置的匹配 — 索引 0 的项映射到索引 0 的项。有了 keys，React 可以通过稳定的标识跨渲染匹配项目，实现高效的移动而不是销毁和重建。",
+        "howItWorks": [
+          {
+            "title": "React 比较新旧子元素数组",
+            "body": "当列表重新渲染时，React 有两个子元素数组：旧的和新的。它需要将它们匹配起来，以决定更新什么、插入什么、删除什么。"
+          },
+          {
+            "title": "没有 keys：基于位置的匹配",
+            "body": "React 通过索引位置匹配元素。如果列表 [A, B, C] 变为 [B, A, C]（重新排序），React 看到位置 0 从 A 变为 B，位置 1 从 B 变为 A — 导致两次更新和潜在的 state 丢失。"
+          },
+          {
+            "title": "有 keys：基于标识的匹配",
+            "body": "React 构建从 key 到 Fiber 的映射。[A, B, C] 变为 [B, A, C] 被视为 'key=b 从位置 1 移到 0，key=a 从 1 移到 0'。React 移动现有 DOM 节点 — 没有销毁/创建周期。"
+          },
+          {
+            "title": "缺少 keys 会触发协调器警告",
+            "body": "当 React 检测到没有 keys 的列表时，会记录 'Each child in a list should have a unique key prop'。这是性能警告 — 你的应用仍然工作但渲染效率较低。"
+          },
+          {
+            "title": "key 变化强制卸载 + 重挂载",
+            "body": "更改组件的 key 告诉 React '这是一个完全不同的实例'。React 将卸载旧组件（运行所有清理操作）并挂载一个全新的。这对故意重置组件 state 很有用。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Stable Key",
+            "icon": "🔑",
+            "definition": "跨渲染标识项目的 key — 通常是数据库 ID 或 slug。在兄弟元素中必须唯一。"
+          },
+          {
+            "term": "Index as Key",
+            "icon": "⚠️",
+            "definition": "将数组索引用作 key 仅对静态、不重新排序的列表安全。对于动态列表，在项目重新排序时会导致 bug。"
+          },
+          {
+            "term": "DOM Reuse",
+            "icon": "♻️",
+            "definition": "当 React 通过 key 匹配新旧元素时，它复用现有 DOM 节点并只更新变更的属性。"
+          },
+          {
+            "term": "Component Reset via Key",
+            "icon": "🔄",
+            "definition": "故意更改组件的 key prop 来重置它 — 适用于在切换项目时重置表单 state。"
+          }
+        ],
+        "codeLabel": "Keys 的实际应用",
+        "whyItMatters": "Keys 是 React 匹配新旧列表项的提示。好的 key 意味着 React 可以复用 DOM 节点（快速）、保留组件 state（正确）并触发最少的更新（高效）。差的 key（或没有 key）意味着 React 要么比必要的努力得多，要么意外丢失组件 state。",
+        "pitfalls": [
+          "永远不要使用 Math.random() 或 Date.now() 作为 keys — 它们在每次渲染时变化，迫使每个列表项在每次渲染时卸载并重新挂载。",
+          "Keys 必须在兄弟元素中唯一，而不是全局唯一。两个不同的列表可以复用相同的 key 值。",
+          "key prop 是特殊的 — 它不作为 prop 传递给组件。如果你需要在组件内部使用 ID，也要将它作为单独的 prop 传递。"
+        ]
+      }
+    },
+    "errorBoundaries": {
+      "title": "错误边界",
+      "subtitle": "React 如何捕获组件树中的错误并渲染降级 UI。",
+      "explainer": {
+        "overview": "错误边界是 React 类组件，它们捕获子组件树中任何地方的 JavaScript 错误，记录这些错误，并显示降级 UI 而不是使整个应用崩溃。它们的工作原理类似于 JavaScript 的 catch{} 块，但用于组件树。错误边界捕获渲染期间、生命周期方法中和整个子树的构造函数中的错误。",
+        "howItWorks": [
+          {
+            "title": "子组件在渲染时抛出错误",
+            "body": "当子树中的任何组件在渲染（或生命周期方法）中抛出时，React 开始通过 Fiber 树向上传播错误，寻找最近的错误边界。"
+          },
+          {
+            "title": "React 展开 Fiber 树寻找边界",
+            "body": "React 向上遍历父 Fiber。如果找到实现了 getDerivedStateFromError 或 componentDidCatch 的类组件，它就在那里停止。如果到达根都没有找到，整个应用卸载。"
+          },
+          {
+            "title": "getDerivedStateFromError 更新边界 state",
+            "body": "React 在边界类上调用 getDerivedStateFromError(error)。这个静态方法返回新的 state（如 { hasError: true }），使边界重新渲染并显示降级 UI。"
+          },
+          {
+            "title": "componentDidCatch 记录错误",
+            "body": "显示降级 UI 后，React 调用 componentDidCatch(error, errorInfo) — 这是向 Sentry 等日志服务发送错误的好地方。"
+          },
+          {
+            "title": "错误边界渲染降级 UI",
+            "body": "边界组件检查其 state（hasError），渲染子组件（正常）或降级 JSX 元素。边界之外的应用其余部分继续正常工作。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "getDerivedStateFromError",
+            "icon": "🛡️",
+            "definition": "静态类方法。在子组件抛出时在渲染阶段调用。返回新 state 以触发降级渲染。"
+          },
+          {
+            "term": "componentDidCatch",
+            "icon": "📊",
+            "definition": "实例方法。在降级渲染后的 commit 阶段调用。用于错误日志记录。接收 error + 组件堆栈。"
+          },
+          {
+            "term": "Error Propagation",
+            "icon": "⬆️",
+            "definition": "错误通过 Fiber 树冒泡到最近的边界，就像异常通过调用栈冒泡一样。"
+          },
+          {
+            "term": "Recovery / Reset",
+            "icon": "🔄",
+            "definition": "边界可以通过更改其 key prop 来重置，这使 React 卸载并重新挂载整个子树。"
+          }
+        ],
+        "codeLabel": "实现错误边界",
+        "whyItMatters": "没有错误边界，单个未处理的渲染错误会使整个 React 应用崩溃并显示空白屏幕。错误边界让你将失败隔离到 UI 的独立部分 — 应用的其余部分继续工作。这对于无法预测每种边缘情况的生产应用至关重要。",
+        "pitfalls": [
+          "错误边界不捕获事件处理器中的错误（在那里使用 try/catch）、异步代码（setTimeout、Promise）或服务端渲染。",
+          "错误边界必须是类组件 — 没有 hook 等价物。使用 'react-error-boundary' 等库获取对 hooks 友好的包装器。",
+          "错误边界不能捕获自身的错误 — 只能捕获子组件的错误。始终用另一个边界包裹边界。"
+        ]
+      }
+    },
+    "portals": {
+      "title": "React 传送门",
+      "subtitle": "在父 DOM 层次结构之外渲染子元素，同时保留 React 事件冒泡。",
+      "explainer": {
+        "overview": "ReactDOM.createPortal(children, domNode) 将 React 子树渲染到与父组件不同的 DOM 节点中。虽然组件在 DOM 中出现在不同的位置（如 body 层级的模态框），但它在 React 组件树中仍然是子组件。这意味着 context、事件和 React 生命周期的工作方式与传送门是内联的完全相同。",
+        "howItWorks": [
+          {
+            "title": "React 将传送门渲染到指定的 DOM 节点",
+            "body": "createPortal(children, document.getElementById('modal-root')) 告诉 React 将 children 渲染到 #modal-root 中，而不是父组件的 DOM 子树中。DOM 输出与父组件的 DOM 完全分离。"
+          },
+          {
+            "title": "组件仍然是父组件在 React 中的子组件",
+            "body": "尽管在 DOM 的其他地方渲染，传送门组件在概念上是渲染它的组件的子组件。它获得相同的 context 值、相同的 React props，并参与同一个 Fiber 树。"
+          },
+          {
+            "title": "事件通过 React 树冒泡，而非 DOM 树",
+            "body": "如果你点击传送门内部，点击事件会通过 React 的组件树冒泡到父组件 — 即使在 DOM 中，传送门的节点在父组件的 DOM 子树之外。React 的合成事件系统在 Fiber 树上操作，而不是 DOM 树。"
+          },
+          {
+            "title": "Context 通过 React 树流入传送门",
+            "body": "传送门组件可以读取来自 Provider 的 context 值，该 Provider 是 React 组件树中的祖先，即使传送门渲染在完全不同的 DOM 节点中。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "createPortal",
+            "icon": "🌀",
+            "definition": "ReactDOM.createPortal(children, domNode)。将 React children 渲染到 domNode 中而不是父容器中。"
+          },
+          {
+            "term": "React Tree vs DOM Tree",
+            "icon": "🌳",
+            "definition": "两个不同的层次结构。React 树控制 context、事件和 props。DOM 树控制视觉布局和 CSS 继承。"
+          },
+          {
+            "term": "Event Bubbling",
+            "icon": "⬆️",
+            "definition": "传送门事件通过 React 组件树（而非 DOM 树）冒泡，因此父组件会接收到来自传送门子组件的事件。"
+          },
+          {
+            "term": "Modal/Tooltip Pattern",
+            "icon": "💬",
+            "definition": "最常见的传送门使用场景：将模态框和工具提示渲染到 document.body，以避免祖先元素的 overflow:hidden 或 z-index 裁剪。"
+          }
+        ],
+        "codeLabel": "createPortal 用于模态框",
+        "whyItMatters": "传送门解决了一个基本的 CSS 问题：模态框、工具提示和下拉菜单需要从父容器中视觉上\"逃脱\"。祖先 CSS 如 overflow:hidden、z-index 堆叠上下文和 transform 属性可能会裁剪或重新定位绝对定位的子元素。通过在 document.body 渲染，传送门绕过了所有这些约束，同时保留了 React 的组件模型。",
+        "pitfalls": [
+          "传送门目标 DOM 节点必须在传送门渲染之前存在。在 HTML 中使用静态元素，或在渲染传送门之前在 useEffect 中创建它。",
+          "传送门事件冒泡会让开发者感到意外 — 传送门内部的点击会触发 React 父组件上的 onClick 处理器（即使那些父组件在 DOM 中不包含传送门）。如需要，使用 stopPropagation。",
+          "传送门不从 React 父组件继承 CSS，因为它们在不同的 DOM 位置渲染。需要全局 CSS 或能注入样式的 CSS-in-JS 解决方案。"
+        ]
+      }
+    },
+    "suspense": {
+      "title": "Suspense 与 React.lazy",
+      "subtitle": "使用 Suspense 边界实现降级渲染、代码分割和流式 SSR。",
+      "explainer": {
+        "overview": "Suspense 是一种让组件在渲染前\"等待\"某些事情的机制。当组件尚未准备好（懒加载导入尚未加载，或数据获取尚未完成）时，它抛出一个 Promise。React 捕获这个抛出的 Promise，在树上找到最近的 Suspense 边界，显示其降级 UI，并在 Promise 解析时自动重新渲染子树。",
+        "howItWorks": [
+          {
+            "title": "React.lazy() 创建懒加载组件",
+            "body": "React.lazy(() => import('./MyComponent')) 将动态导入包装在特殊包装器中。React 第一次尝试渲染它时，import() 还未解析，所以懒加载包装器抛出一个 Promise。"
+          },
+          {
+            "title": "抛出的 Promise 冒泡到最近的 Suspense",
+            "body": "在渲染阶段，React 捕获抛出的 Promise（不是抛出的 Error — 那些去错误边界）。它向上遍历 Fiber 树找到最近的 <Suspense> 祖先，并渲染其 fallback prop 而不是暂停的子树。"
+          },
+          {
+            "title": "React 订阅 Promise",
+            "body": "React 向抛出的 Promise 附加 .then() 处理器。当 Promise 解析（模块加载，或数据到达）时，React 从头开始重新渲染暂停的子树，这次使用解析后的值。"
+          },
+          {
+            "title": "并发模式：Suspense 无降级闪烁",
+            "body": "在并发模式下，React 可以\"尝试\"渲染暂停的子树而不提交到 DOM。如果它暂停，React 继续显示旧内容（不闪烁到降级）直到 Promise 解析，然后原子性地换入新内容。"
+          },
+          {
+            "title": "流式 SSR：服务器分块发送 HTML",
+            "body": "使用 Next.js/React 18 流式传输，服务器立即发送带有 Suspense 降级的 HTML shell。随着每个异步数据获取在服务器上完成，React 将填充后的 HTML 块流式传输到浏览器，内联替换降级内容。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "React.lazy()",
+            "icon": "📦",
+            "definition": "包装动态导入以创建懒加载组件。第一次渲染时抛出 Promise。解析后，React 使用加载的模块重新渲染。"
+          },
+          {
+            "term": "Suspense Boundary",
+            "icon": "🛡️",
+            "definition": "<Suspense fallback={<Spinner/>}> 捕获任何后代抛出的 Promise。等待时显示降级，准备好后显示子组件。"
+          },
+          {
+            "term": "Thrown Promise",
+            "icon": "🚀",
+            "definition": "组件表示未准备好的机制。任何组件（不只是懒加载组件）都可以抛出 Promise 来触发 Suspense — 这就是 React Query 等数据获取库的集成方式。"
+          },
+          {
+            "term": "Streaming SSR",
+            "icon": "🌊",
+            "definition": "服务器逐步发送 HTML。Shell 立即渲染带降级。随着异步工作完成，React 将填充的内容块流式传输到浏览器。"
+          },
+          {
+            "term": "SuspenseList",
+            "icon": "📋",
+            "definition": "协调多个 Suspense 边界的显示顺序。可以强制 'together'（一次全部显示）或 'forwards'/'backwards'（按顺序显示）。"
+          }
+        ],
+        "codeLabel": "Suspense 用于代码分割和数据获取",
+        "whyItMatters": "Suspense 将三个之前独立的问题 — 代码分割、加载状态和服务器流式传输 — 统一在一个声明式模型下。不再需要在每个组件中跟踪 isLoading 标志，你声明一个边界和降级，React 处理编排。这导致数据获取代码显著简化，并消除了加载状态管理 bug。",
+        "pitfalls": [
+          "Suspense 不捕获错误 — 只捕获抛出的 Promise。用错误边界包裹 Suspense 以优雅地处理获取失败。",
+          "每次渲染都抛出新的 Promise 对象会导致无限循环 — React 永远不会看到相同的 Promise 解析。库缓存 Promise，直到解析前始终抛出相同对象。",
+          "在 React 18+ 中，用 Suspense 边界包裹根不足以实现流式 SSR。你需要在异步工作发生的组件级别放置边界，这样 React 就能独立地流式传输每个部分。"
+        ]
+      }
+    },
+    "concurrentRendering": {
+      "title": "并发渲染",
+      "subtitle": "React 18 如何使用时间切片和优先级通道保持 UI 响应性。",
+      "explainer": {
+        "overview": "并发渲染是 React 18 同时准备多个 UI 版本并中断长时间运行的渲染以处理更紧急更新的能力。渲染不再是阻塞主线程的单一同步操作，React 现在可以在树的中途暂停渲染工作，让出给浏览器，处理紧急更新，然后恢复或丢弃暂停的工作。",
+        "howItWorks": [
+          {
+            "title": "Fiber 架构实现可中断性",
+            "body": "React 的 Fiber 协调器将每个组件表示为一小单元的工作（一个 Fiber）。渲染阶段一次处理一个 Fiber，在每个单元后检查是否有更高优先级的工作到达。如果有，它可以暂停并稍后回来。"
+          },
+          {
+            "title": "时间切片：React 每约 5ms 让给浏览器",
+            "body": "React 的调度器将渲染工作分割成小块。每块后，它将控制权交还给浏览器 — 允许输入事件、动画和绘制发生。这防止 UI 在长时间渲染期间冻结。"
+          },
+          {
+            "title": "优先级通道为更新分配紧急程度",
+            "body": "React 18 使用 lanes 模型按优先级对更新进行分类：SyncLane（用户输入，必须立即）、InputContinuousLane（持续手势）、DefaultLane（普通 state 更新）、TransitionLane（非紧急 UI 过渡）。"
+          },
+          {
+            "title": "高优先级更新中断低优先级更新",
+            "body": "如果在 React 处理低优先级渲染时高优先级更新到达，React 暂停低优先级工作，完整处理高优先级更新（包括提交），然后恢复或重新开始低优先级工作。"
+          },
+          {
+            "title": "丢弃的渲染没有可见的副作用",
+            "body": "因为渲染阶段是纯粹的（没有副作用），React 可以安全地丢弃部分完成的渲染并重新开始，而不会破坏应用状态。副作用只在 commit 阶段发生，它永远不会被中断。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Time Slicing",
+            "icon": "⏱️",
+            "definition": "将渲染工作分割成约 5ms 的块，在块之间让给浏览器。在昂贵渲染期间保持 UI 响应。"
+          },
+          {
+            "term": "Priority Lanes",
+            "icon": "🛣️",
+            "definition": "将更新从 SyncLane（最紧急）分类到 OffscreenLane（最不紧急）的位掩码系统。决定调度顺序。"
+          },
+          {
+            "term": "Scheduler",
+            "icon": "📅",
+            "definition": "React 的内部任务调度器。管理渲染任务的优先级队列，根据优先级和截止时间决定下一步做什么。"
+          },
+          {
+            "term": "startTransition",
+            "icon": "🔀",
+            "definition": "将 state 更新标记为非紧急过渡的 API。告诉 React 可以为更紧急的更新中断这项工作。"
+          },
+          {
+            "term": "useTransition",
+            "icon": "🕐",
+            "definition": "提供 startTransition 和 isPending 布尔值的 hook，isPending 表示过渡是否正在进行中。"
+          }
+        ],
+        "codeLabel": "startTransition 用于非紧急更新",
+        "whyItMatters": "在 React 18 之前，任何触发慢速渲染的 state 更新都会冻结整个 UI，直到渲染完成。并发渲染意味着即使 React 在后台计算复杂更新，输入框打字、滚动和按钮点击也保持响应。这是 Suspense、流式 SSR 和 React 服务端组件的基础。",
+        "pitfalls": [
+          "startTransition 不会使慢速渲染变快 — 它只是使其非阻塞。如果你的渲染很慢，用记忆化或虚拟化来优化它。",
+          "渲染阶段代码现在可能运行多次（React 可能重新开始暂停的渲染）。确保你的渲染函数真正是纯函数，没有副作用。",
+          "不是所有 React 18 特性默认都是并发的。你必须使用 createRoot()（不是旧版 ReactDOM.render()）来启用并发特性。"
+        ]
+      }
+    },
+    "transitions": {
+      "title": "过渡 (useTransition)",
+      "subtitle": "基于优先级的更新 — 使用 startTransition 区分紧急与非紧急渲染。",
+      "explainer": {
+        "overview": "useTransition 是一个 React 18 hook，让你可以将 state 更新标记为\"非紧急过渡\"。紧急更新（打字、点击）立即处理，永不中断。过渡更新优先级较低 — 如果在过渡进行时紧急更新到达，React 中断过渡，处理紧急工作，然后重新开始过渡。这使 UI 即使在繁重的重新渲染期间也保持响应。",
+        "howItWorks": [
+          {
+            "title": "React 18 为调度器添加了优先级通道",
+            "body": "React 调度器为每个更新分配优先级通道：SyncLane（紧急，不可批处理）、InputContinuousLane（拖拽/滚动）、DefaultLane（普通 setState）和 TransitionLane（useTransition / startTransition）。高优先级通道始终抢占低优先级通道。"
+          },
+          {
+            "title": "startTransition 将更新标记为低优先级",
+            "body": "在 startTransition(callback) 中包裹 setState 调用告诉 React：'这个更新是过渡 — 可以被中断'。React 在 TransitionLane 中调度它，并保持当前 UI 可见，直到过渡完成。"
+          },
+          {
+            "title": "紧急更新中断正在进行的过渡",
+            "body": "如果用户在 5000 个项目的列表作为过渡重新渲染时输入另一个字符，React 在树中途暂停过渡渲染，立即处理打字（紧急），更新输入，然后以新输入值从头重新开始过渡。"
+          },
+          {
+            "title": "isPending 指示过渡正在进行",
+            "body": "useTransition 返回 [isPending, startTransition]。isPending 在 React 仍处理过渡更新时为 true。用它来显示微妙的加载指示器而不阻塞 UI。"
+          },
+          {
+            "title": "useDeferredValue 延迟派生值",
+            "body": "startTransition 的替代方案：useDeferredValue(value) 返回在过渡期间滞后的 value 的延迟副本。UI 首先用旧的延迟值渲染（快速），然后在 React 有时间时用新值重新渲染。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Transition Lane",
+            "icon": "🛤️",
+            "definition": "过渡更新的低优先级调度通道。可以被任何更高优先级的工作（用户输入、同步更新）抢占。"
+          },
+          {
+            "term": "startTransition()",
+            "icon": "🚦",
+            "definition": "将回调内的 setState 调用标记为非紧急。可作为独立导入或从 useTransition hook 使用。"
+          },
+          {
+            "term": "isPending",
+            "icon": "⏳",
+            "definition": "来自 useTransition 的布尔值。在 React 仍处理过渡更新时为 true。用于显示 spinner 而不阻塞输入。"
+          },
+          {
+            "term": "useDeferredValue",
+            "icon": "🕐",
+            "definition": "返回值的延迟副本。首先以陈旧值渲染（即时），在空闲时以新值重新渲染。适用于过滤大型列表。"
+          },
+          {
+            "term": "Interruption & Restart",
+            "icon": "🔄",
+            "definition": "当紧急更新在过渡中途到达时，React 丢弃正在进行的过渡渲染，并在处理紧急工作后重新开始。"
+          }
+        ],
+        "codeLabel": "useTransition 用于搜索过滤",
+        "whyItMatters": "在过渡之前，React 以相同优先级渲染所有 state 更新 — 繁重的列表重新渲染可能会冻结输入数百毫秒。过渡让你明确告诉 React '用户需要输入感觉立即响应，但结果列表可以等一会儿'。这是处理昂贵渲染时，一个卡顿的应用和一个流畅的应用之间的区别。",
+        "pitfalls": [
+          "startTransition 不适用于回调内的异步代码。只有直接包裹在 startTransition 内的同步 setState 调用才被标记为过渡。",
+          "过渡无法中断同步渲染。如果组件由于渲染函数中的繁重循环（而非异步）而缓慢渲染，过渡无济于事 — 你需要 useMemo 或虚拟化。",
+          "不要将每个 state 更新都标记为过渡 — 这会增加调度开销。将过渡保留给真正繁重的渲染，其延迟是用户可感知的（>100ms）。"
+        ]
+      }
+    },
+    "serverComponents": {
+      "title": "React 服务端组件",
+      "subtitle": "服务端/客户端边界、RSC 负载流式传输和零打包的服务端渲染。",
+      "explainer": {
+        "overview": "React 服务端组件（RSC）是仅在服务器上运行的组件 — 它们永远不会发送到浏览器。它们可以直接访问数据库、文件系统和仅服务器端的秘密，客户端打包成本为零。RSC 输出不是 HTML，而是一种特殊的有线格式（RSC Payload），客户端的 React 使用它来重建组件树，而无需重新运行服务器代码。",
+        "howItWorks": [
+          {
+            "title": "服务端组件在服务器上渲染，产生 RSC payload",
+            "body": "页面加载时，服务器运行你的服务端组件，直接执行异步数据库查询、文件读取或 API 调用。输出不是 HTML — 而是自定义流式格式的序列化 React 元素树（RSC Payload）。"
+          },
+          {
+            "title": "客户端组件是 RSC payload 中的空洞",
+            "body": "当服务器遇到客户端组件（用 'use client' 标记）时，它不渲染它。相反，它在 payload 中插入 CLIENT_REFERENCE 占位符，包含组件的模块 URL 和 props。客户端通过在浏览器中运行客户端组件来填充这些空洞。"
+          },
+          {
+            "title": "RSC payload 逐步流式传输到客户端",
+            "body": "服务器随着每个异步操作完成流式传输 RSC payload。客户端的 React 运行时接收块并逐步构建组件树 — 先是服务端组件输出，然后是客户端组件外壳，然后是水合。"
+          },
+          {
+            "title": "客户端只水合客户端组件",
+            "body": "客户端的 React 获取流式传输的 RSC payload 并使用它重建完整的组件树。只有客户端组件被水合（附加事件监听器）。服务端组件输出已经是最终的 — 不在客户端重新执行。"
+          },
+          {
+            "title": "Server Actions 允许客户端到服务器的变更",
+            "body": "用 'use server' 标记的函数变成 Server Actions — 客户端可以像普通异步函数一样调用的 RPC 风格函数。在底层，React 向服务器发送一个 POST 请求，带有编码的参数，并流式返回新的 RSC payload。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "'use client'",
+            "icon": "💻",
+            "definition": "文件级指令，将模块及其所有导入标记为客户端组件。创建客户端边界 — 所有导出都可以使用 hooks、事件处理器和浏览器 API。"
+          },
+          {
+            "term": "'use server'",
+            "icon": "🖥️",
+            "definition": "将函数标记为 Server Action。可以通过网络请求从客户端组件调用。该函数在服务器上以完整的服务器端访问权限运行。"
+          },
+          {
+            "term": "RSC Payload",
+            "icon": "📦",
+            "definition": "描述服务端渲染组件树的紧凑流式 JSON 格式。包含客户端组件应该放置位置的 CLIENT_REFERENCE 空洞。不是 HTML。"
+          },
+          {
+            "term": "Zero Bundle Cost",
+            "icon": "🪶",
+            "definition": "服务端组件永远不会出现在客户端 JS 包中。导入 500KB markdown 解析器的服务端组件向客户端添加 0 字节。"
+          },
+          {
+            "term": "Shared Components",
+            "icon": "🔄",
+            "definition": "没有 'use client' 或 'use server' 的组件可以在两种上下文中使用。当被服务端组件导入时在服务器运行，当被客户端组件导入时在客户端运行。"
+          }
+        ],
+        "codeLabel": "服务端与客户端组件模式",
+        "whyItMatters": "服务端组件从根本上改变了性能等式。之前，任何获取数据的组件都必须将获取库、数据转换逻辑和渲染代码发送到客户端。有了 RSC，所有这些都留在服务器上。客户端只接收最终渲染输出加上交互岛屿（客户端组件）。这带来了显著更小的包和更快的可交互时间。",
+        "pitfalls": [
+          "服务端组件不能使用 useState、useEffect、useContext 或任何 hook — 这些是仅限客户端的特性。如果服务端组件需要交互性，将其提取到客户端组件子组件中。",
+          "你不能在客户端组件内导入服务端组件。边界是单向的：服务端组件可以渲染客户端组件，但反之不行。将服务端组件输出作为 props（children）传递给客户端组件。",
+          "从服务端组件传递到客户端组件的 props 必须是可序列化的（JSON 兼容）。函数、类实例、Date 和 Set 不能作为 props 跨越服务器/客户端边界。"
+        ]
+      }
+    }
+  }
+}

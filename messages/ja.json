@@ -1,0 +1,1303 @@
+{
+  "nav": {
+    "react": "React",
+    "azureFunctions": "Azure Functions",
+    "csharpClr": "C# / CLR",
+    "fiberArchitecture": "Fiberアーキテクチャ",
+    "virtualDom": "仮想DOM & Diffing",
+    "reconciliation": "リコンシリエーション",
+    "renderingPipeline": "レンダリングパイプライン",
+    "componentLifecycle": "コンポーネントライフサイクル",
+    "hooksInternals": "Hooksの内部",
+    "useeffectLifecycle": "useEffectライフサイクル",
+    "stateBatching": "状態とバッチ処理",
+    "memoization": "メモ化",
+    "reactMemo": "React.memo & 再レンダリング",
+    "contextApi": "Context API",
+    "eventSystem": "イベントシステム",
+    "refsDom": "Refs & DOM",
+    "keysLists": "キーとリスト",
+    "errorBoundaries": "エラーバウンダリ",
+    "portals": "ポータル",
+    "suspense": "Suspense & Lazy",
+    "concurrentMode": "並行レンダリング",
+    "transitions": "トランジション",
+    "serverComponents": "サーバーコンポーネント"
+  },
+  "home": {
+    "title": "仕組みを学ぼう",
+    "highlight": "学ぼう",
+    "subtitle": "技術がどのように動くかを視覚的・インタラクティブに解説します。",
+    "reactTitle": "React内部",
+    "reactDesc": "Fiberアーキテクチャ、hooksライフサイクル、リコンシリエーション、仮想DOMのdiffing。",
+    "javascriptTitle": "JavaScript Engine",
+    "javascriptDesc": "Event loop, closures, prototypal inheritance, promises, and V8 garbage collection.",
+    "csharpTitle": "C# / .NET Runtime",
+    "csharpDesc": "CLR architecture, JIT compilation, garbage collection, async state machines, and generics.",
+    "aspnetTitle": "ASP.NET Core",
+    "aspnetDesc": "Middleware pipeline, routing, authentication, model binding, and dependency injection.",
+    "efTitle": "Entity Framework Core",
+    "efDesc": "DbContext, change tracker, LINQ-to-SQL pipeline, migrations, and loading strategies.",
+    "azureTitle": "Azure Cloud",
+    "azureDesc": "Functions, App Service, Service Bus, Cosmos DB, Key Vault, and managed identity.",
+    "architectureTitle": "Architecture & Patterns",
+    "architectureDesc": "SOLID principles, clean architecture, DDD, CQRS, and Gang of Four design patterns.",
+    "microservicesTitle": "Microservices",
+    "microservicesDesc": "API gateway, circuit breaker, saga pattern, event-driven architecture, and containers.",
+    "testingTitle": "Testing Strategies",
+    "testingDesc": "Unit testing, Jest, xUnit, Playwright E2E, TDD, mocking, and contract testing.",
+    "systemdesignTitle": "System Design",
+    "systemdesignDesc": "Scalability, load balancing, caching, sharding, message queues, and CDN.",
+    "aimlTitle": "AI & Machine Learning",
+    "aimlDesc": "Neural networks, transformers, RAG, embeddings, AI agents, and model serving.",
+    "comingSoon": "Explore 98+ interactive visualizers across 11 technology tracks."
+  },
+  "common": {
+    "triggerRender": "レンダリング実行",
+    "reset": "リセット",
+    "play": "再生",
+    "pause": "一時停止",
+    "howItWorks": "仕組み",
+    "keyConcepts": "主要概念",
+    "whyItMatters": "なぜ重要か",
+    "commonPitfalls": "よくある落とし穴"
+  },
+  "pages": {
+    "fiberVisualizer": {
+      "title": "React Fiberビジュアライザー",
+      "subtitle": "リコンシリエーション中にReactがFiberツリーを深さ優先探索で走査する様子を観察します。",
+      "explainer": {
+        "overview": "FiberはReact 16で導入された、Reactの内部リコンシリエーションエンジンです。アプリ内の各コンポーネントには対応するFiberノードがあります。これはコンポーネントの型、props、state、関連するDOMノード、そして親・子・兄弟Fiberへのポインタを格納するJavaScriptオブジェクトです。このリンク構造により、Reactは複数のフレームをまたいで作業を一時停止・再開・優先順位付けすることができます。",
+        "howItWorks": [
+          {
+            "title": "すべてのコンポーネントはFiberノードに対応する",
+            "body": "Reactがコンポーネントツリーをレンダリングするとき、各要素に対してFiberノードを作成します。ノードには次の情報が格納されます：型（関数・クラス・文字列）、props、state、エフェクトフック、および前回のレンダリングからの作業中の状態。"
+          },
+          {
+            "title": "Fiberはコールスタックではなくリンクツリーを形成する",
+            "body": "一時停止できない再帰的なコールスタックとは異なり、Fiberはリンクリストとして接続されています。各ノードには子ポインタ（最初の子）、兄弟ポインタ（次の兄弟）、returnポインタ（親）があります。これによりReactはツリーを反復的に走査できます。"
+          },
+          {
+            "title": "深さ優先探索：beginWork → completeWork",
+            "body": "Reactは深さ優先でFiberツリーを走査します。下方向（親→子）では「beginWork」を呼び出し、上方向（子→親）では「completeWork」を呼び出します。この2パスのアプローチにより、Reactはエフェクトリストをボトムアップで構築できます。"
+          },
+          {
+            "title": "ダブルバッファリング：currentとwork-in-progress",
+            "body": "Reactは2つのFiberツリーを同時に維持します：「current」ツリー（画面に表示中のもの）と「work-in-progress」ツリー（構築中のもの）。各Fiberノードにはもうひとつのツリーのカウンターパートを指す「alternate」ポインタがあります。"
+          },
+          {
+            "title": "コミット後、work-in-progressがcurrentになる",
+            "body": "コミットフェーズが完了すると、Reactはルートの「current」ポインタをwork-in-progressツリーに向けることで、2つのツリーをアトミックに入れ替えます。古いcurrentツリーは次のレンダリングの新しいwork-in-progressになります。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Fiberノード",
+            "icon": "🧵",
+            "definition": "コンポーネントの1つの作業単位を表すJSオブジェクト。型、key、ref、props、state、hooksリスト、エフェクトタグ、ツリーポインタを含みます。"
+          },
+          {
+            "term": "Work-in-Progressツリー",
+            "icon": "🌱",
+            "definition": "リコンシリエーション中に構築されるFiberツリー。コミットフェーズが完了してcurrentツリーと入れ替わるまで、ユーザーには見えません。"
+          },
+          {
+            "term": "beginWork / completeWork",
+            "icon": "🔽🔼",
+            "definition": "ReactがFiberツリーを走査する際に呼び出す2つの関数。beginWorkは下方向にノードを処理し、completeWorkは上方向に戻りながらノードを確定します。"
+          },
+          {
+            "term": "エフェクトタグ",
+            "icon": "🏷️",
+            "definition": "Fiberノード上のビットマスクフラグで、必要なDOM操作を示します：Placement（挿入）、Update（propsのパッチ適用）、Deletion（削除）。"
+          },
+          {
+            "term": "alternateポインタ",
+            "icon": "↔️",
+            "definition": "各Fiberは、もうひとつのツリー（current ↔ work-in-progress）のカウンターパートを指す「alternate」フィールドを持ちます。ダブルバッファリングを実現します。"
+          }
+        ],
+        "codeLabel": "Fiberノードの内部構造",
+        "whyItMatters": "FiberアーキテクチャこそがReactの並行機能を可能にしています。作業がデータ構造（コールスタックではなく）として表現されているため、ReactはFiberノードの途中でリコンシリエーションを一時停止し、ユーザー入力などの高優先度タスクのためにブラウザに制御を返し、中断した箇所から再開できます。これがSuspense、トランジション、自動バッチ処理の基盤です。",
+        "pitfalls": [
+          "Reactの内部Fiberノードを直接読み取ったり変更したりしないでください。これらはReactバージョン間で変更される可能性がある非公開の実装詳細です。",
+          "深さ優先探索は、深くネストされたコンポーネントツリーほどReactがブラウザに制御を譲るまでの時間が長くなることを意味します。可能な限りコンポーネント階層を浅くしてください。",
+          "Fiberノードはレンダリングをまたいで持続します（再作成されず再利用されます）。これがhooksが機能する理由です。useStateは関数自体の中ではなく、Fiberノードに値を保存します。"
+        ]
+      }
+    },
+    "virtualDom": {
+      "title": "仮想DOM & Diffing",
+      "subtitle": "Reactが仮想表現を作成し、最小限のDOM変更を見つけるためにdiffingする仕組み。",
+      "explainer": {
+        "overview": "仮想DOMは、実際のDOMを模した軽量なJavaScriptオブジェクトツリーです。Reactは2つのコピーを保持します：現在のツリーと、各レンダリング中に構築される「work-in-progress」ツリーです。実際のDOMをすぐに操作する代わりに、Reactは2つの仮想ツリーを比較して必要な最小限の変更セットを計算し、それらを1つのバッチで適用します。",
+        "howItWorks": [
+          {
+            "title": "JSXはReact.createElement()呼び出しにコンパイルされる",
+            "body": "JSXを書くと、Babel（またはReactコンパイラ）がそれをReact.createElement(type, props, ...children)呼び出しに変換します。これらは実際のDOMノードではなく、Reactエレメントと呼ばれるプレーンなJavaScriptオブジェクトを返します。"
+          },
+          {
+            "title": "Reactが仮想DOMツリーを構築する",
+            "body": "React.createElement()は{ type: 'div', props: { className: 'box', children: [...] } }のようなネストされたオブジェクトツリーを返します。これが仮想DOM — UIがどのように見えるべきかを表す安価なインメモリの記述です。"
+          },
+          {
+            "title": "更新時、Reactは新しい仮想DOMツリーを構築する",
+            "body": "stateやpropsが変更されると、Reactはコンポーネント関数を再度呼び出し、新しい望ましいUIを表すまったく新しい仮想DOMツリーを生成します。"
+          },
+          {
+            "title": "diffingアルゴリズムが古いツリーと新しいツリーを比較する",
+            "body": "ReactのdiffingアルゴリズムはO(n)のヒューリスティックで、両方のツリーを同時に走査します。異なる型の要素は異なるツリーを生成すると仮定し、key propを使ってレンダリングをまたいでリストアイテムをマッチングします。"
+          },
+          {
+            "title": "差分のみが実際のDOMに適用される",
+            "body": "diffing後、Reactは変更のリストを持ちます：このpropを更新、このノードを挿入、あのノードを削除。これらはコミットフェーズで実際のDOMに適用され、リフローと再描画を最小化します。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Reactエレメント",
+            "icon": "📦",
+            "definition": "React.createElement()が返すプレーンなJSオブジェクト。型、props、childrenを記述します。実際のDOMノードではありません。"
+          },
+          {
+            "term": "diffingアルゴリズム",
+            "icon": "🔍",
+            "definition": "2つの仮想ツリーを比較するReactのO(n)ヒューリスティック。keyが異なる場合を除き、同じ位置の要素は同じ型であると仮定します。"
+          },
+          {
+            "term": "リコンシリエーション",
+            "icon": "⚖️",
+            "definition": "古い仮想ツリーと新しい仮想ツリーを比較し、必要な最小限のDOM操作セットを決定するプロセス。"
+          },
+          {
+            "term": "key prop",
+            "icon": "🔑",
+            "definition": "リストアイテムの安定した識別子。位置が移動しても古いリスト要素と新しいリスト要素をマッチングできます。"
+          },
+          {
+            "term": "バッチ更新",
+            "icon": "📦",
+            "definition": "ReactはリコンシリエーションパスからのすべてのDOM変更をまとめて適用し、ブラウザのリフローを削減します。"
+          }
+        ],
+        "codeLabel": "JSXから仮想DOMへ",
+        "whyItMatters": "直接のDOM操作は、ブラウザがレイアウトを再計算して再描画する必要があるため、高コストです。JavaScriptでdiffing（高速）しDOMへの書き込みをバッチ処理（低速）することで、Reactは高コストなブラウザ操作の回数を最小化します。これがReactアプリが複雑なUIでも高速に感じられる理由です。",
+        "pitfalls": [
+          "仮想DOMオブジェクトを直接変更しないでください。Reactは変更を効率的に検出するために不変性を前提としています。",
+          "動的なリストの配列インデックスをkeyとして使用しないでください。リストが並べ替えられると、ReactはIDではなく位置でアイテムをマッチングし、不要なアンマウントと再マウントを引き起こします。",
+          "仮想DOMは無料ではありません。エレメントオブジェクトの作成にはコストがかかります。stateのない非常にシンプルなUIでは、プレーンHTMLの方が高速なことがあります。"
+        ]
+      }
+    },
+    "reconciliation": {
+      "title": "リコンシリエーションアルゴリズム",
+      "subtitle": "ReactがFiberツリーを比較して更新・挿入・削除を決定する方法。",
+      "explainer": {
+        "overview": "リコンシリエーションは、stateやpropsが変更されたときにUIを効率的に更新するためのReactのアルゴリズムです。DOMツリー全体を再レンダリングする代わりに、Reactは前の仮想DOMツリーと新たにレンダリングされたツリーを比較し、必要な最小限の操作数を計算します。O(n³)ではなくO(n)時間でこれを行うために2つの主要なヒューリスティックを使用します。",
+        "howItWorks": [
+          {
+            "title": "2つのヒューリスティックがdiffingをO(n)にする",
+            "body": "Reactは次のことを前提とします：(1) 異なる型の要素は完全に異なるツリーを生成する — そのためReactは古いサブツリーをアンマウントして新しいものをマウントします。(2) 開発者はkey propを使用してレンダリングをまたいだ安定したIDをヒントとして提供できます。"
+          },
+          {
+            "title": "同じ型 → その場で更新する",
+            "body": "2つの要素が同じ型（例：両方とも<div>）の場合、Reactは既存のDOMノードを保持し、変更された属性・propsのみを更新します。これにより不必要なDOMノードの破棄と再作成を避けられます。"
+          },
+          {
+            "title": "異なる型 → 破棄して再構築する",
+            "body": "型が変わった場合（例：<div>が<span>になる）、Reactは古いコンポーネントツリー全体をアンマウントし（すべてのクリーンアップを実行）、新しいツリーを新鮮な状態でマウントします。stateは失われます。"
+          },
+          {
+            "title": "リストは安定したIDのためにkeyを使用する",
+            "body": "childrenのリストに対して、Reactはkeyで古いアイテムと新しいアイテムをマッチングします。keyなしでは、Reactは位置を使用します — アイテムが並べ替えられると不要なアンマウントを引き起こす可能性があります。keyによりReactは既存のDOMノードを効率的に移動できます。"
+          },
+          {
+            "title": "エフェクトリストが必要な作業を追跡する",
+            "body": "Reactが両ツリーを走査するとき、「エフェクトリスト」を構築します — 作業（更新・挿入・削除）を持つFiberのリンクリストです。コミットフェーズはこのリストを走査して実際のDOMに変更を適用します。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Fiber",
+            "icon": "🧵",
+            "definition": "Reactのリコンシリエーションエンジンにおける作業の単位。各コンポーネントは型、props、state、および親・子・兄弟Fiberへのポインタを格納するFiberノードを持ちます。"
+          },
+          {
+            "term": "Work-in-Progressツリー",
+            "icon": "🌳",
+            "definition": "リコンシリエーション中にReactが変更を適用する現在のFiberツリーのクローン。コミットフェーズが完了した後にのみ「current」に昇格されます。"
+          },
+          {
+            "term": "エフェクトリスト",
+            "icon": "📋",
+            "definition": "リコンシリエーション中に構築され、コミットフェーズで走査される、DOM変更を保留中のFiberのフラットなリンクリスト。"
+          },
+          {
+            "term": "ベイルアウト",
+            "icon": "⚡",
+            "definition": "ReactがFiberのpropsとcontextが変更されていないことを検出した場合、そのサブツリーのレンダリングを完全にスキップできます — 重要なパフォーマンス最適化です。"
+          }
+        ],
+        "codeLabel": "keyがリコンシリエーションに与える影響",
+        "whyItMatters": "リコンシリエーションは、ReactのDeclarativeモデルを実用的にするものです。UIがどのように見えるべきかを記述すれば、Reactが必要な最小限のDOM変更を計算します。Fiberアーキテクチャによりこれは中断可能になっています — ReactはツリーのどのFiberノードでもリコンシリエーションを一時停止し、後で再開できます。これによりSuspenseやトランジションなどの並行機能が可能になっています。",
+        "pitfalls": [
+          "不安定なkey（Math.random()や動的リストの配列インデックスなど）を使用すると、レンダリングのたびにコンポーネントのアンマウントと再マウントが強制され、ローカルstateが破棄されます。",
+          "コンポーネントの型を変更すること（同じ位置でコンポーネントAとコンポーネントBを切り替えること）は、同じDOM出力をレンダリングしても常に完全なアンマウント・再マウントを引き起こします。",
+          "深くネストされた条件付きレンダリングはコンポーネントの型を変更し、予期しないアンマウントを引き起こす可能性があります。条件付きコンポーネント型より条件付きpropsを優先してください。"
+        ]
+      }
+    },
+    "renderingPipeline": {
+      "title": "Reactレンダリングパイプライン",
+      "subtitle": "JSXからピクセルまでの完全な旅 — レンダリングをトリガーして各フェーズを観察。",
+      "explainer": {
+        "overview": "Reactがレンダリングするたびに、予測可能な2フェーズのパイプラインを経由します：レンダーフェーズとコミットフェーズです。レンダーフェーズは純粋で中断可能 — ReactはコンポーネントCallし新しいFiberツリーを構築します。コミットフェーズは同期的で副作用があります — Reactは計算された変更を実際のDOMに適用し、エフェクトを発火させます。",
+        "howItWorks": [
+          {
+            "title": "JSXはReact.createElement()呼び出しに変換される",
+            "body": "ビルド時に、<Button color='blue'>Click</Button>のようなJSXはReact.createElement(Button, { color: 'blue' }, 'Click')になります。これはプレーンなオブジェクトツリー — 仮想DOMを生成します。"
+          },
+          {
+            "title": "レンダーフェーズ：ReactがコンポーネントをCallする",
+            "body": "ReactはFiberツリーを走査して各コンポーネント関数（またはrender()メソッド）を呼び出します。このフェーズは純粋で副作用を生成しません — 並行モードではReactはいつでもこれを中断して再起動できます。"
+          },
+          {
+            "title": "リコンシリエーション：古いFiberツリーと新しいFiberツリーをdiffする",
+            "body": "Reactは新しい出力を前のFiberツリーと比較します。各FiberにエフェクトタグをマークしますUpdate、Placement（挿入）、またはDeletion。結果は「エフェクトリスト」 — 保留中の作業を持つFiberのフラットなリストです。"
+          },
+          {
+            "title": "コミットフェーズ — beforeMutation：スナップショット",
+            "body": "ReactはクラスコンポーネントのgetSnapshotBeforeUpdate()を呼び出し、パッシブエフェクトをスケジュールします。このサブフェーズはDOMの変更が行われる前に実行されます。"
+          },
+          {
+            "title": "コミットフェーズ — mutation：DOM変更を適用",
+            "body": "ReactはエフェクトリストをWalkして、すべてのDOM変更を同期的に適用します：挿入、更新、削除。この後、DOMは新しいUIを反映します。"
+          },
+          {
+            "title": "コミットフェーズ — layout：同期エフェクト",
+            "body": "useLayoutEffectコールバックはDOM変更後、ブラウザが描画する前に同期的に実行されます。その後ブラウザが描画します。最後に、useEffectコールバックが描画後に非同期に実行されます。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "レンダーフェーズ",
+            "icon": "🔄",
+            "definition": "Reactがコンポーネントを呼び出して新しいFiberツリーを構築する、純粋で副作用のないフェーズ。並行モードでは中断可能です。"
+          },
+          {
+            "term": "コミットフェーズ",
+            "icon": "✅",
+            "definition": "ReactがDOMの変更を適用し、ライフサイクルメソッド・エフェクトを発火させる同期フェーズ。中断不可能です。"
+          },
+          {
+            "term": "useLayoutEffect",
+            "icon": "⚡",
+            "definition": "DOM変更後、ブラウザ描画前に同期的に発火します。DOM測定に使用します。描画をブロックします。"
+          },
+          {
+            "term": "useEffect",
+            "icon": "🕐",
+            "definition": "ブラウザ描画後に非同期で発火します。描画をブロックしません — サブスクリプション、フェッチ、非視覚的な副作用に最適です。"
+          },
+          {
+            "term": "二重レンダリング（StrictMode）",
+            "icon": "🔁",
+            "definition": "開発環境では、Reactは副作用を検出するためにレンダーフェーズでコンポーネントを2回レンダリングします。コミットは1回だけ行われます。"
+          }
+        ],
+        "codeLabel": "エフェクトのタイミング参照",
+        "whyItMatters": "パイプラインを理解することで、適切な場所にコードを配置できます。DOM測定はuseLayoutEffect（描画前）に入れる必要があります。データフェッチはuseEffect（描画後、非ブロッキング）に入れます。最初のレンダリング前に行う必要がある初期化はuseStateイニシャライザーまたはuseMemoに入れます。間違えると、視覚的なフラッシュ、レイアウトのジャンプ、またはレンダリングの欠落が発生します。",
+        "pitfalls": [
+          "DOM測定をuseEffect（描画後）に入れるとフラッシュが発生します — ブラウザが間違ったサイズで一度描画し、その後useEffectが修正してもう一度描画をトリガーします。代わりにuseLayoutEffectを使用してください。",
+          "依存配列なしのuseEffectはすべてのレンダリング後に実行されます。これは通常バグです — マウント時のみは[]、制御された再実行は[specificDep]が必要なはずです。",
+          "レンダーフェーズでの高コストな同期処理は避けてください — メインスレッドをブロックして描画を遅延させます。重い計算はuseMemoまたはWeb Workerに移動してください。"
+        ]
+      }
+    },
+    "componentLifecycle": {
+      "title": "コンポーネントライフサイクル",
+      "subtitle": "マウント、更新、アンマウントフェーズ — 各段階でどのhooksとエフェクトが発火するか。",
+      "explainer": {
+        "overview": "すべてのReactコンポーネントは3つのライフサイクルフェーズを経ます：マウント（DOMへの最初のレンダリング）、更新（stateまたはpropの変更による再レンダリング）、アンマウント（DOMからの削除）。Hooksを使用すると、これらのフェーズはクラスのライフサイクルメソッドではなく、useEffect、useLayoutEffect、クリーンアップ関数を通じて表現されます。",
+        "howItWorks": [
+          {
+            "title": "マウント：コンポーネントが初めてレンダリングされる",
+            "body": "ReactはFunction Componentを呼び出し、JSXを評価し、結果のDOMノードを挿入します。useStateイニシャライザーが実行され、useRefオブジェクトが作成されます。DOM挿入後、useLayoutEffectが同期的に実行され、その後useEffectが描画後に非同期に実行されます。"
+          },
+          {
+            "title": "更新：stateまたはpropsの変更が再レンダリングをトリガーする",
+            "body": "setStateまたは新しいpropが到着すると、Reactは再レンダリングをキューに入れます。再レンダリング中、Hooksはマウント時と同じ順序で呼び出されます。ReactはDOMの新旧の出力を比較してパッチを適用します。エフェクトを再実行する前に、Reactは前のレンダリングのエフェクトからクリーンアップ関数を実行します。"
+          },
+          {
+            "title": "次のエフェクト実行前のクリーンアップ",
+            "body": "エフェクトが再実行されるたびに（およびアンマウント時に）、Reactは前のエフェクトのクリーンアップ関数を呼び出します。これはタイマーのクリア、フェッチのキャンセル、イベントからのアンサブスクライブに不可欠です。"
+          },
+          {
+            "title": "アンマウント：コンポーネントがツリーから削除される",
+            "body": "コンポーネントが削除されると（条件付きレンダリング、ルート変更など）、Reactはすべてのクリーンアップ関数を実行します — useEffectのクリーンアップ、次にuseLayoutEffectのクリーンアップ。DOMノードはドキュメントから削除されます。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "useEffect(() => {}, [])",
+            "icon": "🏔️",
+            "definition": "空の依存配列：マウント後に1回実行。クリーンアップはアンマウント時に実行。componentDidMount + componentWillUnmountに相当します。"
+          },
+          {
+            "term": "useEffect(() => {}, [dep])",
+            "icon": "🔄",
+            "definition": "マウント後およびdepが変更されるたびに実行。クリーンアップは再実行前と、アンマウント時に実行されます。"
+          },
+          {
+            "term": "useEffect(() => {})",
+            "icon": "♾️",
+            "definition": "依存配列なし：すべてのレンダリング後に実行。通常これは望ましくありません — stateの変更をトリガーすると無限ループになります。"
+          },
+          {
+            "term": "useLayoutEffect",
+            "icon": "⚡",
+            "definition": "useEffectと同じシグネチャですが、DOM変更後、描画前に同期的に発火します。DOM測定に使用します。"
+          },
+          {
+            "term": "クリーンアップ関数",
+            "icon": "🧹",
+            "definition": "useEffectコールバックから返される関数。Reactは次のエフェクト実行前とアンマウント時に呼び出します。"
+          }
+        ],
+        "codeLabel": "Hooksを使った完全なライフサイクル",
+        "whyItMatters": "ライフサイクルのタイミングを理解することで、最も一般的なReactバグを防げます：クリーンアップなしのデータフェッチ（アンマウントされたコンポーネントでのsetState警告を引き起こす）、タイマーのクリア忘れ（メモリリークを引き起こす）、依存配列の誤用によるエフェクトの実行頻度が多すぎるまたは少なすぎる問題。",
+        "pitfalls": [
+          "useEffectから関数以外を返すことは実行時エラーです。undefinedまたはクリーンアップ関数のみを返してください。",
+          "依存配列の欠損した依存関係は古いクロージャを作成します — エフェクトが古い値をキャプチャして更新されません。これを検出するためにESLintのexhaustive-depsルールを使用してください。",
+          "依存配列なしでuseEffect内でstateを無条件に設定すると無限ループが発生します：render → effect → setState → render → effect → ..."
+        ]
+      }
+    },
+    "hooksVisualizer": {
+      "title": "React Hooksビジュアライザー",
+      "subtitle": "ReactがHooksをリンクリストとして管理し、状態更新を処理して再レンダリングする仕組み。",
+      "explainer": {
+        "overview": "HooksはFiberノード上の単方向リンクリストとして格納されます。コンポーネントがレンダリングされると、Reactはこのリストを順番に走査し、各Hook呼び出し（useState、useEffect、useRefなど）を格納されたstateにマッチングします。これがHooksのルールが存在する理由です：条件付きでHooksを呼び出すと、リストの順序が変わり、Reactが間違ったHookの間違ったstateを読み取ります。",
+        "howItWorks": [
+          {
+            "title": "最初のレンダリング：ReactがHooksのリンクリストを構築する",
+            "body": "各Hook呼び出し（useState、useEffect、useRef、useMemo…）は、memoizedStateフィールドとnextポインタを持つ「Hook」オブジェクトを作成します。ReactはそれぞれをCall順にリストに追加します。リストはFiberノードのmemoizedStateフィールドに格納されます。"
+          },
+          {
+            "title": "useStateはstate値 + 更新キューを格納する",
+            "body": "useStateのHookオブジェクトは次を格納します：memoizedState（現在の値）、queue（保留中のsetStateCallのリンクリスト）、dispatch（コンポーネントで使用するsetState関数）。dispatch関数は安定しています — レンダリング間で変化しません。"
+          },
+          {
+            "title": "setStateの呼び出しは更新をエンキューする",
+            "body": "setState(newValue)を呼び出しても、Reactはすぐにstateを更新しません。代わりに、UpdateオブジェクトをHookのキューに追加し、Fiberの再レンダリングをスケジュールします。1つのイベントハンドラ内の複数のsetState呼び出しは1回の再レンダリングにバッチされます。"
+          },
+          {
+            "title": "再レンダリング：Reactが更新キューを処理する",
+            "body": "次のレンダリングでは、ReactはHooksリストを再度走査します。各useStateフックに対して、キューに入っているすべての更新を順番に実行（またはuseReducerのreducer関数を呼び出す）して処理します。最終的に計算された値が新しいmemoizedStateになります。"
+          },
+          {
+            "title": "useEffectフックはdestroy + create関数を格納する",
+            "body": "エフェクトHookオブジェクトは次を格納します：create（渡したコールバック）、destroy（前回返したクリーンアップ関数）、deps（依存配列）、それがuseEffect、useLayoutEffect、useInsertionEffectであるかを示すタグ。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Hooksリンクリスト",
+            "icon": "🔗",
+            "definition": "HooksはFiberノード上の単方向リンクリストとして格納されます。呼び出し順 = リスト順。条件付きHooksはリストを壊します。"
+          },
+          {
+            "term": "memoizedState",
+            "icon": "💾",
+            "definition": "Hookオブジェクトの現在の値を格納するフィールド。useStateの場合：state値。useRefの場合：{ current: value }。useMemoの場合：キャッシュされた結果。"
+          },
+          {
+            "term": "更新キュー",
+            "icon": "📬",
+            "definition": "次のレンダリングで処理される保留中のsetStateCallを格納する循環リンクリスト。複数の更新は1回のキューフラッシュにバッチされます。"
+          },
+          {
+            "term": "ディスパッチャー",
+            "icon": "🚦",
+            "definition": "ReactはレンダーフェーズによってHookの実装を切り替えます。最初のレンダリング時：HooksDispatcherOnMount。再レンダリング時：HooksDispatcherOnUpdate。これがHooksをコンポーネント外で呼び出せない理由です。"
+          },
+          {
+            "term": "Hooksのルール",
+            "icon": "📏",
+            "definition": "Hooksはトップレベルのみで呼び出す（条件・ループ内は不可）、Reactの関数からのみ呼び出す。これらのルールはReactがリンクリスト内の位置でHooksを識別するために存在します。"
+          }
+        ],
+        "codeLabel": "Hooksリストの内部構造",
+        "whyItMatters": "Hooksの内部を理解することで、HooksのルールがなぜRestrictionsではなく技術的必要性であるかが説明できます。また、useStateのsetter関数がなぜ常に安定しているか（値ではなくキューに紐づいているため）、Hooksがレンダリングをまたいでなぜ機能するか（Fiberに永続されているため）、カスタムHooksがなぜ構築できるか — 単に他のHooksを呼び出す関数でリストにさらにノードを追加するだけだからです。",
+        "pitfalls": [
+          "if/elseやループ内でHooksを呼び出すと、HooksリストとHook呼び出しの間に不一致が生じます — Reactは間違ったHookの間違ったstateを静かに読み取ります。",
+          "useStateのsetterは参照的に安定（変化しない）ですが、state値は安定していません。エフェクト内のクロージャはレンダリング時の値をキャプチャします — 最新の値に常にアクセスするには関数型更新形式setState(prev => prev + 1)を使用してください。",
+          "すべてのHook呼び出しにはコストがかかります（リンクリスト走査）。HookのValueがすべてのレンダリングで必要でない場合、レンダリングが多いコンポーネントで無条件にHooksを呼び出さないでください — useMemoが不要な再計算をスキップするのに役立ちます。"
+        ]
+      }
+    },
+    "useeffectLifecycle": {
+      "title": "useEffectライフサイクル",
+      "subtitle": "エフェクトの実行タイミング、クリーンアップの順序、依存関係の追跡。",
+      "explainer": {
+        "overview": "useEffectは、Reactコンポーネントと外部システム（ブラウザAPI、サードパーティライブラリ、ネットワークリクエスト、サブスクリプション）を同期するための主要なHookです。ブラウザが画面を描画した後に実行されるため、非ブロッキングです。すべてのエフェクトは、Reactが次のエフェクト実行前とコンポーネントのアンマウント時に呼び出すクリーンアップ関数をオプションで返します。",
+        "howItWorks": [
+          {
+            "title": "エフェクトはブラウザが描画した後に実行される",
+            "body": "ReactはDOMの変更をコミットし、ブラウザが画面を描画し、その後ReactはuseEffectコールバックを非同期に実行します。この順序により、エフェクトは最初のレンダリングを決してブロックしません — ユーザーはすぐにコンテンツを見ます。"
+          },
+          {
+            "title": "依存配列がエフェクトの再実行タイミングを制御する",
+            "body": "ReactはObject.is()等値比較を使用して、現在の依存配列と前のレンダリングの依存配列を比較します。いずれかの依存関係が変わった場合、エフェクトは再実行がスケジュールされます。依存配列なし = すべてのレンダリング後に実行。空配列[] = マウント後に1回実行。"
+          },
+          {
+            "title": "クリーンアップは次のエフェクト前とアンマウント時に実行される",
+            "body": "エフェクトが関数を返す場合、Reactはそれをクリーンアップとして格納します。（依存関係が変わったため）エフェクトを再実行する前に、Reactは前のクリーンアップを先に呼び出します。コンポーネントがアンマウントされると、Reactは最後のクリーンアップを呼び出します。"
+          },
+          {
+            "title": "React 18 StrictModeは開発環境でエフェクトを2回実行する",
+            "body": "StrictModeでは、Reactは適切にクリーンアップしないエフェクトを検出するために意図的にすべてのコンポーネントをマウント→アンマウント→再マウントします。二重呼び出しは開発環境でのみ行われます。これが適切なクリーンアップが必須である理由です。"
+          },
+          {
+            "title": "useLayoutEffectは描画前に同期的に発火する",
+            "body": "useLayoutEffectはuseEffectと同一のセマンティクスを持ちますが、DOM変更後、ブラウザが描画する前に同期的に発火します。エフェクトがDOM測定を読み取ってユーザーが何かを見る前に修正を適用する必要がある場合に使用します。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "依存配列",
+            "icon": "📋",
+            "definition": "再実行頻度を制御します。[] = マウント時のみ。[a, b] = aまたはbが変わったとき。配列なし = すべてのレンダリング。ReactはObject.is()で比較します — オブジェクト・配列を依存関係にするのは避けてください。"
+          },
+          {
+            "term": "クリーンアップ関数",
+            "icon": "🧹",
+            "definition": "エフェクトから返される関数。エフェクトが再実行される前（依存関係が変わった場合）とコンポーネントのアンマウント時に呼び出されます。フェッチのキャンセル、タイマーのクリア、アンサブスクライブに使用します。"
+          },
+          {
+            "term": "古いクロージャ",
+            "icon": "🕸️",
+            "definition": "エフェクトが古いレンダリングのstate・propsをキャプチャしているが、更新された値を取得するために再実行されない場合。変数を依存関係に追加するかrefを使用することで修正できます。"
+          },
+          {
+            "term": "useLayoutEffect",
+            "icon": "⚡",
+            "definition": "DOM変更後、描画前に同期的に発火します。描画をブロックします — 高速に保ってください。DOM測定（getBoundingClientRect、スクロール位置）に使用します。"
+          },
+          {
+            "term": "useInsertionEffect",
+            "icon": "💉",
+            "definition": "DOM変更前に発火します。CSS-in-JSライブラリがレイアウト前にスタイルルールを同期的に注入するためのものです。一般的なアプリケーションコード向けではありません。"
+          }
+        ],
+        "codeLabel": "エフェクトパターンとそのクリーンアップ",
+        "whyItMatters": "useEffectはReactで最も誤用されているHookです。エフェクトを正しく使う — 正しい依存関係、適切なクリーンアップ、正しいタイミング — ことは、メモリリークせず、余分なネットワークリクエストを行わず、古いデータのバグがないアプリを構築するために不可欠です。思考モデルの転換が必要です：「エフェクトはライフサイクルイベント」ではなく「エフェクトは同期メカニズム」です。マウント・更新・アンマウントのコールバックにフックするのではなく、外の世界と同期し続ける方法をReactに伝えています。",
+        "pitfalls": [
+          "依存配列の欠損した依存関係は、エフェクトが古い値を永遠に読み取る古いクロージャを作成します。エフェクト内で使用されるすべての値を依存配列に常に含めるか、再実行をトリガーすべきでない値にはrefを使用してください。",
+          "サブスクリプションとイベントリスナーのクリーンアップを提供しないとメモリリークが発生します。すべてのaddEventListenerにはクリーンアップ内に対応するremoveEventListenerが必要です。",
+          "依存配列にオブジェクトまたは配列リテラルを直接入れると、すべてのレンダリングでエフェクトが再実行されます：[{ id: 1 }]はレンダリングごとに新しいオブジェクトを作成します（同じ値でも異なる参照）。プリミティブを分割代入するか、参照を安定させるためにuseMemoを使用してください。"
+        ]
+      }
+    },
+    "stateBatching": {
+      "title": "状態バッチ処理",
+      "subtitle": "ReactがパフォーマンスのためにsetState呼び出しを1回の再レンダリングにまとめる方法。",
+      "explainer": {
+        "overview": "状態バッチ処理とは、Reactが同じ同期ブロックからの複数のsetState呼び出しを収集し、1回の再レンダリングパスですべてを処理することです。個々のsetStateの後に毎回再レンダリングする代わりに、Reactは現在の「バッチ」の終わりまで待ち、すべての更新を一度に適用し、ちょうど1回レンダリングします。React 18は自動バッチ処理を非同期コードとネイティブイベントリスナーにも拡張しました。",
+        "howItWorks": [
+          {
+            "title": "1つのイベントハンドラ内の複数のsetState呼び出し = 1回のレンダリング",
+            "body": "クリックハンドラ内でsetA(1)とsetB(2)を呼び出すとき、ReactはsetAの後すぐに再レンダリングしません。両方の更新をキューに入れ、1回の再レンダリングをスケジュールします。コンポーネントは両方の新しい値が適用された状態で1回レンダリングされます。"
+          },
+          {
+            "title": "ReactはFiberのHook更新キューに更新をエンキューする",
+            "body": "各setStateCallはHookの循環キューにUpdateオブジェクトを追加します。Reactは保留中の作業があるとしてFiberをマークし、キューをフラッシュするためのマイクロタスク（またはコールバック）をスケジュールします — ただし現在の同期コードが終了した後のみです。"
+          },
+          {
+            "title": "React 17 vs React 18：非同期バッチ処理",
+            "body": "React 17では、バッチ処理はReactイベントハンドラ内でのみ行われました。setTimeout、Promise、またはfetchコールバック内のsetState呼び出しは個別に再レンダリングをトリガーしました。React 18はすべての更新を発生元に関わらず自動的にバッチします。"
+          },
+          {
+            "title": "flushSync()はバッチ処理をオプトアウトする",
+            "body": "（state変更後のレイアウト測定など）同期的なDOM更新が必要な場合は、ReactDOM.flushSync(() => setState(...))を呼び出してください。これによりReactは更新を即座かつ同期的にフラッシュし、バッチ処理をバイパスします。"
+          },
+          {
+            "title": "関数型更新は正しい順序を保証する",
+            "body": "複数のsetStateCallが前の値に依存する場合、関数型形式を使用してください：setState(prev => prev + 1)。ReactはキューOrder通りにこれらの更新を適用するため、各更新はレンダリング時の値ではなく前の結果を参照します。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "自動バッチ処理",
+            "icon": "📦",
+            "definition": "React 18の機能：setTimeout、Promise、ネイティブイベントリスナー内であっても、すべてのsetState呼び出しがバッチされます。不要な再レンダリングを削減します。"
+          },
+          {
+            "term": "更新キュー",
+            "icon": "📬",
+            "definition": "保留中のsetStateCallを格納する各Hookオブジェクト上の循環リンクリスト。各バッチの終わりにフラッシュされます — すべての更新が順番に適用されます。"
+          },
+          {
+            "term": "flushSync()",
+            "icon": "⚡",
+            "definition": "保留中のstate更新を同期的かつ即座にフラッシュするようReactを強制します。バッチ処理をバイパスします。state変更後にDOM測定が必要な場合のみ使用してください。"
+          },
+          {
+            "term": "関数型更新",
+            "icon": "🔧",
+            "definition": "setState(prev => newValue)。更新がバッチされているか非同期でキューされている場合でも、最新のstate値を受け取ることが保証されます。"
+          },
+          {
+            "term": "レンダリング回数",
+            "icon": "🔢",
+            "definition": "バッチ処理によりレンダリング回数が削減されます。バッチなし：N回のsetStateCall = N回のレンダリング。バッチあり：N回のsetStateCall = 1回のレンダリング。"
+          }
+        ],
+        "codeLabel": "Reactバージョン間のバッチ処理の動作",
+        "whyItMatters": "バッチ処理はReactの最も重要なパフォーマンス最適化の1つです。バッチ処理なしでは、3つのstate更新をトリガーする単一のユーザー操作が3回の完全なレンダリング + リコンシリエーション + コミットサイクルを引き起こします。バッチ処理ありでは常に1回だけです。React 18の自動バッチ処理は非同期コードに特に価値があります — サーバーレスポンス、WebSocketメッセージ、タイマーはもはやレンダラーを酷使しません。",
+        "pitfalls": [
+          "setStateが同期的であることに依存しないでください。flushSyncでも、レンダリング中にsetStateを呼び出すことは禁止されています。setStateを呼び出した直後ではなく、次のレンダリングから更新された値を読み取ってください。",
+          "1つのバッチ内でsetState(count + 1)の直接値形式を複数回使用することはバグです：各Callは同じ古い「count」値をクロージャに持ちます。更新を累積するには常に関数型形式setState(prev => prev + 1)を使用してください。",
+          "Reactイベントハンドラやライフサイクル内のflushSyncは開発環境でスローします。これはReactをReact以外のコードと橋渡しするためのもので、React内で同期的なstateを強制するためではありません。"
+        ]
+      }
+    },
+    "memoization": {
+      "title": "メモ化 (useMemo & useCallback)",
+      "subtitle": "Reactが計算値と関数参照をキャッシュして再計算をスキップする方法。",
+      "explainer": {
+        "overview": "メモ化は、Reactが高コストな計算の結果を格納し、入力が変わっていない場合は後続のレンダリングでキャッシュされた結果を返すキャッシングテクニックです — 計算を完全にスキップします。useMemoは計算値をキャッシュします。useCallbackは関数参照をキャッシュします。どちらも再計算のタイミングを決定するために依存配列を使用します。",
+        "howItWorks": [
+          {
+            "title": "useMemoは関数の戻り値をキャッシュする",
+            "body": "useMemo(() => expensiveComputation(a, b), [a, b])は最初のレンダリングで関数を呼び出し、結果を格納します。再レンダリング時に、ReactはaまたはbCheckが変わったかどうかを確認します。変わっていなければ、関数を再度呼び出さずにキャッシュされた結果を返します。"
+          },
+          {
+            "title": "useCallbackは関数参照自体をキャッシュする",
+            "body": "useCallback(fn, [deps])はuseMemo(() => fn, [deps])と同等です。戻り値をキャッシュする代わりに、関数オブジェクト自体をキャッシュします。JavaScriptはレンダリングのたびに新しい関数オブジェクトを作成するため、これは重要です — 子コンポーネントのpropsの参照等値性を壊します。"
+          },
+          {
+            "title": "ReactはObject.is()で依存関係を比較する",
+            "body": "Reactは各依存関係の値をObject.is()（厳密等値）を使用して比較します。プリミティブ値（数値、文字列、真偽値）は値で比較されます。オブジェクトと配列は参照で比較されます — 依存関係に新しいオブジェクトリテラル{}は常に再計算をトリガーします。"
+          },
+          {
+            "title": "キャッシュヒット：格納された値を返す",
+            "body": "すべての依存関係が前のレンダリングの依存関係と等しい場合、Reactはファクトリ関数を呼び出さずにメモ化された値をすぐに返します。コンポーネントは依然として再レンダリングされますが、高コストな計算はスキップされます。"
+          },
+          {
+            "title": "キャッシュミス：再計算して新しい値を格納する",
+            "body": "いずれかの依存関係が変わった場合、Reactはファクトリ関数を再度呼び出し、新しい結果を格納して返します。古いキャッシュ値は破棄されます。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "useMemo",
+            "icon": "💾",
+            "definition": "計算の戻り値をキャッシュします。依存関係が変わったときのみ再計算します。props・stateから導出される高コストな計算に役立ちます。"
+          },
+          {
+            "term": "useCallback",
+            "icon": "🔗",
+            "definition": "関数参照をキャッシュします。useMemo(() => fn, deps)と同等。メモ化された子コンポーネントにコールバックを渡す際に重要です。"
+          },
+          {
+            "term": "参照等値性",
+            "icon": "⚖️",
+            "definition": "2つのオブジェクト・配列が同じメモリアドレスを指している場合のみ等しいとみなされます。{} === {}はfalse。useMemo・useCallbackはレンダリングをまたいでIDを保持します。"
+          },
+          {
+            "term": "依存配列",
+            "icon": "📋",
+            "definition": "useMemo・useCallbackの第2引数。Reactはこれらの値をレンダリング間で比較して再計算するかどうかを決定します。"
+          },
+          {
+            "term": "React.memo",
+            "icon": "🛡️",
+            "definition": "コンポーネントのレンダリング出力をメモ化する高階コンポーネント。コールバックpropsを安定させるためにuseCallbackと組み合わせると最も効果的です。"
+          }
+        ],
+        "codeLabel": "useMemoとuseCallbackの連携",
+        "whyItMatters": "メモ化なしでは、親コンポーネントの再レンダリングのたびに新しいオブジェクト・関数参照が作成され、React.memoされた子コンポーネントが不必要に再レンダリングされます。useMemoとuseCallbackは参照の安定性を保持し、React.memoを効果的にして、大規模なコンポーネントツリーでのカスケードした再レンダリングを防ぎます。",
+        "pitfalls": [
+          "すべてをメモ化しないでください — useMemoとuseCallbackにはコストがかかります（キャッシュ用のメモリ、レンダリングごとの比較）。高コストな計算や、メモ化された子コンポーネントのpropsを安定させる場合にのみ使用してください。",
+          "依存配列にオブジェクトまたは配列リテラルを含めると目的が無効になります：useMemo(() => x, [{}])は{}!=={}がレンダリングごとに新しい参照を作成するため、すべてのレンダリングで再計算します。",
+          "useMemoはセマンティック的な保証ではありません — Reactは将来キャッシュされた値を破棄する可能性があります（例：オフスクリーンコンポーネントのためのメモリ解放）。副作用のためにuseMemoに依存しないでください。"
+        ]
+      }
+    },
+    "reactMemo": {
+      "title": "React.memo & 再レンダリング",
+      "subtitle": "React.memoがシャロー比較を使って変更されていない子コンポーネントのレンダリングをスキップする方法。",
+      "explainer": {
+        "overview": "デフォルトでは、Reactはコンポーネント自体のpropsが変わったかどうかに関係なく、親コンポーネントが再レンダリングされるたびにコンポーネントを再レンダリングします。React.memoは関数コンポーネントをラップしてレンダリング出力をメモ化する高階コンポーネントです。前のpropsと新しいpropsのシャロー比較を行い、それらが等しい場合は再レンダリングをスキップします。",
+        "howItWorks": [
+          {
+            "title": "親の再レンダリングはデフォルトですべての子をトリガーする",
+            "body": "親コンポーネントのstateが変更されると、ReactはParentの関数を呼び出します。その後、返されたすべてのJSX childrenを処理します — propsが同一でも関数を呼び出します。これがツリー全体に伝播します。"
+          },
+          {
+            "title": "React.memoはコンポーネントをprop比較でラップする",
+            "body": "React.memo(Component)は新しいコンポーネントを返します。ComponentのFunctionを呼び出す前に、Reactは新しいpropsが前のpropsとシャローに等しいかどうかをCheckします。等しい場合、Reactは前のレンダリング出力を再利用し、関数呼び出しを完全にスキップします。"
+          },
+          {
+            "title": "シャロー比較は各propをObject.is()でCheckする",
+            "body": "各propキーに対して、ReactはoldProp === newPropを比較します。プリミティブ（string、number、boolean）は値で比較されます。オブジェクトと関数は参照で比較されます — propsに新しいオブジェクトリテラル{}は常に等値チェックに失敗します。"
+          },
+          {
+            "title": "カスタム比較関数による細かい制御",
+            "body": "React.memo(Component, arePropsEqual)は第2引数としてカスタム比較関数を受け取ります。trueを返すと再レンダリングをスキップ（propsは等しい）、falseを返すと許可します。深い等値Checkや特定のpropsを無視する場合に役立ちます。"
+          },
+          {
+            "title": "contextの変更は依然として再レンダリングを引き起こす",
+            "body": "React.memoはpropの変更による再レンダリングのみをスキップします。コンポーネントがuseContext()を呼び出す場合、React.memoに関係なく、context値が変わると再レンダリングされます。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "React.memo",
+            "icon": "🛡️",
+            "definition": "コンポーネントのレンダリング出力をメモ化するHOC。propsが前のレンダリングとシャローに等しい場合、再レンダリングをスキップします。"
+          },
+          {
+            "term": "シャロー比較",
+            "icon": "🔍",
+            "definition": "各propをObject.is()で比較します。プリミティブに効果的。オブジェクトと関数はレンダリングをまたいで同じ参照を維持する必要があります。"
+          },
+          {
+            "term": "レンダーベイルアウト",
+            "icon": "⚡",
+            "definition": "React.memoがpropsが等しいと判断したとき、前のレンダリング出力を返してコンポーネント関数の呼び出しをスキップします。"
+          },
+          {
+            "term": "参照の安定性",
+            "icon": "⚓",
+            "definition": "レンダリングをまたいで同じオブジェクト・関数参照を保持すること。プリミティブ以外のpropsでReact.memoを正しく機能させるために必要です。"
+          },
+          {
+            "term": "不要な再レンダリング",
+            "icon": "♻️",
+            "definition": "前のレンダリングと出力が同一の再レンダリング。propsが論理的に変わっていない場合、React.memoはこれらを防ぎます。"
+          }
+        ],
+        "codeLabel": "安定したpropsを持つReact.memo",
+        "whyItMatters": "複雑なコンポーネントを持つ大規模なReactツリーでは、不要な再レンダリングが積み重なって実際のパフォーマンス問題になります — 遅い操作、フレームのドロップ、アニメーションのラグ。React.memoを使えば、特定のコンポーネントが再レンダリングされることを外科的に防ぎ、高コストなサブツリーを安定させながらアプリの残りの部分が自由に更新できます。",
+        "pitfalls": [
+          "オブジェクト・配列・関数リテラルをpropsとして直接渡す場合、React.memoは無意味です — 親レンダリングのたびに新しい参照が作成されます。React.memoには常にuseMemoとuseCallbackを組み合わせてください。",
+          "すべてのコンポーネントをReact.memoでラップしないでください — 比較自体にコストがかかります。レンダリングが本当に高コストか、頻繁にレンダリングされるコンポーネントのみメモ化してください。",
+          "React.memoはpropsを比較しますが、stateやcontextは比較しません。メモ化されたコンポーネントは、自身のstateが変わるとき、または消費するcontextが更新されるときに依然として再レンダリングされます。"
+        ]
+      }
+    },
+    "contextApi": {
+      "title": "Context API",
+      "subtitle": "Reactがprops drillingなしにコンポーネントツリーに値を伝播させる方法。",
+      "explainer": {
+        "overview": "Context APIを使うと、propsをすべての階層で受け渡すこと（props drilling）なしに、コンポーネントツリー全体でデータを共有できます。Providerコンポーネントがサブツリーをラップし、値を提供します。子孫コンポーネントはuseContextでその値にアクセスでき、値が変わると自動的に再レンダリングされます。",
+        "howItWorks": [
+          {
+            "title": "createContext()でContextを作成する",
+            "body": "React.createContext(defaultValue)はProviderとConsumerを持つContextオブジェクトを作成します。defaultValueは、コンポーネントがツリー内の一致するProviderなしにContextを消費するときに使用されます。"
+          },
+          {
+            "title": "Providerでサブツリーをラップする",
+            "body": "Providerコンポーネントはvalue propを受け取ります。サブツリー内のすべてのコンポーネントがこの値にアクセスできます。同じContextの複数のProviderをネストでき、最も近い祖先のProviderが優先されます。"
+          },
+          {
+            "title": "ConsumerはuseContext()で値を読み取る",
+            "body": "useContext(MyContext)は、呼び出しコンポーネントの上にある最も近いProviderから現在のContext値を返します。コンポーネントをContextの変更に購読します。"
+          },
+          {
+            "title": "Providerのvalue変更はすべてのConsumerをトリガーする",
+            "body": "Providerのvalue propが（参照として）変更されると、ReactはサブツリーでuseContext(MyContext)を呼び出すすべてのコンポーネントを再レンダリングします — 消費された値が実際に変わったかどうかに関係なく。"
+          },
+          {
+            "title": "ProviderとConsumerの間のコンポーネントは再レンダリングされない",
+            "body": "これが重要な効率性です：useContextを呼び出さない中間コンポーネントは再レンダリングされません。Contextはそれらをスキップします。実際のConsumerのみが再レンダリングされます。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "createContext",
+            "icon": "🏭",
+            "definition": "Contextオブジェクトを作成します。ツリー内のConsumerの上にProviderがない場合に使用されるデフォルト値を受け取ります。"
+          },
+          {
+            "term": "Provider",
+            "icon": "📡",
+            "definition": "すべての子孫ConsumerにValueをブロードキャストします。ネストされたProviderは外側のものをオーバーライドします。不要な再レンダリングを防ぐためにValueをメモ化すべきです。"
+          },
+          {
+            "term": "useContext",
+            "icon": "🔌",
+            "definition": "コンポーネントをContextに購読するHook。Context値が変わるたびに再レンダリングします。"
+          },
+          {
+            "term": "Contextの伝播",
+            "icon": "🌊",
+            "definition": "ContextはConsumerに直接スキップします — useContextを呼び出さない限り、中間コンポーネントは再レンダリングされません。"
+          },
+          {
+            "term": "参照等値性",
+            "icon": "⚖️",
+            "definition": "ReactはObject.is()でContext値を比較します。レンダリングのたびに新しいオブジェクトリテラル{}をProviderに渡すと、内容が同じでもすべてのConsumerが再レンダリングされます。"
+          }
+        ],
+        "codeLabel": "Contextのセットアップと消費",
+        "whyItMatters": "Contextはprops drilling — データを深くネストされた子に届けるためだけに多くのコンポーネント層を通じてpropsを渡すこと — を解決します。ただしContextは真にグローバルまたは広く共有されるデータ（認証、テーマ、ロケール）に最適です。頻繁に変わる値にはZustandやReduxを使い、変更のたびにすべてのConsumerが再レンダリングされるのを避けましょう。",
+        "pitfalls": [
+          "Provider value={}にオブジェクトや配列リテラルを直接渡すと、親レンダリングのたびにすべてのConsumerが再レンダリングされます。useMemoでラップするかrefに移してください。",
+          "Contextは状態管理ソリューションではなく、データの転送手段です。多くの更新を伴う複雑な状態には、ContextをuseReducerと組み合わせるか外部ストアを使用してください。",
+          "useContextは最も近いProviderからのみ読み取ります — 特定のものからではありません。同じContextの複数のProviderがある場合、常に最も近い祖先が優先されます。"
+        ]
+      }
+    },
+    "eventSystem": {
+      "title": "イベントシステム & SyntheticEvents",
+      "subtitle": "Reactのイベント委譲、合成イベントのラッピング、ルートからのバブリング。",
+      "explainer": {
+        "overview": "ReactはイベントリスナーをDOMエレメントに直接アタッチしません。代わりにイベント委譲を使用します — ReactDOM.createRoot()が呼び出されたdivであるルートコンテナに単一のリスナーがアタッチされます。ネイティブイベントがルートにバブリングすると、Reactがそれを傍受し、SyntheticEventオブジェクトにラップし、Reactコンポーネントツリーを通じてディスパッチします。",
+        "howItWorks": [
+          {
+            "title": "Reactはイベントタイプごとにルートリスナーを1つ登録する",
+            "body": "JSXでonClick={handleClick}と書いても、ReactはそのDOMノードにaddEventListenerを呼び出しません。代わりに、「click」イベントのためにルートコンテナに単一のリスナーを登録します — コンポーネントごとではなく、アプリ全体で1回だけ行います。"
+          },
+          {
+            "title": "ネイティブイベントはルートまでバブリングする",
+            "body": "ボタンをクリックすると、ブラウザはボタン上でネイティブのclickイベントを発火させ、それが実際のDOMツリーを通じてReactのリスナーが待機しているドキュメントルートまでバブリングします。"
+          },
+          {
+            "title": "ReactはSyntheticEventラッパーを作成する",
+            "body": "Reactはネイティブイベントをブラウザを問わず正規化されたイベントオブジェクトであるSyntheticEventにラップします。これはブラウザに関係なく同じAPIを公開します。古いReactバージョンでは、SyntheticEventsはパフォーマンスのためにプールされ再利用されていました。"
+          },
+          {
+            "title": "ReactはFiberツリーを通じてバブリングをシミュレートする",
+            "body": "Reactはターゲット要素からルートまでFiberツリーを走査し、各FiberにあるonClick（または他のイベント）ハンドラを呼び出します。これはブラウザのバブリングをシミュレートしますが、Reactの仮想ツリー上で行われます。"
+          },
+          {
+            "title": "キャプチャフェーズが最初に実行される（トップダウン）",
+            "body": "ネイティブイベントと同様に、ReactはonClickCaptureによるキャプチャフェーズハンドラをサポートします。これらはバブルフェーズハンドラ（ターゲット → ルートのボトムアップ）が発火する前に、トップダウン（ルート → ターゲット）で発火します。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "イベント委譲",
+            "icon": "🎯",
+            "definition": "ルートの1つのリスナーがそのタイプのすべてのイベントを処理します。すべてのインタラクティブな要素にリスナーをアタッチするよりもはるかに効率的です。"
+          },
+          {
+            "term": "SyntheticEvent",
+            "icon": "🎁",
+            "definition": "Reactのクロスブラウザイベントラッパー。ブラウザ間の非一貫性を正規化します。生のアクセスのためにnativeEventプロパティを公開します。"
+          },
+          {
+            "term": "バブリングフェーズ",
+            "icon": "⬆️",
+            "definition": "イベントがターゲット要素から祖先要素に向かって上方向に伝播します。ほとんどのReactイベントハンドラのデフォルトフェーズです。"
+          },
+          {
+            "term": "キャプチャフェーズ",
+            "icon": "⬇️",
+            "definition": "イベントがバブリング前にルートからターゲットに向かって下方向に伝播します。キャプチャフェーズにはonClickCaptureを使用します。"
+          },
+          {
+            "term": "stopPropagation()",
+            "icon": "🚧",
+            "definition": "Reactのシミュレートされたツリーを通じたイベントの伝播を停止します。e.nativeEventで呼び出さない限り、ネイティブイベントは停止しません。"
+          }
+        ],
+        "codeLabel": "イベント委譲の実践",
+        "whyItMatters": "イベント委譲によりReactは非常に効率的です — アプリ内にどれだけ多くのボタンがあっても、イベントタイプごとにネイティブイベントリスナーは1つだけです。またReactは動的に追加されたコンポーネントのイベントも傍受・処理でき、Reactの合成イベントシステムがすべてのブラウザで一貫して動作することを可能にします。",
+        "pitfalls": [
+          "React 17以降、イベントはdocumentではなくルートコンテナに委譲されます。つまりdocument.addEventListenerを手動で呼び出すと、ReactのハンドラーのAFTER（React 16のようなBEFOREではなく）に発火します。",
+          "e.stopPropagation()はReactのシミュレートされたバブリングを停止しますが、ネイティブイベントはすでにルートに到達しています。ネイティブの伝播を停止するにはe.nativeEvent.stopImmediatePropagation()を使用してください。",
+          "古いReactバージョン（イベントプーリング）では、SyntheticEventのプロパティはイベントハンドラが返った後に無効化されます。プロパティには同期的にアクセスするか、React 16ではe.persist()を呼び出してください。"
+        ]
+      }
+    },
+    "refsDom": {
+      "title": "Refs & DOMアクセス",
+      "subtitle": "useRefがレンダリング間でミュータブルな値を保持し、直接DOMアクセスを提供する方法。",
+      "explainer": {
+        "overview": "useRefはコンポーネントの全ライフタイムを通じて持続するミュータブルなオブジェクト { current: value } を返します。stateと異なり、ref.currentを変更しても再レンダリングはトリガーされません。ReactはrefsをDOMへの直接アクセスのためのエスケープハッチとしても使用します — コミットフェーズ後、Reactはref.currentを実際のDOMノードに設定し、ブラウザAPIへの命令的なアクセスを提供します。",
+        "howItWorks": [
+          {
+            "title": "useRefは持続するミュータブルなボックスを作成する",
+            "body": "最初のレンダリングで、useRef(initialValue)はオブジェクト{ current: initialValue }を作成し、FiberのHooksリストに格納します。その後のすべてのレンダリングで、Reactは同じオブジェクトを返します — ref.currentは常に同じボックスを指します。"
+          },
+          {
+            "title": "ref.currentの変更は副作用であり、再レンダリングは発生しない",
+            "body": "ReactはRef.currentの変更を追跡しません。ref.current = 5と書いても、Reactはそれが変わったことを知らず、再レンダリングをスケジュールしません。これにより、refsは表示する必要はないが持続させたい値に最適です。"
+          },
+          {
+            "title": "DOM ref：Reactはコミット後にref.currentを設定する",
+            "body": "refをJSX要素に渡すとき（<input ref={myRef} />）、Reactはレンダーフェーズ中にref.currentを設定しません。コミットフェーズ — DOMノードが存在した後 — まで待ち、その後ref.current = domNodeを設定します。"
+          },
+          {
+            "title": "アンマウント時、ref.currentはnullに戻される",
+            "body": "コンポーネントがアンマウントされると、Reactはクリーンアップエフェクトを実行する前にref.current = nullを設定します。これによりエフェクトがデタッチされたDOMノードにアクセスするのを防ぎます。"
+          },
+          {
+            "title": "forwardRefはコンポーネント境界を越えてrefsを渡す",
+            "body": "デフォルトでは、refsを関数コンポーネントにアタッチできません。forwardRefを使用してref propを受け入れ、DOMエレメントに転送するか、useImperativeHandleを通じて命令的なメソッドを公開してください。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "{ current }",
+            "icon": "📦",
+            "definition": "refオブジェクト。Reactはすべてのレンダリングで同じオブジェクトを渡します。currentを自由に変更できます — 再レンダリングは発生しません。"
+          },
+          {
+            "term": "DOM Ref",
+            "icon": "🖱️",
+            "definition": "refをJSX要素に渡すと、コミット後にref.currentで基になるDOMノードを取得できます。フォーカス、スクロール、測定に便利です。"
+          },
+          {
+            "term": "forwardRef",
+            "icon": "➡️",
+            "definition": "ref propを受け入れて内側の要素に転送するか、useImperativeHandleを通じて公開するために関数コンポーネントをラップします。"
+          },
+          {
+            "term": "useImperativeHandle",
+            "icon": "🎛️",
+            "definition": "親が子のrefにアクセスするときに見えるものをカスタマイズします。DOMノードの代わりに特定のメソッドを公開できます。"
+          },
+          {
+            "term": "Ref vs State",
+            "icon": "⚖️",
+            "definition": "UIに影響する値（再レンダリングをトリガー）にはstateを使用します。レンダリングに影響しない値（タイマー、DOMノード、以前の値、フラグ）にはrefを使用します。"
+          }
+        ],
+        "codeLabel": "よくあるRefのパターン",
+        "whyItMatters": "RefsはReactが命令的なコードのために公式に提供するエスケープハッチです。ReactのDeclarativeな世界と、命令的な呼び出しが必要なブラウザAPI（フォーカス、スクロール、アニメーション、サードパーティDOMライブラリ）を橋渡しします。また、エフェクト内の古いクロージャ問題も解決します — 最新のstateとrefを同期させることで、長期実行の非同期操作内で安全に現在の値にアクセスできます。",
+        "pitfalls": [
+          "レンダリング中にref.currentを読み取ったり書き込んだりしないでください — refsはリアクティブではないため、値が変わってもReactは再レンダリングせず、古いUIになります。",
+          "再レンダリングを避ける手段としてrefsを過剰に使用しないでください。UIに表示する必要がある値はstateにすべきです。Refsは副作用と命令的なDOM操作専用です。",
+          "コンポーネントのマウント前（useStateイニシャライザーなど）にref.currentにアクセスするとnullになります — ReactはDOMのrefsをコミットフェーズ後にのみ設定します。"
+        ]
+      }
+    },
+    "keysLists": {
+      "title": "キーとリストレンダリング",
+      "subtitle": "key propがReactがリストアイテムを識別してDOM変更を最小化する方法。",
+      "explainer": {
+        "overview": "Reactがリストのエレメントをレンダリングするとき、レンダリング間でどのアイテムが変更・追加・削除されたかを知る必要があります。key propなしでは、Reactは位置ベースのマッチングを使用します — インデックス0のアイテムはインデックス0のアイテムにマップされます。keyがあれば、Reactはレンダリングをまたいで安定したIDでアイテムをマッチングでき、破棄・再作成ではなく効率的な移動が可能になります。",
+        "howItWorks": [
+          {
+            "title": "Reactは古い子配列と新しい子配列を比較する",
+            "body": "リストが再レンダリングされると、Reactは2つの子エレメントの配列を持ちます：古いものと新しいもの。何を更新・挿入・削除するかを決めるためにそれらをマッチングする必要があります。"
+          },
+          {
+            "title": "keyなし：位置ベースのマッチング",
+            "body": "Reactはインデックスの位置でエレメントをマッチングします。リスト[A, B, C]が[B, A, C]（並び替え）になると、Reactは位置0がAからBに変わり、位置1がBからAに変わったと見なし — 2つの更新と潜在的なstateの喪失を引き起こします。"
+          },
+          {
+            "title": "keyあり：IDベースのマッチング",
+            "body": "Reactはkeyからfiberへのマップを構築します。[A, B, C]が[B, A, C]になることは「key=bが位置1から0に移動、key=aが1から0に移動」と見なされます。Reactは既存のDOMノードを移動します — 破棄・作成サイクルなし。"
+          },
+          {
+            "title": "keyなしのリストはReconcilerの警告をトリガーする",
+            "body": "Reactはkeyなしのリストを検出すると「Each child in a list should have a unique key prop」をログします。これはパフォーマンスの警告です — アプリは動作し続けますが、レンダリングが非効率になります。"
+          },
+          {
+            "title": "keyの変更は強制的にアンマウント + 再マウントする",
+            "body": "コンポーネントのkeyを変更することは、Reactに「これはまったく別のインスタンスだ」と伝えます。Reactは古いコンポーネントをアンマウントし（すべてのクリーンアップを実行）、新しいものをマウントします。これはコンポーネントのstateを意図的にリセットするのに便利です。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "安定したKey",
+            "icon": "🔑",
+            "definition": "レンダリングをまたいでアイテムを識別するkey — 通常はデータベースIDやスラッグ。兄弟要素間で一意である必要があります。"
+          },
+          {
+            "term": "インデックスをKeyとして使用",
+            "icon": "⚠️",
+            "definition": "配列インデックスをkeyとして使用することは、静的で並び替えのないリストにのみ安全です。動的なリストでは、アイテムが並び替えられるとバグを引き起こします。"
+          },
+          {
+            "term": "DOMの再利用",
+            "icon": "♻️",
+            "definition": "Reactがkeyで古いエレメントと新しいエレメントをマッチングすると、既存のDOMノードを再利用し、変更された属性のみを更新します。"
+          },
+          {
+            "term": "Keyによるコンポーネントリセット",
+            "icon": "🔄",
+            "definition": "コンポーネントのkey propを意図的に変更するとリセットされます — アイテムを切り替える際にフォームのstateをリセットするのに便利です。"
+          }
+        ],
+        "codeLabel": "実践でのKey",
+        "whyItMatters": "KeyはReactが古いリストアイテムと新しいリストアイテムをマッチングするためのヒントです。良いkeyはReactがDOMノードを再利用でき（高速）、コンポーネントのstateを保持でき（正確）、最小限の更新をトリガーできます（効率的）。悪いkey（またはkeyなし）はReactが必要以上に苦労するか、予期せずコンポーネントのstateを失うことを意味します。",
+        "pitfalls": [
+          "Math.random()やDate.now()をkeyとして使用しないでください — それらはすべてのレンダリングで変わり、すべてのリストアイテムがレンダリングのたびにアンマウントと再マウントを強制されます。",
+          "Keyは兄弟要素間で一意である必要があり、グローバルではありません。異なる2つのリストは同じkey値を再利用できます。",
+          "key propは特別です — コンポーネントにpropとして渡されません。コンポーネント内でIDが必要な場合は、別のpropとしても渡してください。"
+        ]
+      }
+    },
+    "errorBoundaries": {
+      "title": "エラーバウンダリ",
+      "subtitle": "ReactがコンポーネントツリーのエラーをキャッチしてフォールバックUIを表示する方法。",
+      "explainer": {
+        "overview": "エラーバウンダリは、子コンポーネントツリー内のどこでもJavaScriptエラーをキャッチし、それらのエラーをログに記録し、アプリケーション全体をクラッシュさせる代わりにフォールバックUIを表示するReactクラスコンポーネントです。JavaScriptのcatch{}ブロックのように機能しますが、コンポーネントツリー向けです。エラーバウンダリはレンダリング中、ライフサイクルメソッド内、およびその下のツリー全体のコンストラクタ内のエラーをキャッチします。",
+        "howItWorks": [
+          {
+            "title": "子コンポーネントがレンダリング中にエラーをスローする",
+            "body": "サブツリー内のいずれかのコンポーネントがレンダリング中（またはライフサイクルメソッド内で）エラーをスローすると、ReactはFiberツリーを通じて上方向にエラーを伝播させ始め、最も近いエラーバウンダリを探します。"
+          },
+          {
+            "title": "ReactはFiberツリーを巻き戻してバウンダリを探す",
+            "body": "Reactは親Fiberを上方向に走査します。getDerivedStateFromErrorまたはcomponentDidCatchを実装したクラスコンポーネントを見つけると、そこで停止します。一つも見つからずにルートに到達すると、アプリ全体がアンマウントされます。"
+          },
+          {
+            "title": "getDerivedStateFromErrorがバウンダリのstateを更新する",
+            "body": "Reactはバウンダリクラス上でgetDerivedStateFromError(error)を呼び出します。この静的メソッドは新しいstate（例：{ hasError: true }）を返し、バウンダリがフォールバックUIで再レンダリングされます。"
+          },
+          {
+            "title": "componentDidCatchがエラーをログに記録する",
+            "body": "フォールバックUIが表示された後、ReactはcomponentDidCatch(error, errorInfo)を呼び出します — Sentryのようなロギングサービスにエラーを送信するのに適した場所です。"
+          },
+          {
+            "title": "エラーバウンダリがフォールバックUIをレンダリングする",
+            "body": "バウンダリコンポーネントはstateを確認し（hasError）、子（通常）またはフォールバックJSXエレメントのどちらかをレンダリングします。バウンダリの外側のアプリの残りの部分は通常通り動作し続けます。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "getDerivedStateFromError",
+            "icon": "🛡️",
+            "definition": "静的クラスメソッド。子がスローしたときのレンダーフェーズ中に呼び出されます。フォールバックレンダリングをトリガーするための新しいstateを返します。"
+          },
+          {
+            "term": "componentDidCatch",
+            "icon": "📊",
+            "definition": "インスタンスメソッド。フォールバックがレンダリングされた後のコミットフェーズ中に呼び出されます。エラーロギングに使用します。エラー + コンポーネントスタックを受け取ります。"
+          },
+          {
+            "term": "エラーの伝播",
+            "icon": "⬆️",
+            "definition": "エラーは例外がコールスタックを上方向にバブリングするのと同様に、Fiberツリーを通じて最も近いバウンダリまでバブリングします。"
+          },
+          {
+            "term": "リカバリー / リセット",
+            "icon": "🔄",
+            "definition": "バウンダリのkey propを変更することでリセットできます。これによりReactはサブツリー全体をアンマウントして新しい状態で再マウントします。"
+          }
+        ],
+        "codeLabel": "エラーバウンダリの実装",
+        "whyItMatters": "エラーバウンダリなしでは、単一の未処理レンダーエラーがReactアプリ全体をクラッシュさせ、空白の画面を表示します。エラーバウンダリにより、失敗をUIの分離されたセクションに隔離できます — アプリの残りの部分は動作し続けます。これは、すべてのエッジケースを予測できない本番アプリにとって非常に重要です。",
+        "pitfalls": [
+          "エラーバウンダリはイベントハンドラ内のエラー（そこではtry/catchを使用）、非同期コード（setTimeout、Promise）、またはサーバーサイドレンダリングではキャッチしません。",
+          "エラーバウンダリはクラスコンポーネントでなければなりません — フック相当のものはありません。フックフレンドリーなラッパーには「react-error-boundary」のようなライブラリを使用してください。",
+          "エラーバウンダリは自身のエラーをキャッチできません — 子のエラーのみです。バウンダリは常に別のバウンダリでラップしてください。"
+        ]
+      }
+    },
+    "portals": {
+      "title": "Reactポータル",
+      "subtitle": "Reactのイベントバブリングを維持しながら親DOM階層外に子をレンダリング。",
+      "explainer": {
+        "overview": "ReactDOM.createPortal(children, domNode)は、親がレンダリングするDOMノードとは異なるDOMノードにReactのサブツリーをレンダリングします。コンポーネントはDOM上では別の場所（モーダルがbodyレベルにあるなど）に表示されますが、Reactコンポーネントツリーでは依然として子として扱われます。つまり、context、イベント、Reactライフサイクルはポータルがインラインであるかのように正確に機能します。",
+        "howItWorks": [
+          {
+            "title": "Reactはポータルを指定されたDOMノードにレンダリングする",
+            "body": "createPortal(children, document.getElementById('modal-root'))は、childrenを親のDOMサブツリーではなく#modal-rootにレンダリングするようReactに指示します。DOMの出力は親のDOMとは完全に切り離されています。"
+          },
+          {
+            "title": "コンポーネントは依然として親のReact子である",
+            "body": "DOMの別の場所にレンダリングされていても、ポータルコンポーネントはそれをレンダリングするコンポーネントの概念上の子です。同じcontext値、同じReact propsを受け取り、同じFiberツリーに参加します。"
+          },
+          {
+            "title": "イベントはDOMツリーではなくReactツリーを通じてバブルする",
+            "body": "ポータル内をクリックすると、クリックイベントはReactのコンポーネントツリーを通じて親にバブルします — DOMではポータルのノードが親のDOMサブツリーの外側にあっても同様です。Reactの合成イベントシステムはDOMツリーではなくFiberツリー上で動作します。"
+          },
+          {
+            "title": "contextはReactツリーを通じてポータルに流れる",
+            "body": "ポータルコンポーネントは、ポータルが完全に異なるDOMノードにレンダリングされていても、ReactのコンポーネントツリーでProviderの祖先にあたるものからcontext値を読み取ることができます。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "createPortal",
+            "icon": "🌀",
+            "definition": "ReactDOM.createPortal(children, domNode)。React childrenを親のDOMコンテナではなくdomNodeにレンダリングします。"
+          },
+          {
+            "term": "ReactツリーとDOMツリー",
+            "icon": "🌳",
+            "definition": "2つの異なる階層。Reactツリーはcontext、イベント、propsを管理します。DOMツリーは視覚的なレイアウトとCSSの継承を管理します。"
+          },
+          {
+            "term": "イベントバブリング",
+            "icon": "⬆️",
+            "definition": "ポータルのイベントはReactコンポーネントツリー（DOMツリーではなく）を通じてバブルするため、親コンポーネントはポータルの子からのイベントを受け取ります。"
+          },
+          {
+            "term": "モーダル・ツールチップパターン",
+            "icon": "💬",
+            "definition": "最も一般的なポータルのユースケース：祖先要素のoverflow:hiddenやz-indexのクリッピングを避けるため、モーダルやツールチップをdocument.bodyにレンダリングします。"
+          }
+        ],
+        "codeLabel": "モーダル用のcreatePortal",
+        "whyItMatters": "ポータルはCSSの根本的な問題を解決します：モーダル、ツールチップ、ドロップダウンは親コンテナから視覚的に「抜け出す」必要があります。overflow:hidden、z-indexのスタッキングコンテキスト、transformプロパティなどの祖先CSSは、絶対位置指定された子をクリップしたり再配置したりすることがあります。document.bodyにレンダリングすることで、ポータルはこれらの制約をすべて回避しながらReactのコンポーネントモデルを維持します。",
+        "pitfalls": [
+          "ポータルのターゲットDOMノードはポータルがレンダリングされる前に存在しなければなりません。HTMLに静的な要素を使用するか、ポータルをレンダリングする前にuseEffectで作成してください。",
+          "ポータルのイベントバブリングは開発者を驚かせます — ポータル内のクリックはReact親コンポーネントのonClickハンドラを発火させます（DOMではそれらの親がポータルを含んでいなくても）。必要に応じてstopPropagationを使用してください。",
+          "ポータルは異なるDOMの場所にレンダリングされるため、React親からCSSを継承しません。グローバルCSSまたはスタイルを注入するCSS-in-JSソリューションが必要です。"
+        ]
+      }
+    },
+    "suspense": {
+      "title": "Suspense & React.lazy",
+      "subtitle": "Suspenseバウンダリによるフォールバックレンダリング、コード分割、ストリーミングSSR。",
+      "explainer": {
+        "overview": "Suspenseはコンポーネントがレンダリング前に何かを「待つ」ことを可能にするメカニズムです。コンポーネントの準備ができていない場合（lazyインポートがロードされていない、またはデータフェッチが解決されていない）、Promiseをスローします。ReactはスローされたPromiseをキャッチし、ツリーの上位にある最も近いSuspenseバウンダリを見つけ、フォールバックUIを表示し、Promiseが解決したときにサブツリーを自動的に再レンダリングします。",
+        "howItWorks": [
+          {
+            "title": "React.lazy()は遅延ロードコンポーネントを作成する",
+            "body": "React.lazy(() => import('./MyComponent'))は動的インポートを特別なラッパーでラップします。Reactが初めてレンダリングしようとすると、import()がまだ解決されていないため、lazyラッパーはPromiseをスローします。"
+          },
+          {
+            "title": "スローされたPromiseは最も近いSuspenseまでバブルする",
+            "body": "レンダーフェーズ中、ReactはスローされたPromise（スローされたエラーではありません — それらはError Boundariesに行きます）をキャッチします。Fiberツリーを上に走査して最も近い<Suspense>祖先を見つけ、サスペンドされたサブツリーの代わりにfallback propをレンダリングします。"
+          },
+          {
+            "title": "ReactはPromiseを購読する",
+            "body": "ReactはスローされたPromiseに.then()ハンドラをアタッチします。Promiseが解決されると（モジュールがロードされるかデータが到着すると）、Reactはサスペンドされたサブツリーを最初から再レンダリングし、今度は解決された値を使用します。"
+          },
+          {
+            "title": "並行モード：フォールバックのちらつきなしのSuspense",
+            "body": "並行モードでは、ReactはサスペンドされたサブツリーをDOMにコミットせずに「試みる」ことができます。サスペンドすると、Reactは（フォールバックへのフラッシュなしで）古いコンテンツを表示し続け、Promiseが解決した後に新しいコンテンツをアトミックに切り替えます。"
+          },
+          {
+            "title": "ストリーミングSSR：サーバーがHTMLをチャンクで送信する",
+            "body": "Next.js/React 18ストリーミングでは、サーバーはSuspenseフォールバックが配置されたHTMLシェルを即座に送信します。各非同期データフェッチがサーバーで解決されると、Reactは入力されたHTMLチャンクをブラウザにストリームし、インラインでフォールバックを置き換えます。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "React.lazy()",
+            "icon": "📦",
+            "definition": "遅延ロードコンポーネントを作成するために動的インポートをラップします。最初のレンダリングでPromiseをスローします。解決後、Reactはロードされたモジュールで再レンダリングします。"
+          },
+          {
+            "term": "Suspenseバウンダリ",
+            "icon": "🛡️",
+            "definition": "<Suspense fallback={<Spinner/>}>は子孫からスローされたPromiseをキャッチします。待機中はフォールバックを表示し、準備ができたら子を表示します。"
+          },
+          {
+            "term": "スローされたPromise",
+            "icon": "🚀",
+            "definition": "コンポーネントが準備できていないことを通知するメカニズム。lazyコンポーネントに限らず、任意のコンポーネントがSuspenseをトリガーするためにPromiseをスローできます — これがReact Queryなどのデータフェッチライブラリの統合方法です。"
+          },
+          {
+            "term": "ストリーミングSSR",
+            "icon": "🌊",
+            "definition": "サーバーがHTMLを段階的に送信します。シェルはフォールバックとともに即座にレンダリングされます。非同期処理が完了すると、Reactは入力されたコンテンツチャンクをブラウザにストリームします。"
+          },
+          {
+            "term": "SuspenseList",
+            "icon": "📋",
+            "definition": "複数のSuspenseバウンダリの表示順を調整します。「一緒に」（一度にすべて表示）または「前から」/「後ろから」（順番に表示）を指定できます。"
+          }
+        ],
+        "codeLabel": "コード分割とデータフェッチのためのSuspense",
+        "whyItMatters": "Suspenseは以前は別々だった3つの問題（コード分割、ローディング状態、サーバーストリーミング）を1つの宣言的なモデルに統合します。すべてのコンポーネントでisLoadingフラグを追跡する代わりに、バウンダリとフォールバックを宣言し、Reactがオーケストレーションを処理します。これにより、データフェッチのコードが大幅に簡素化され、ローディング状態管理のバグがなくなります。",
+        "pitfalls": [
+          "Suspenseはエラーをキャッチしません — スローされたPromiseのみです。フェッチの失敗を適切に処理するためにSuspenseをError Boundaryでラップしてください。",
+          "レンダリングのたびに新しいPromiseオブジェクトをスローすると無限ループが発生します — ReactはPromiseが解決したと判断できません。ライブラリはPromiseをキャッシュして、解決されるまで同じオブジェクトをスローします。",
+          "React 18以降では、ルートをSuspenseバウンダリでラップするだけではストリーミングSSRには不十分です。Reactが各セクションを独立してストリームできるように、非同期処理が行われるコンポーネントレベルにバウンダリを配置する必要があります。"
+        ]
+      }
+    },
+    "concurrentRendering": {
+      "title": "並行レンダリング",
+      "subtitle": "React 18がタイムスライシングと優先度レーンを使ってUIの応答性を維持する方法。",
+      "explainer": {
+        "overview": "並行レンダリングはReact 18の機能で、複数バージョンのUIを同時に準備し、長時間実行されるレンダリングを中断してより緊急の更新を処理できます。レンダリングがメインスレッドをブロックする単一の同期操作である代わりに、Reactはレンダリング作業をツリーの途中で一時停止し、ブラウザに制御を譲り、緊急の更新を処理し、その後一時停止した作業を再開または破棄できます。",
+        "howItWorks": [
+          {
+            "title": "Fiberアーキテクチャが中断可能性を実現する",
+            "body": "ReactのFiberリコンサイラーは各コンポーネントを小さな作業単位（Fiber）として表現します。レンダーフェーズは一度に1つのFiberを処理し、各ユニットの後により高い優先度の作業が到着したかどうかを確認します。その場合、一時停止して後で戻ることができます。"
+          },
+          {
+            "title": "タイムスライシング：Reactは約5msごとにブラウザに制御を譲る",
+            "body": "Reactのスケジューラーはレンダリング作業を小さなチャンクに分割します。各チャンクの後、ブラウザに制御を戻します — 入力イベント、アニメーション、描画が発生できるようにします。これにより長いレンダリング中にUIがフリーズするのを防ぎます。"
+          },
+          {
+            "title": "優先度レーンが更新の緊急度を割り当てる",
+            "body": "React 18は「レーン」モデルを使用して更新を優先度で分類します：SyncLane（ユーザー入力、即時必須）、InputContinuousLane（継続的なジェスチャー）、DefaultLane（通常の状態更新）、TransitionLane（非緊急のUIトランジション）。"
+          },
+          {
+            "title": "高優先度の更新は低優先度の更新を中断する",
+            "body": "高優先度の更新が低優先度のレンダリング中に到着した場合、Reactは低優先度の作業を一時停止し、高優先度の更新を完全に処理（コミットを含む）し、その後低優先度の作業を再開または再開始します。"
+          },
+          {
+            "title": "破棄されたレンダリングには目に見える副作用がない",
+            "body": "レンダーフェーズは純粋（副作用なし）であるため、Reactは部分的に完了したレンダリングを安全に破棄して、アプリケーションの状態を破損させることなく再開始できます。副作用はコミットフェーズでのみ発生し、コミットフェーズは中断されることはありません。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "タイムスライシング",
+            "icon": "⏱️",
+            "definition": "レンダリング作業を約5msのチャンクに分割し、チャンク間でブラウザに制御を譲ります。高コストなレンダリング中もUIの応答性を維持します。"
+          },
+          {
+            "term": "優先度レーン",
+            "icon": "🛣️",
+            "definition": "更新をSyncLane（最も緊急）からOffscreenLane（最も緊急でない）まで分類するビットマスクシステム。スケジューリングの順序を決定します。"
+          },
+          {
+            "term": "スケジューラー",
+            "icon": "📅",
+            "definition": "Reactの内部タスクスケジューラー。レンダリングタスクの優先度キューを管理し、優先度と期限に基づいて次に何を処理するかを決定します。"
+          },
+          {
+            "term": "startTransition",
+            "icon": "🔀",
+            "definition": "状態更新を非緊急トランジションとしてマークするAPI。より緊急の更新のためにこの作業を中断できることをReactに伝えます。"
+          },
+          {
+            "term": "useTransition",
+            "icon": "🕐",
+            "definition": "startTransitionとトランジションが進行中かどうかを示すisPendingブール値を提供するHook。"
+          }
+        ],
+        "codeLabel": "非緊急更新のためのstartTransition",
+        "whyItMatters": "React 18以前は、遅いレンダリングをトリガーする状態更新はレンダリングが完了するまでUI全体をフリーズさせました。並行レンダリングにより、入力への入力、スクロール、ボタンのクリックは、Reactがバックグラウンドで複雑な更新を計算している間も応答性を維持します。これはSuspense、ストリーミングSSR、React Server Componentsの基盤です。",
+        "pitfalls": [
+          "startTransitionは遅いレンダリングを速くするわけではありません — 単にノンブロッキングにするだけです。レンダリングが遅い場合は、メモ化や仮想化で最適化してください。",
+          "レンダーフェーズのコードは現在複数回実行される可能性があります（Reactは一時停止したレンダリングを再開始することがあります）。レンダリング関数が真に純粋で副作用がないことを確認してください。",
+          "すべてのReact 18機能がデフォルトで並行ではありません。並行機能を有効にするには、レガシーのReactDOM.render()ではなくcreateRoot()を使用する必要があります。"
+        ]
+      }
+    },
+    "transitions": {
+      "title": "トランジション (useTransition)",
+      "subtitle": "優先度ベースの更新 — startTransitionによる緊急・非緊急レンダリング。",
+      "explainer": {
+        "overview": "useTransitionはReact 18のHookで、状態更新を「非緊急トランジション」としてマークできます。緊急の更新（入力、クリック）は即座に処理され、中断されることはありません。トランジション更新は低優先度です — トランジション進行中に緊急の更新が到着すると、Reactはトランジションを中断し、緊急の作業を処理してからトランジションを再開始します。これにより、重い再レンダリング中もUIの応答性が維持されます。",
+        "howItWorks": [
+          {
+            "title": "React 18はスケジューラーに優先度レーンを追加する",
+            "body": "Reactスケジューラーは各更新に優先度レーンを割り当てます：SyncLane（緊急、バッチ不可）、InputContinuousLane（ドラッグ/スクロール）、DefaultLane（通常のsetState）、TransitionLane（useTransition / startTransition）。高優先度のレーンは常に低優先度のレーンを先取りします。"
+          },
+          {
+            "title": "startTransitionは更新を低優先度としてマークする",
+            "body": "startTransition(callback)内にsetStateの呼び出しをラップすると、Reactに「この更新はトランジションです — 中断可能です」と伝えます。ReactはTransitionLaneでスケジュールし、トランジションが完了するまで現在のUIを表示し続けます。"
+          },
+          {
+            "title": "緊急の更新が進行中のトランジションを中断する",
+            "body": "ユーザーが5000アイテムのリストがトランジションとして再レンダリング中に別の文字を入力すると、Reactはトランジションのレンダリングをツリーの途中で一時停止し、入力（緊急）を即座に処理し、入力を更新してから、新しい入力値でトランジションを最初から再開始します。"
+          },
+          {
+            "title": "isPendingはトランジションが進行中であることを示す",
+            "body": "useTransitionは[isPending, startTransition]を返します。isPendingはReactがトランジションを処理している間はtrueです。UIをブロックせずに控えめなローディングインジケーターを表示するために使用します。"
+          },
+          {
+            "title": "useDeferredValueは派生値を遅延させる",
+            "body": "startTransitionの代替として：useDeferredValue(value)はトランジション中に遅れる値の遅延コピーを返します。UIは最初に古い遅延値でレンダリング（高速）し、Reactに時間ができたときに新しい値で再レンダリングします。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "トランジションレーン",
+            "icon": "🛤️",
+            "definition": "トランジション更新用の低優先度スケジューラーレーン。より高優先度の作業（ユーザー入力、同期更新）によって先取りされる可能性があります。"
+          },
+          {
+            "term": "startTransition()",
+            "icon": "🚦",
+            "definition": "コールバック内のsetState呼び出しを非緊急としてマークします。スタンドアロンのインポートとして、またはuseTransitionフックから使用できます。"
+          },
+          {
+            "term": "isPending",
+            "icon": "⏳",
+            "definition": "useTransitionからのブール値。Reactがまだトランジション更新を処理している間はtrue。入力をブロックせずにスピナーを表示するために使用します。"
+          },
+          {
+            "term": "useDeferredValue",
+            "icon": "🕐",
+            "definition": "値の遅延コピーを返します。最初に古い値でレンダリング（即時）し、アイドル時に新しい値で再レンダリングします。大きなリストのフィルタリングに役立ちます。"
+          },
+          {
+            "term": "中断と再開始",
+            "icon": "🔄",
+            "definition": "トランジションの途中で緊急の更新が到着すると、Reactは進行中のトランジションレンダリングを破棄し、緊急の作業を処理してから新鮮な状態で再開始します。"
+          }
+        ],
+        "codeLabel": "検索フィルターのためのuseTransition",
+        "whyItMatters": "トランジション以前は、Reactはすべての状態更新を同じ優先度でレンダリングしていました — 重いリストの再レンダリングが数百ミリ秒間入力をフリーズさせることがありました。トランジションにより、「ユーザーは入力を瞬時に感じる必要があるが、結果リストは少し時間がかかっても構わない」とReactに明示的に伝えられます。これが高コストなレンダリングを扱う際の、もたつくアプリと滑らかなアプリの違いです。",
+        "pitfalls": [
+          "startTransitionはコールバック内の非同期コードでは機能しません。startTransition内に直接ラップされた同期的なsetState呼び出しのみがトランジションとしてマークされます。",
+          "トランジションは同期的なレンダリングを中断できません。レンダリング関数内の重いループ（非同期ではなく）によってコンポーネントのレンダリングが遅い場合、トランジションは役立ちません — 代わりにuseMemoや仮想化が必要です。",
+          "すべての状態更新をトランジションとしてマークしないでください — スケジューリングのオーバーヘッドが発生します。待ち時間がユーザーに認識できる（100ms以上）本当に重いレンダリングにのみトランジションを使用してください。"
+        ]
+      }
+    },
+    "serverComponents": {
+      "title": "Reactサーバーコンポーネント",
+      "subtitle": "サーバー/クライアント境界、RSCペイロードストリーミング、バンドルなしのサーバーレンダリング。",
+      "explainer": {
+        "overview": "React Server Components（RSC）はサーバー上でのみ実行されるコンポーネントです — ブラウザには決して送信されません。クライアントのバンドルコストゼロで、データベース、ファイルシステム、サーバー専用のシークレットに直接アクセスできます。RSCの出力はHTMLではなく、クライアントのReactがサーバーコードを再実行せずにコンポーネントツリーを再構築するために使用する特別なワイヤーフォーマット（RSCペイロード）です。",
+        "howItWorks": [
+          {
+            "title": "Server Componentsはサーバーでレンダリングし、RSCペイロードを生成する",
+            "body": "ページがロードされると、サーバーはServer Componentsを実行し、非同期データベースクエリ、ファイル読み取り、またはAPI呼び出しを直接実行します。出力はHTMLではなく、カスタムストリーミングフォーマットのシリアライズされたReactエレメントツリー（RSCペイロード）です。"
+          },
+          {
+            "title": "Client ComponentsはRSCペイロードの穴である",
+            "body": "サーバーがClient Component（'use client'でマーク）に遭遇すると、それをレンダリングしません。代わりに、ペイロードにコンポーネントのモジュールURLとpropsを含むCLIENT_REFERENCEプレースホルダーを挿入します。クライアントはブラウザでClient Componentを実行することでこれらの穴を埋めます。"
+          },
+          {
+            "title": "RSCペイロードはクライアントに段階的にストリームされる",
+            "body": "サーバーは各非同期操作が完了するたびにRSCペイロードをストリームします。クライアントのReactランタイムはチャンクを受信し、段階的にコンポーネントツリーを構築します — まずServer Componentの出力、次にClient Componentのシェル、そしてハイドレーション。"
+          },
+          {
+            "title": "クライアントはClient Componentsのみをハイドレートする",
+            "body": "クライアントのReactはストリームされたRSCペイロードを受け取り、完全なコンポーネントツリーを再構築するために使用します。ハイドレートされる（イベントリスナーが付与される）のはClient Componentsのみです。Server Componentの出力はすでに最終的なものです — クライアントで再実行されません。"
+          },
+          {
+            "title": "Server Actionsはクライアントからサーバーへのミューテーションを可能にする",
+            "body": "'use server'でマークされた関数はServer Actionsになります — クライアントが通常の非同期関数のように呼び出せるRPCスタイルの関数です。内部では、ReactはエンコードされたargumentとともにサーバーにPOSTリクエストを送信し、新しいRSCペイロードをストリームで返します。"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "'use client'",
+            "icon": "💻",
+            "definition": "モジュールとそのすべてのインポートをClient Componentsとしてマークするファイルレベルのディレクティブ。クライアントバウンダリを作成します — すべてのエクスポートでhooks、イベントハンドラー、ブラウザAPIを使用できます。"
+          },
+          {
+            "term": "'use server'",
+            "icon": "🖥️",
+            "definition": "関数をServer Actionとしてマークします。ネットワークリクエストを通じてClient Componentsから呼び出せます。関数はフルサーバーサイドアクセスを持ってサーバー上で実行されます。"
+          },
+          {
+            "term": "RSCペイロード",
+            "icon": "📦",
+            "definition": "サーバーでレンダリングされたコンポーネントツリーを記述するコンパクトなストリーミングJSON形式。Client Componentsが入るべき場所にCLIENT_REFERENCEの穴を含みます。HTMLではありません。"
+          },
+          {
+            "term": "ゼロバンドルコスト",
+            "icon": "🪶",
+            "definition": "Server Componentsはクライアントのバンドルに一切含まれません。500KBのMarkdownパーサーをインポートするServer Componentはクライアントに0バイトを追加します。"
+          },
+          {
+            "term": "共有コンポーネント",
+            "icon": "🔄",
+            "definition": "'use client'または'use server'のないコンポーネントは両方のコンテキストで使用できます。Server Componentからインポートされるとサーバーで実行され、Client Componentからインポートされるとクライアントで実行されます。"
+          }
+        ],
+        "codeLabel": "サーバーとクライアントのコンポーネントパターン",
+        "whyItMatters": "Server Componentsはパフォーマンスの方程式を根本的に変えます。以前は、データをフェッチするコンポーネントはフェッチライブラリ、データ変換ロジック、レンダリングコードをクライアントに送信する必要がありました。RSCでは、それらすべてがサーバーに留まります。クライアントは最終的なレンダリング出力とインタラクティブなアイランド（Client Components）のみを受け取ります。これにより、バンドルサイズが大幅に小さくなり、Time-to-Interactiveが向上します。",
+        "pitfalls": [
+          "Server ComponentsはuseState、useEffect、useContext、またはいかなるhookも使用できません — これらはクライアント専用の機能です。Server Componentにインタラクティビティが必要な場合は、Client Componentの子として分離してください。",
+          "Client Component内にServer Componentをインポートすることはできません。バウンダリは一方向です：Server ComponentsはClient Componentsをレンダリングできますが、その逆はできません。代わりに、Server Componentの出力をprops（children）としてClient Componentsに渡してください。",
+          "Server ComponentsからClient Componentsに渡されるpropsはシリアライズ可能（JSON互換）でなければなりません。関数、クラスインスタンス、Date、Setはサーバー/クライアント境界をpropsとして越えることはできません。"
+        ]
+      }
+    }
+  }
+}

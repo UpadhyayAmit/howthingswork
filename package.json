@@ -1,0 +1,46 @@
+{
+  "name": "howthingswork",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UpadhyayAmit/howthingswork.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/UpadhyayAmit/howthingswork/issues"
+  },
+  "homepage": "https://github.com/UpadhyayAmit/howthingswork#readme",
+  "description": "A visual, interactive encyclopedia that explains how technologies work internally.",
+  "dependencies": {
+    "@mdx-js/loader": "^3.1.1",
+    "@mdx-js/react": "^3.1.1",
+    "@monaco-editor/react": "^4.7.0",
+    "@next/mdx": "^16.2.1",
+    "@tailwindcss/postcss": "^4.2.2",
+    "@tailwindcss/typography": "^0.5.19",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@xyflow/react": "^12.10.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.38.0",
+    "next": "^16.2.1",
+    "next-intl": "^4.8.3",
+    "postcss": "^8.5.8",
+    "prism-react-renderer": "^2.4.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^5.9.3",
+    "zustand": "^5.0.12"
+  }
+}

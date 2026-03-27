@@ -1,0 +1,29 @@
+# React Internals
+
+## Fiber Architecture
+
+React Fiber is the reimplementation of React's core reconciliation algorithm. Introduced in React 16, it enables incremental rendering — the ability to split rendering work into chunks and spread it over multiple frames.
+
+### Key Concepts
+
+- **Fiber Node**: A JavaScript object representing a unit of work. Each React element has a corresponding fiber.
+- **Work Loop**: The scheduler that processes fibers one at a time, yielding back to the browser between units.
+- **Reconciliation**: The process of comparing the new tree with the previous tree and determining what changes need to be applied to the DOM.
+
+### Traversal Order
+
+Fibers are processed depth-first:
+1. Begin work on the current fiber
+2. If it has a child, move to the child
+3. If no child, complete work and move to sibling
+4. If no sibling, return to parent
+
+## Hooks
+
+React Hooks are stored as a linked list on each fiber node. During rendering, React walks this list sequentially — which is why hooks must be called in the same order every render.
+
+### Hook Types
+- `useState` — Manages component state via an update queue
+- `useEffect` — Schedules side effects after render
+- `useMemo` — Memoizes computed values
+- `useCallback` — Memoizes function references

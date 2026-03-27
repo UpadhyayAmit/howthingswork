@@ -1,0 +1,1303 @@
+{
+  "nav": {
+    "react": "React",
+    "azureFunctions": "Azure Functions",
+    "csharpClr": "C# / CLR",
+    "fiberArchitecture": "Fiber-Architektur",
+    "virtualDom": "Virtuelles DOM & Diffing",
+    "reconciliation": "Reconciliation",
+    "renderingPipeline": "Rendering-Pipeline",
+    "componentLifecycle": "Komponenten-Lebenszyklus",
+    "hooksInternals": "Hooks-Interna",
+    "useeffectLifecycle": "useEffect-Lebenszyklus",
+    "stateBatching": "Status & Batching",
+    "memoization": "Memoisierung",
+    "reactMemo": "React.memo & Re-Renders",
+    "contextApi": "Context API",
+    "eventSystem": "Ereignissystem",
+    "refsDom": "Refs & DOM",
+    "keysLists": "Schlüssel & Listen",
+    "errorBoundaries": "Fehlergrenzen",
+    "portals": "Portale",
+    "suspense": "Suspense & Lazy",
+    "concurrentMode": "Concurrent-Rendering",
+    "transitions": "Übergänge",
+    "serverComponents": "Server-Komponenten"
+  },
+  "home": {
+    "title": "Wie es funktioniert",
+    "highlight": "funktioniert",
+    "subtitle": "Visuelle, interaktive Erklärungen, wie Technologien unter der Haube funktionieren.",
+    "reactTitle": "React-Interna",
+    "reactDesc": "Fiber-Architektur, Hooks-Lebenszyklus, Reconciliation und virtuelles DOM-Diffing.",
+    "javascriptTitle": "JavaScript Engine",
+    "javascriptDesc": "Event loop, closures, prototypal inheritance, promises, and V8 garbage collection.",
+    "csharpTitle": "C# / .NET Runtime",
+    "csharpDesc": "CLR architecture, JIT compilation, garbage collection, async state machines, and generics.",
+    "aspnetTitle": "ASP.NET Core",
+    "aspnetDesc": "Middleware pipeline, routing, authentication, model binding, and dependency injection.",
+    "efTitle": "Entity Framework Core",
+    "efDesc": "DbContext, change tracker, LINQ-to-SQL pipeline, migrations, and loading strategies.",
+    "azureTitle": "Azure Cloud",
+    "azureDesc": "Functions, App Service, Service Bus, Cosmos DB, Key Vault, and managed identity.",
+    "architectureTitle": "Architecture & Patterns",
+    "architectureDesc": "SOLID principles, clean architecture, DDD, CQRS, and Gang of Four design patterns.",
+    "microservicesTitle": "Microservices",
+    "microservicesDesc": "API gateway, circuit breaker, saga pattern, event-driven architecture, and containers.",
+    "testingTitle": "Testing Strategies",
+    "testingDesc": "Unit testing, Jest, xUnit, Playwright E2E, TDD, mocking, and contract testing.",
+    "systemdesignTitle": "System Design",
+    "systemdesignDesc": "Scalability, load balancing, caching, sharding, message queues, and CDN.",
+    "aimlTitle": "AI & Machine Learning",
+    "aimlDesc": "Neural networks, transformers, RAG, embeddings, AI agents, and model serving.",
+    "comingSoon": "Explore 98+ interactive visualizers across 11 technology tracks."
+  },
+  "common": {
+    "triggerRender": "Rendering auslösen",
+    "reset": "Zurücksetzen",
+    "play": "Abspielen",
+    "pause": "Pausieren",
+    "howItWorks": "So funktioniert es",
+    "keyConcepts": "Schlüsselkonzepte",
+    "whyItMatters": "Warum das wichtig ist",
+    "commonPitfalls": "Häufige Fehler"
+  },
+  "pages": {
+    "fiberVisualizer": {
+      "title": "React Fiber-Visualizer",
+      "subtitle": "Beobachten Sie, wie React den Fiber-Baum bei der Reconciliation mit Tiefensuche durchläuft.",
+      "explainer": {
+        "overview": "Fiber ist Reacts internes Reconciliation-Modul, das in React 16 eingeführt wurde. Jede Komponente in Ihrer App hat einen entsprechenden Fiber-Knoten — ein JavaScript-Objekt, das den Komponententyp, seine Props, seinen Zustand, den zugehörigen DOM-Knoten sowie Zeiger auf übergeordnete, untergeordnete und benachbarte Fibers speichert. Diese verknüpfte Struktur erlaubt es React, die Arbeit über mehrere Frames hinweg anzuhalten, fortzusetzen und zu priorisieren.",
+        "howItWorks": [
+          {
+            "title": "Jede Komponente wird einem Fiber-Knoten zugeordnet",
+            "body": "Wenn React Ihren Komponentenbaum rendert, erstellt es für jedes Element einen Fiber-Knoten. Der Knoten speichert: Typ (Funktion/Klasse/String), Props, Zustand, Effect-Hooks und den Work-in-Progress-Zustand des vorherigen Renderings."
+          },
+          {
+            "title": "Fibers bilden einen verknüpften Baum, keinen Aufrufstapel",
+            "body": "Anders als ein rekursiver Aufrufstapel (der nicht pausiert werden kann) sind Fibers als verkettete Liste verbunden: Jeder Knoten hat einen child-Zeiger (erstes Kind), einen sibling-Zeiger (nächstes Geschwister) und einen return-Zeiger (Elternteil). Dies ermöglicht React, den Baum iterativ zu durchlaufen."
+          },
+          {
+            "title": "Tiefensuche: beginWork → completeWork",
+            "body": "React durchläuft den Fiber-Baum mit Tiefensuche. Es ruft 'beginWork' beim Abstieg auf (Elternteil → Kind) und 'completeWork' beim Aufstieg (Kind → Elternteil). Dieser Zwei-Phasen-Ansatz erlaubt React, eine Effect-Liste von unten nach oben aufzubauen."
+          },
+          {
+            "title": "Doppelte Pufferung: current vs. work-in-progress",
+            "body": "React hält zwei Fiber-Bäume gleichzeitig: den 'current'-Baum (was auf dem Bildschirm angezeigt wird) und den 'work-in-progress'-Baum (was gerade gebaut wird). Jeder Fiber-Knoten hat einen 'alternate'-Zeiger, der sein Gegenstück im anderen Baum verknüpft."
+          },
+          {
+            "title": "Nach dem Commit wird work-in-progress zum current",
+            "body": "Wenn die Commit-Phase abgeschlossen ist, tauscht React die beiden Bäume atomisch, indem es den 'current'-Zeiger der Wurzel auf den work-in-progress-Baum setzt. Der alte current-Baum wird zum neuen work-in-progress für das nächste Rendering."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Fiber Node",
+            "icon": "🧵",
+            "definition": "Ein JS-Objekt, das eine Arbeitseinheit für eine Komponente darstellt. Enthält Typ, key, ref, Props, Zustand, Hooks-Liste, Effect-Tags und Baumzeiger."
+          },
+          {
+            "term": "Work-in-Progress Tree",
+            "icon": "🌱",
+            "definition": "Der Fiber-Baum, der während der Reconciliation aufgebaut wird. Für den Benutzer nicht sichtbar, bis die Commit-Phase abgeschlossen ist und er mit dem current-Baum getauscht wurde."
+          },
+          {
+            "term": "beginWork / completeWork",
+            "icon": "🔽🔼",
+            "definition": "Die zwei Funktionen, die React beim Durchlaufen des Fiber-Baums aufruft. beginWork verarbeitet einen Knoten beim Abstieg; completeWork schließt ihn beim Aufstieg ab."
+          },
+          {
+            "term": "Effect Tag",
+            "icon": "🏷️",
+            "definition": "Eine Bitmaske auf einem Fiber-Knoten, die angibt, welche DOM-Arbeit anfällt: Placement (Einfügen), Update (Props aktualisieren), Deletion (Entfernen)."
+          },
+          {
+            "term": "Alternate Pointer",
+            "icon": "↔️",
+            "definition": "Jeder Fiber hat ein 'alternate'-Feld, das auf sein Gegenstück im anderen Baum zeigt (current ↔ work-in-progress). Ermöglicht doppelte Pufferung."
+          }
+        ],
+        "codeLabel": "So sieht ein Fiber-Knoten intern aus",
+        "whyItMatters": "Die Fiber-Architektur ist das, was Reacts Concurrent-Features ermöglicht. Da Arbeit als Datenstruktur (nicht als Aufrufstapel) dargestellt wird, kann React die Reconciliation an jedem Fiber-Knoten pausieren, die Kontrolle an den Browser für hochprioritäre Aufgaben wie Benutzereingaben zurückgeben und dort weitermachen, wo es aufgehört hat. Dies ist das Fundament von Suspense, Transitions und automatischem Batching.",
+        "pitfalls": [
+          "Lesen oder verändern Sie Reacts interne Fiber-Knoten niemals direkt — sie sind private Implementierungsdetails, die sich zwischen React-Versionen ändern können.",
+          "Die Tiefensuche bedeutet, dass tief verschachtelte Komponentenbäume die Zeit verlängern, bevor React dem Browser die Kontrolle übergeben kann. Flachen Sie Ihre Komponentenhierarchie wo möglich ab.",
+          "Fiber-Knoten bleiben über Renderings hinweg erhalten (sie werden wiederverwendet, nicht neu erstellt). Deshalb funktionieren Hooks — useState speichert Werte auf dem Fiber-Knoten, nicht innerhalb der Funktion selbst."
+        ]
+      }
+    },
+    "virtualDom": {
+      "title": "Virtuelles DOM & Diffing",
+      "subtitle": "Wie React eine virtuelle Darstellung erstellt und sie vergleicht, um minimale DOM-Änderungen zu finden.",
+      "explainer": {
+        "overview": "Das Virtual DOM ist ein leichtgewichtiger JavaScript-Objektbaum, der das echte DOM widerspiegelt. React hält zwei Kopien: den aktuellen Baum und den 'work-in-progress'-Baum, der bei jedem Rendering aufgebaut wird. Anstatt das echte DOM sofort zu berühren, vergleicht React die beiden virtuellen Bäume und berechnet die minimale Menge an benötigten Änderungen — dann wendet es diese in einem einzigen Batch an.",
+        "howItWorks": [
+          {
+            "title": "JSX wird zu React.createElement()-Aufrufen kompiliert",
+            "body": "Wenn Sie JSX schreiben, wandelt Babel (oder der React-Compiler) es in React.createElement(Typ, Props, ...Kinder)-Aufrufe um. Diese geben einfache JavaScript-Objekte zurück, sogenannte React-Elemente — keine echten DOM-Knoten."
+          },
+          {
+            "title": "React baut einen Virtual DOM-Baum auf",
+            "body": "React.createElement() gibt einen verschachtelten Objektbaum zurück wie { type: 'div', props: { className: 'box', children: [...] } }. Dies ist das Virtual DOM — eine günstige In-Memory-Beschreibung, wie die Benutzeroberfläche aussehen soll."
+          },
+          {
+            "title": "Bei Aktualisierungen baut React einen neuen Virtual DOM-Baum auf",
+            "body": "Wenn sich Zustand oder Props ändern, ruft React Ihre Komponentenfunktion erneut auf und erzeugt einen brandneuen Virtual DOM-Baum, der die neue gewünschte Benutzeroberfläche repräsentiert."
+          },
+          {
+            "title": "Der Diffing-Algorithmus vergleicht alte und neue Bäume",
+            "body": "Reacts Diffing-Algorithmus (O(n)-Heuristik) durchläuft beide Bäume gleichzeitig. Er geht davon aus, dass Elemente unterschiedlicher Typen unterschiedliche Bäume erzeugen, und verwendet die key-Prop, um Listenelemente über Renderings hinweg zuzuordnen."
+          },
+          {
+            "title": "Nur die Unterschiede werden auf das echte DOM angewendet",
+            "body": "Nach dem Diffing hat React eine Liste von Mutationen: Diese Prop aktualisieren, diesen Knoten einfügen, jenen Knoten entfernen. Diese werden in der Commit-Phase auf das echte DOM angewendet — dabei werden Reflows und Repaints minimiert."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "React Element",
+            "icon": "📦",
+            "definition": "Ein einfaches JS-Objekt, das von React.createElement() zurückgegeben wird. Beschreibt Typ, Props und Kinder. Kein echter DOM-Knoten."
+          },
+          {
+            "term": "Diffing Algorithm",
+            "icon": "🔍",
+            "definition": "Reacts O(n)-Heuristik zum Vergleichen zweier virtueller Bäume. Nimmt an, dass Elemente gleicher Position denselben Typ haben, sofern sich die Keys nicht unterscheiden."
+          },
+          {
+            "term": "Reconciliation",
+            "icon": "⚖️",
+            "definition": "Der Prozess des Vergleichens alter und neuer virtueller Bäume und der Bestimmung der minimalen Menge an benötigten DOM-Operationen."
+          },
+          {
+            "term": "key prop",
+            "icon": "🔑",
+            "definition": "Eine stabile Identität für Listenelemente. Ermöglicht React, alte und neue Listenelemente zuzuordnen, auch wenn sie ihre Position gewechselt haben."
+          },
+          {
+            "term": "Batched Updates",
+            "icon": "📦",
+            "definition": "React sammelt alle DOM-Mutationen aus einem Reconciliation-Durchlauf und wendet sie gemeinsam an, um Browser-Reflows zu reduzieren."
+          }
+        ],
+        "codeLabel": "Von JSX zum Virtual DOM",
+        "whyItMatters": "Direkte DOM-Manipulation ist teuer, weil der Browser das Layout neu berechnen und neu zeichnen muss. Durch Diffing in JavaScript (schnell) und Bündelung von DOM-Schreibvorgängen (langsam) minimiert React die Anzahl teurer Browser-Operationen. Deshalb fühlen sich React-Apps auch bei komplexen Benutzeroberflächen schnell an.",
+        "pitfalls": [
+          "Verändern Sie das Virtual DOM-Objekt niemals direkt — React setzt Unveränderlichkeit voraus, um Änderungen effizient zu erkennen.",
+          "Vermeiden Sie Array-Indizes als Keys in dynamischen Listen. Wenn die Liste neu geordnet wird, ordnet React Elemente nach Position statt nach Identität zu, was zu unnötigen Unmounts und Remounts führt.",
+          "Das Virtual DOM ist NICHT kostenlos — das Erstellen von Elementobjekten hat einen Preis. Bei sehr einfachen Benutzeroberflächen ohne Zustand kann einfaches HTML schneller sein."
+        ]
+      }
+    },
+    "reconciliation": {
+      "title": "Reconciliation-Algorithmus",
+      "subtitle": "Wie React alte und neue Fiber-Bäume vergleicht, um Aktualisierungen, Einfügungen oder Löschungen zu bestimmen.",
+      "explainer": {
+        "overview": "Reconciliation ist Reacts Algorithmus zur effizienten Aktualisierung der Benutzeroberfläche, wenn sich Zustand oder Props ändern. Anstatt den gesamten DOM-Baum neu zu rendern, vergleicht React den vorherigen virtuellen DOM-Baum mit dem neu gerenderten Baum und berechnet die minimale Anzahl an benötigten Operationen. Es verwendet zwei Schlüsselheuristiken, um dies in O(n) statt O(n³) Zeit zu erreichen.",
+        "howItWorks": [
+          {
+            "title": "Zwei Heuristiken machen Diffing O(n)",
+            "body": "React nimmt an: (1) Elemente unterschiedlicher Typen erzeugen völlig verschiedene Bäume — daher hebt React den alten Teilbaum auf und mountet einen neuen. (2) Der Entwickler kann mithilfe der key-Prop stabile Identitäten über Renderings hinweg angeben."
+          },
+          {
+            "title": "Gleicher Typ → in-place aktualisieren",
+            "body": "Wenn zwei Elemente denselben Typ haben (z.B. beide <div>), behält React den vorhandenen DOM-Knoten und aktualisiert nur die geänderten Attribute/Props. Dies vermeidet das unnötige Zerstören und Neuerstellen von DOM-Knoten."
+          },
+          {
+            "title": "Unterschiedlicher Typ → abbauen und neu aufbauen",
+            "body": "Wenn sich der Typ ändert (z.B. <div> wird zu <span>), hebt React den alten Komponentenbaum vollständig auf (führt alle Bereinigungen aus) und mountet den neuen Baum von Grund auf. Der Zustand geht verloren."
+          },
+          {
+            "title": "Listen verwenden Keys für stabile Identität",
+            "body": "Für Listen von Kindern ordnet React alte und neue Elemente nach Key zu. Ohne Keys verwendet React die Position — was zu unnötigen Unmounts führen kann, wenn Elemente neu geordnet werden. Keys ermöglichen React, vorhandene DOM-Knoten effizient zu verschieben."
+          },
+          {
+            "title": "Die Effect-Liste verfolgt, was zu tun ist",
+            "body": "Während React beide Bäume durchläuft, erstellt es eine 'Effect-Liste' — eine verknüpfte Liste von Fibers, die Arbeit zu erledigen haben (Aktualisierungen, Einfügungen, Löschungen). Die Commit-Phase durchläuft diese Liste und wendet Änderungen auf das echte DOM an."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Fiber",
+            "icon": "🧵",
+            "definition": "Eine Arbeitseinheit in Reacts Reconciliation-Modul. Jede Komponente hat einen Fiber-Knoten, der Typ, Props, Zustand und Zeiger auf Elternteil/Kind/Geschwister speichert."
+          },
+          {
+            "term": "Work-in-Progress Tree",
+            "icon": "🌳",
+            "definition": "Ein Klon des aktuellen Fiber-Baums, in dem React während der Reconciliation Änderungen vornimmt. Wird erst nach Abschluss der Commit-Phase zum 'current'."
+          },
+          {
+            "term": "Effect List",
+            "icon": "📋",
+            "definition": "Eine flache verknüpfte Liste von Fibers mit ausstehenden DOM-Mutationen, die während der Reconciliation aufgebaut und in der Commit-Phase durchlaufen wird."
+          },
+          {
+            "term": "Bailout",
+            "icon": "⚡",
+            "definition": "Wenn React erkennt, dass sich Props und Kontext eines Fibers nicht geändert haben, kann es das Rendering dieses Teilbaums vollständig überspringen — eine wichtige Leistungsoptimierung."
+          }
+        ],
+        "codeLabel": "Wie key die Reconciliation beeinflusst",
+        "whyItMatters": "Reconciliation macht Reacts deklaratives Modell praktikabel. Sie beschreiben, wie die Benutzeroberfläche aussehen soll, und React ermittelt die minimale Menge an DOM-Änderungen. Die Fiber-Architektur macht dies unterbrechbar — React kann die Reconciliation mitten im Baum pausieren und später fortsetzen, was Concurrent-Features wie Suspense und Transitions ermöglicht.",
+        "pitfalls": [
+          "Die Verwendung instabiler Keys (wie Math.random() oder Array-Indizes in dynamischen Listen) zwingt React, Komponenten bei jedem Rendering zu unmounten und neu zu mounten, was den lokalen Zustand zerstört.",
+          "Das Ändern des Typs einer Komponente (Wechsel zwischen Komponente A und B an derselben Position) führt immer zu einem vollständigen Unmount/Remount — selbst wenn sie dasselbe DOM ausgeben.",
+          "Tief verschachteltes bedingtes Rendering kann Komponententypen ändern und unerwartete Unmounts auslösen. Bevorzugen Sie bedingte Props gegenüber bedingten Komponententypen."
+        ]
+      }
+    },
+    "renderingPipeline": {
+      "title": "React Rendering-Pipeline",
+      "subtitle": "Die vollständige Reise von JSX zu Pixeln — lösen Sie ein Rendering aus und beobachten Sie jede Phase.",
+      "explainer": {
+        "overview": "Jedes Mal, wenn React rendert, durchläuft es eine vorhersehbare zweiphasige Pipeline: die Render-Phase und die Commit-Phase. Die Render-Phase ist rein und unterbrechbar — React ruft Ihre Komponenten auf und baut einen neuen Fiber-Baum auf. Die Commit-Phase ist synchron und hat Seiteneffekte — React wendet die berechneten Änderungen auf das echte DOM an und löst Effects aus.",
+        "howItWorks": [
+          {
+            "title": "JSX wird zu React.createElement()-Aufrufen umgewandelt",
+            "body": "Zur Build-Zeit wird JSX wie <Button color='blue'>Klick</Button> zu React.createElement(Button, { color: 'blue' }, 'Klick'). Dies erzeugt einen einfachen Objektbaum — das Virtual DOM."
+          },
+          {
+            "title": "Render-Phase: React ruft Ihre Komponenten auf",
+            "body": "React durchläuft den Fiber-Baum und ruft jede Komponentenfunktion (oder render()-Methode) auf. Diese Phase ist rein und erzeugt keine Seiteneffekte — React kann sie im Concurrent Mode jederzeit unterbrechen und neu starten."
+          },
+          {
+            "title": "Reconciliation: alten vs. neuen Fiber-Baum vergleichen",
+            "body": "React vergleicht die neue Ausgabe mit dem vorherigen Fiber-Baum. Es markiert jeden Fiber mit einem Effect-Tag: Update, Placement (Einfügen) oder Deletion. Das Ergebnis ist eine 'Effect-Liste' — eine flache Liste von Fibers mit ausstehender Arbeit."
+          },
+          {
+            "title": "Commit-Phase — beforeMutation: Snapshot",
+            "body": "React ruft getSnapshotBeforeUpdate() bei Klassen-Komponenten auf und plant passive Effects. Diese Teilphase läuft, bevor DOM-Mutationen stattfinden."
+          },
+          {
+            "title": "Commit-Phase — mutation: DOM-Änderungen anwenden",
+            "body": "React durchläuft die Effect-Liste und wendet alle DOM-Mutationen synchron an: Einfügungen, Aktualisierungen, Löschungen. Danach spiegelt das DOM die neue Benutzeroberfläche wider."
+          },
+          {
+            "title": "Commit-Phase — layout: synchrone Effects",
+            "body": "useLayoutEffect-Callbacks werden synchron nach DOM-Mutation aber vor dem Browser-Paint ausgeführt. Dann zeichnet der Browser. Schließlich werden useEffect-Callbacks asynchron nach dem Paint ausgeführt."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Render Phase",
+            "icon": "🔄",
+            "definition": "Reine, seiteneffektfreie Phase, in der React Komponenten aufruft und den neuen Fiber-Baum aufbaut. Kann im Concurrent Mode unterbrochen werden."
+          },
+          {
+            "term": "Commit Phase",
+            "icon": "✅",
+            "definition": "Synchrone Phase, in der React DOM-Mutationen anwendet und Lifecycle-Methoden/Effects auslöst. Kann nicht unterbrochen werden."
+          },
+          {
+            "term": "useLayoutEffect",
+            "icon": "⚡",
+            "definition": "Wird synchron nach DOM-Mutation, vor dem Browser-Paint ausgeführt. Für DOM-Messungen verwenden. Blockiert das Zeichnen."
+          },
+          {
+            "term": "useEffect",
+            "icon": "🕐",
+            "definition": "Wird asynchron nach dem Browser-Paint ausgeführt. Blockiert das Zeichnen nicht — ideal für Subscriptions, Fetches und nicht-visuelle Seiteneffekte."
+          },
+          {
+            "term": "Double Render (Strict Mode)",
+            "icon": "🔁",
+            "definition": "In der Entwicklung rendert React Komponenten zweimal in der Render-Phase, um Seiteneffekte zu erkennen. Nur ein Commit findet statt."
+          }
+        ],
+        "codeLabel": "Referenz für Effect-Timing",
+        "whyItMatters": "Das Verstehen der Pipeline hilft Ihnen, Code an die richtige Stelle zu setzen. DOM-Messungen müssen in useLayoutEffect (vor dem Paint) stehen. Datenabruf gehört in useEffect (nach dem Paint, nicht-blockierend). Initialisierung, die vor dem ersten Rendering stattfinden muss, gehört in den useState-Initialisierer oder useMemo. Fehler hierbei verursachen visuelle Blitze, Layout-Sprünge oder verpasste Renderings.",
+        "pitfalls": [
+          "DOM-Messungen in useEffect (nach dem Paint) zu platzieren verursacht einen Blitz — der Browser zeichnet einmal mit der falschen Größe, dann korrigiert useEffect es und löst ein weiteres Paint aus. Verwenden Sie stattdessen useLayoutEffect.",
+          "useEffect ohne Abhängigkeits-Array läuft nach jedem Rendering. Das ist meist ein Fehler — Sie möchten wahrscheinlich [] für mount-only oder [bestimmteDep] für kontrollierte Neuausführungen.",
+          "Vermeiden Sie teure synchrone Arbeit in der Render-Phase — sie blockiert den Haupt-Thread und verzögert das Paint. Verschieben Sie schwere Berechnungen in useMemo oder einen Web Worker."
+        ]
+      }
+    },
+    "componentLifecycle": {
+      "title": "Komponenten-Lebenszyklus",
+      "subtitle": "Mount-, Update- und Unmount-Phasen — sehen Sie, welche Hooks und Effekte in jeder Phase ausgelöst werden.",
+      "explainer": {
+        "overview": "Jede React-Komponente durchläuft drei Lebenszyklusphasen: Mount (erstes Rendering in das DOM), Update (erneutes Rendering aufgrund von Zustand- oder Prop-Änderungen) und Unmount (Entfernung aus dem DOM). Mit Hooks werden diese Phasen durch useEffect, useLayoutEffect und Bereinigungsfunktionen ausgedrückt, anstatt durch Klassen-Lifecycle-Methoden.",
+        "howItWorks": [
+          {
+            "title": "Mount: Komponente wird zum ersten Mal gerendert",
+            "body": "React ruft Ihre Funktionskomponente auf, wertet JSX aus und fügt die resultierenden DOM-Knoten ein. useState-Initialisierer werden ausgeführt, useRef-Objekte werden erstellt. Nach der DOM-Einfügung wird useLayoutEffect synchron ausgeführt, dann useEffect asynchron nach dem Paint."
+          },
+          {
+            "title": "Update: Zustand- oder Prop-Änderung löst Re-Rendering aus",
+            "body": "Wenn setState oder eine neue Prop eintrifft, stellt React ein Re-Rendering in die Warteschlange. Beim Re-Rendering werden Hooks in derselben Reihenfolge wie beim Mount aufgerufen. React vergleicht neue und alte Ausgabe und aktualisiert das DOM. Vor dem erneuten Ausführen von Effects führt React die Bereinigungsfunktionen der vorherigen Render-Effects aus."
+          },
+          {
+            "title": "Bereinigung vor dem nächsten Effect-Aufruf",
+            "body": "Bevor jeder Effect erneut ausgeführt wird (und beim Unmount) ruft React die Bereinigungsfunktion des vorherigen Effects auf. Dies ist entscheidend für das Löschen von Timern, das Abbrechen von Fetches und das Abbestellen von Ereignissen."
+          },
+          {
+            "title": "Unmount: Komponente wird aus dem Baum entfernt",
+            "body": "Wenn eine Komponente entfernt wird (bedingte Rendering, Routenwechsel usw.), führt React alle Bereinigungsfunktionen aus — useEffect-Bereinigung, dann useLayoutEffect-Bereinigung. DOM-Knoten werden aus dem Dokument entfernt."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "useEffect(() => {}, [])",
+            "icon": "🏔️",
+            "definition": "Leeres Deps-Array: läuft einmal nach dem Mount. Bereinigung läuft beim Unmount. Entspricht componentDidMount + componentWillUnmount."
+          },
+          {
+            "term": "useEffect(() => {}, [dep])",
+            "icon": "🔄",
+            "definition": "Läuft nach dem Mount UND immer wenn dep sich ändert. Bereinigung läuft vor jedem Neuaufruf und beim Unmount."
+          },
+          {
+            "term": "useEffect(() => {})",
+            "icon": "♾️",
+            "definition": "Kein Deps-Array: läuft nach jedem Rendering. Selten das Gewünschte — verursacht Endlosschleifen, wenn Zustandsänderungen ausgelöst werden."
+          },
+          {
+            "term": "useLayoutEffect",
+            "icon": "⚡",
+            "definition": "Gleiche Signatur wie useEffect, wird aber synchron nach DOM-Mutationen vor dem Paint ausgeführt. Für DOM-Messungen verwenden."
+          },
+          {
+            "term": "Cleanup Function",
+            "icon": "🧹",
+            "definition": "Die von einem useEffect-Callback zurückgegebene Funktion. React ruft sie vor dem nächsten Effect-Aufruf und beim Unmount auf."
+          }
+        ],
+        "codeLabel": "Vollständiger Lebenszyklus mit Hooks",
+        "whyItMatters": "Das Verstehen des Lifecycle-Timings verhindert die häufigsten React-Fehler: Daten abrufen ohne Bereinigung (verursacht setState-Warnungen bei unmounted Komponenten), vergessen Timer zu löschen (verursacht Speicherlecks) und Effects zu oft oder zu selten durch falschen Einsatz des Dependency-Arrays ausführen.",
+        "pitfalls": [
+          "Das Zurückgeben eines Nicht-Funktions-Werts aus useEffect ist ein Laufzeitfehler. Geben Sie nur undefined oder eine Bereinigungsfunktion zurück.",
+          "Fehlende Abhängigkeiten im Deps-Array erzeugen veraltete Closures — Ihr Effect erfasst einen alten Wert und wird nie aktualisiert. Verwenden Sie die ESLint-Regel exhaustive-deps, um dies abzufangen.",
+          "Zustand ohne Bedingung innerhalb von useEffect ohne Deps zu setzen, erzeugt eine Endlosschleife: Rendering → Effect → setState → Rendering → Effect → ..."
+        ]
+      }
+    },
+    "hooksVisualizer": {
+      "title": "React Hooks-Visualizer",
+      "subtitle": "Sehen Sie, wie React Hooks als verkettete Liste verwaltet, Statusaktualisierungen verarbeitet und neu rendert.",
+      "explainer": {
+        "overview": "Hooks werden als einfach verkettete Liste auf dem Fiber-Knoten gespeichert. Wenn Ihre Komponente rendert, durchläuft React diese Liste in Reihenfolge — und ordnet jeden Hook-Aufruf (useState, useEffect, useRef usw.) dem gespeicherten Zustand zu. Deshalb existieren die Rules of Hooks: Wenn Sie Hooks bedingt aufrufen, ändert sich die Listenreihenfolge und React liest den falschen Zustand für den falschen Hook.",
+        "howItWorks": [
+          {
+            "title": "Erstes Rendering: React baut die Hooks-Liste auf",
+            "body": "Jeder Hook-Aufruf (useState, useEffect, useRef, useMemo…) erstellt ein 'Hook'-Objekt mit einem memoizedState-Feld und einem next-Zeiger. React hängt jeden in Aufruffolge an die Liste an. Die Liste wird im memoizedState-Feld des Fiber-Knotens gespeichert."
+          },
+          {
+            "title": "useState speichert den Zustandswert + Update-Queue",
+            "body": "Ein useState-Hook-Objekt speichert: memoizedState (aktueller Wert), queue (verkettete Liste ausstehender setState-Aufrufe) und dispatch (die setState-Funktion, die Sie in Ihrer Komponente verwenden). Die dispatch-Funktion ist stabil — sie ändert sich nie zwischen Renderings."
+          },
+          {
+            "title": "setState-Aufruf stellt ein Update in die Warteschlange",
+            "body": "Wenn Sie setState(neuerWert) aufrufen, aktualisiert React den Zustand nicht sofort. Stattdessen hängt es ein Update-Objekt an die Queue des Hooks an und plant ein Re-Rendering des Fibers. Mehrere setState-Aufrufe in einem Event-Handler werden zu einem einzigen Re-Rendering zusammengefasst."
+          },
+          {
+            "title": "Re-Rendering: React verarbeitet die Update-Queue",
+            "body": "Beim nächsten Rendering durchläuft React die Hooks-Liste erneut. Für jeden useState-Hook verarbeitet es alle in der Warteschlange stehenden Updates, indem es sie der Reihe nach ausführt (oder die Reducer-Funktion für useReducer aufruft). Der endgültig berechnete Wert wird zum neuen memoizedState."
+          },
+          {
+            "title": "useEffect-Hooks speichern eine destroy + create-Funktion",
+            "body": "Ein Effect-Hook-Objekt speichert: create (den übergebenen Callback), destroy (die zuletzt zurückgegebene Bereinigungsfunktion), deps (das Dependency-Array) und einen Tag, der angibt, ob es sich um useEffect, useLayoutEffect oder useInsertionEffect handelt."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Hooks Linked List",
+            "icon": "🔗",
+            "definition": "Hooks werden als einfach verkettete Liste auf dem Fiber-Knoten gespeichert. Aufruffolge = Listenfolge. Bedingte Hooks brechen die Liste."
+          },
+          {
+            "term": "memoizedState",
+            "icon": "💾",
+            "definition": "Das Feld auf einem Hook-Objekt, das dessen aktuellen Wert speichert. Bei useState: der Zustandswert. Bei useRef: { current: Wert }. Bei useMemo: das gecachte Ergebnis."
+          },
+          {
+            "term": "Update Queue",
+            "icon": "📬",
+            "definition": "Eine zirkuläre verkettete Liste von setState-Aufrufen, die beim nächsten Rendering verarbeitet werden. Mehrere Updates werden in einem Queue-Flush gebündelt."
+          },
+          {
+            "term": "Dispatcher",
+            "icon": "🚦",
+            "definition": "React tauscht die Hook-Implementierung je nach Render-Phase aus. Beim ersten Rendering: HooksDispatcherOnMount. Bei Re-Renderings: HooksDispatcherOnUpdate. Deshalb können Hooks nicht außerhalb von Komponenten aufgerufen werden."
+          },
+          {
+            "term": "Rules of Hooks",
+            "icon": "📏",
+            "definition": "Hooks nur auf oberster Ebene aufrufen (nie in Bedingungen/Schleifen) und nur aus React-Funktionen. Diese Regeln existieren, weil React Hooks nach ihrer Position in der verketteten Liste identifiziert."
+          }
+        ],
+        "codeLabel": "So sieht die Hooks-Liste intern aus",
+        "whyItMatters": "Das Verstehen der Hooks-Interna erklärt, warum die Rules of Hooks keine willkürlichen Einschränkungen sind, sondern technische Notwendigkeiten. Es erklärt auch, warum die useState-Setter-Funktion immer stabil ist (sie ist an die Queue gebunden, nicht an den Wert), warum Hooks über Renderings hinweg funktionieren (sie sind auf dem Fiber gespeichert) und warum man eigene Hooks erstellen kann — sie sind nur Funktionen, die andere Hooks aufrufen und weitere Knoten zur Liste hinzufügen.",
+        "pitfalls": [
+          "Hooks innerhalb von if/else oder Schleifen aufzurufen verursacht eine Nichtübereinstimmung zwischen der Hooks-Liste und Ihren Hook-Aufrufen — React liest stillschweigend den falschen Zustand für den falschen Hook.",
+          "Die useState-Setter-Funktion ist referenziell stabil (ändert sich nie), aber der Zustandswert ist es nicht. Closures in Effects erfassen den Wert zum Render-Zeitpunkt — verwenden Sie die funktionale Update-Form setState(prev => prev + 1), um immer auf den neuesten Wert zuzugreifen.",
+          "Jeder Hook-Aufruf hat einen Preis (Durchlauf der verketteten Liste). Rufen Sie Hooks in render-intensiven Komponenten nicht bedingungslos auf, wenn der Wert des Hooks nicht bei jedem Rendering benötigt wird — useMemo kann helfen, unnötige Neuberechnungen zu überspringen."
+        ]
+      }
+    },
+    "useeffectLifecycle": {
+      "title": "useEffect-Lebenszyklus",
+      "subtitle": "Wann Effekte ausgeführt werden, Bereinigungszeitpunkt und Abhängigkeitsverfolgung.",
+      "explainer": {
+        "overview": "useEffect ist der primäre Hook zur Synchronisierung von React-Komponenten mit externen Systemen — Browser-APIs, Drittanbieter-Bibliotheken, Netzwerkanfragen und Subscriptions. Es läuft, nachdem der Browser den Bildschirm gezeichnet hat, und ist damit nicht-blockierend. Jeder Effect gibt optional eine Bereinigungsfunktion zurück, die React aufruft, bevor der Effect erneut ausgeführt wird und wenn die Komponente unmountet.",
+        "howItWorks": [
+          {
+            "title": "Effects werden nach dem Browser-Paint ausgeführt",
+            "body": "React schreibt DOM-Mutationen, der Browser zeichnet den Bildschirm, und dann führt React asynchron Ihre useEffect-Callbacks aus. Diese Reihenfolge bedeutet, dass Effects das initiale Rendering nie blockieren — der Benutzer sieht Inhalte sofort."
+          },
+          {
+            "title": "Das Dependency-Array steuert, wann Effects erneut laufen",
+            "body": "React vergleicht das aktuelle Deps-Array mit dem des vorherigen Renderings mithilfe von Object.is()-Gleichheit. Wenn sich ein Dep geändert hat, wird der Effect zur erneuten Ausführung eingeplant. Kein Deps-Array = nach jedem Rendering ausführen. Leeres Array [] = einmal nach dem Mount ausführen."
+          },
+          {
+            "title": "Bereinigung läuft vor dem nächsten Effect und beim Unmount",
+            "body": "Wenn Ihr Effect eine Funktion zurückgibt, speichert React sie als Bereinigung. Bevor der Effect erneut ausgeführt wird (weil sich ein Dep geändert hat), ruft React zuerst die vorherige Bereinigung auf. Wenn die Komponente unmountet, ruft React die letzte Bereinigung auf."
+          },
+          {
+            "title": "React 18 StrictMode führt Effects in der Entwicklung zweimal aus",
+            "body": "Im StrictMode mountet React jede Komponente absichtlich → unmountet → remountet sie, um Effects zu finden, die nicht ordnungsgemäß bereinigt werden. Die doppelte Ausführung findet nur in der Entwicklung statt. Deshalb ist ordnungsgemäße Bereinigung unverzichtbar."
+          },
+          {
+            "title": "useLayoutEffect wird synchron vor dem Paint ausgeführt",
+            "body": "useLayoutEffect hat identische Semantik wie useEffect, wird aber synchron nach DOM-Mutationen und vor dem Browser-Paint ausgeführt. Verwenden Sie es, wenn Ihr Effect DOM-Messungen lesen und Korrekturen anwenden muss, bevor der Benutzer etwas sieht."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "deps Array",
+            "icon": "📋",
+            "definition": "Steuert die Häufigkeit der Neuausführung. [] = nur beim Mount. [a, b] = wenn a oder b sich ändert. Kein Array = bei jedem Rendering. React vergleicht mit Object.is() — vermeiden Sie Objekte/Arrays als Deps."
+          },
+          {
+            "term": "Cleanup Function",
+            "icon": "🧹",
+            "definition": "Die von Ihrem Effect zurückgegebene Funktion. Wird aufgerufen, bevor der Effect erneut läuft (Dep geändert) und wenn die Komponente unmountet. Zum Abbrechen von Fetches, Löschen von Timern, Abbestellen."
+          },
+          {
+            "term": "Stale Closure",
+            "icon": "🕸️",
+            "definition": "Wenn ein Effect Zustand/Props aus einem alten Rendering erfasst, aber nie erneut läuft, um die aktualisierten Werte zu erhalten. Behoben, indem die Variable zu Deps hinzugefügt oder eine Ref verwendet wird."
+          },
+          {
+            "term": "useLayoutEffect",
+            "icon": "⚡",
+            "definition": "Wird synchron nach DOM-Mutation vor dem Paint ausgeführt. Blockiert das Zeichnen — schnell halten. Für DOM-Messungen (getBoundingClientRect, Scroll-Position) verwenden."
+          },
+          {
+            "term": "useInsertionEffect",
+            "icon": "💉",
+            "definition": "Wird vor jeder DOM-Mutation ausgeführt. Für CSS-in-JS-Bibliotheken vorgesehen, um Style-Regeln synchron vor dem Layout einzufügen. Nicht für allgemeinen Anwendungscode."
+          }
+        ],
+        "codeLabel": "Effect-Muster und ihre Bereinigung",
+        "whyItMatters": "useEffect ist der am häufigsten falsch verwendete Hook in React. Effects richtig zu handhaben — korrekte Deps, ordnungsgemäße Bereinigung, richtiges Timing — ist entscheidend für Apps ohne Speicherlecks, ohne zusätzliche Netzwerkanfragen und ohne veraltete Daten. Der mentale Modellwechsel ist: 'Effects sind Synchronisierungsmechanismen', nicht 'Lifecycle-Events'. Sie teilen React mit, wie es mit der Außenwelt synchron bleiben soll, nicht Callbacks in Mount/Update/Unmount einzuhängen.",
+        "pitfalls": [
+          "Fehlende Abhängigkeiten im Deps-Array erzeugen veraltete Closures, bei denen Ihr Effect alte Werte für immer liest. Fügen Sie immer jeden Wert, der im Effect verwendet wird, zum Deps-Array hinzu, oder verwenden Sie eine Ref für Werte, die keine erneute Ausführung auslösen sollen.",
+          "Keine Bereinigung für Subscriptions und Event-Listener bereitzustellen verursacht Speicherlecks. Jedes addEventListener muss ein entsprechendes removeEventListener in der Bereinigung haben.",
+          "Objekt- oder Array-Literale direkt im Deps-Array zu platzieren, bewirkt, dass der Effect bei jedem Rendering erneut läuft: [{ id: 1 }] erstellt bei jedem Rendering ein neues Objekt (andere Referenz, obwohl gleicher Wert). Destrukturieren Sie Primitiven oder verwenden Sie useMemo, um Referenzen zu stabilisieren."
+        ]
+      }
+    },
+    "stateBatching": {
+      "title": "Status-Batching",
+      "subtitle": "Wie React mehrere setState-Aufrufe zu einem einzigen Re-Render zusammenfasst.",
+      "explainer": {
+        "overview": "State-Batching bedeutet, dass React mehrere setState-Aufrufe aus demselben synchronen Block sammelt und sie alle in einem einzigen Re-Rendering-Durchlauf verarbeitet. Anstatt nach jedem einzelnen setState-Aufruf neu zu rendern, wartet React bis zum Ende des aktuellen 'Batch', wendet alle Updates auf einmal an und rendert genau einmal. React 18 hat automatisches Batching auf asynchronen Code und native Event-Listener ausgeweitet.",
+        "howItWorks": [
+          {
+            "title": "Mehrere setState-Aufrufe in einem Event-Handler = ein Rendering",
+            "body": "Wenn Sie setA(1) und setB(2) in einem Click-Handler aufrufen, rendert React nicht sofort nach setA neu. Es stellt beide Updates in die Warteschlange und plant ein einziges Re-Rendering ein. Ihre Komponente rendert einmal mit beiden neuen Werten."
+          },
+          {
+            "title": "React stellt Updates in die Update-Queue des Hook-Fibers",
+            "body": "Jeder setState-Aufruf hängt ein Update-Objekt an die zirkuläre Queue des Hooks an. React markiert den Fiber als ausstehende Arbeit und plant eine Microtask (oder einen Callback) zum Leeren der Queue — aber erst nach Abschluss des aktuellen synchronen Codes."
+          },
+          {
+            "title": "React 17 vs. React 18: asynchrones Batching",
+            "body": "In React 17 fand Batching nur innerhalb von React-Event-Handlern statt. setState-Aufrufe in setTimeout, Promises oder fetch-Callbacks lösten individuelle Re-Renderings aus. React 18 bündelt ALLE Updates automatisch, unabhängig von ihrer Herkunft."
+          },
+          {
+            "title": "flushSync() deaktiviert Batching",
+            "body": "Wenn Sie eine synchrone DOM-Aktualisierung benötigen (z.B. um das Layout nach einer Zustandsänderung zu messen), rufen Sie ReactDOM.flushSync(() => setState(...)) auf. Dies zwingt React, das Update sofort und synchron zu leeren und dabei Batching zu umgehen."
+          },
+          {
+            "title": "Funktionale Updates stellen korrekte Reihenfolge sicher",
+            "body": "Wenn mehrere setState-Aufrufe vom vorherigen Wert abhängen, verwenden Sie die funktionale Form: setState(prev => prev + 1). React wendet diese Updates in Warteschlangenreihenfolge an, sodass jedes Update das Ergebnis des vorherigen sieht — nicht den Wert zum Render-Zeitpunkt."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Automatic Batching",
+            "icon": "📦",
+            "definition": "React 18-Feature: alle setState-Aufrufe werden zusammengefasst, auch in setTimeout, Promises und nativen Event-Listenern. Reduziert unnötige Re-Renderings."
+          },
+          {
+            "term": "Update Queue",
+            "icon": "📬",
+            "definition": "Eine zirkuläre verkettete Liste auf jedem Hook-Objekt, die ausstehende setState-Aufrufe speichert. Am Ende jedes Batches geleert — alle Updates in Reihenfolge angewendet."
+          },
+          {
+            "term": "flushSync()",
+            "icon": "⚡",
+            "definition": "Zwingt React, ausstehende Zustandsaktualisierungen synchron und sofort zu leeren. Umgeht Batching. Nur verwenden, wenn nach einer Zustandsänderung eine DOM-Messung benötigt wird."
+          },
+          {
+            "term": "Functional Update",
+            "icon": "🔧",
+            "definition": "setState(prev => neuerWert). Garantiert den neuesten Zustandswert zu erhalten, auch wenn Updates gebündelt oder asynchron eingereiht werden."
+          },
+          {
+            "term": "Render Count",
+            "icon": "🔢",
+            "definition": "Batching reduziert die Anzahl der Renderings. Ohne Batching: N setState-Aufrufe = N Renderings. Mit Batching: N setState-Aufrufe = 1 Rendering."
+          }
+        ],
+        "codeLabel": "Batching-Verhalten über React-Versionen hinweg",
+        "whyItMatters": "Batching ist eine der wichtigsten Leistungsoptimierungen von React. Ohne Batching würde eine einzelne Benutzerinteraktion, die 3 Zustandsaktualisierungen auslöst, 3 vollständige Render-+Reconcile-+Commit-Zyklen verursachen. Mit Batching ist es immer nur 1. Reacts automatisches Batching in React 18 ist besonders wertvoll für asynchronen Code — Server-Antworten, WebSocket-Nachrichten und Timer belasten den Renderer nicht mehr übermäßig.",
+        "pitfalls": [
+          "Verlassen Sie sich nicht darauf, dass setState synchron ist. Selbst mit flushSync ist das Aufrufen von setState mitten im Rendering verboten. Lesen Sie den aktualisierten Wert aus dem nächsten Rendering, nicht sofort nach dem Aufruf von setState.",
+          "Die direkte Wertform setState(count + 1) mehrmals in einem Batch zu verwenden, ist ein Fehler: Jeder Aufruf schließt denselben veralteten 'count'-Wert ein. Verwenden Sie immer die funktionale Form setState(prev => prev + 1) für akkumulierende Updates.",
+          "flushSync innerhalb eines React-Event-Handlers oder Lifecycle wird in der Entwicklung einen Fehler werfen. Es ist für die Überbrückung von React mit Nicht-React-Code gedacht, nicht zum Erzwingen von synchronem Zustand innerhalb von React."
+        ]
+      }
+    },
+    "memoization": {
+      "title": "Memoisierung (useMemo & useCallback)",
+      "subtitle": "Wie React berechnete Werte und Funktionsreferenzen zwischenspeichert, um teure Neuberechnungen zu überspringen.",
+      "explainer": {
+        "overview": "Memoisierung ist eine Caching-Technik, bei der React das Ergebnis einer teuren Berechnung speichert und bei nachfolgenden Renderings das gecachte Ergebnis zurückgibt — die Berechnung wird vollständig übersprungen, wenn sich die Eingaben nicht geändert haben. useMemo cached berechnete Werte. useCallback cached Funktionsreferenzen. Beide verwenden ein Dependency-Array, um zu entscheiden, wann neu berechnet werden soll.",
+        "howItWorks": [
+          {
+            "title": "useMemo cached den Rückgabewert einer Funktion",
+            "body": "useMemo(() => teureBerechnung(a, b), [a, b]) ruft die Funktion beim ersten Rendering auf und speichert das Ergebnis. Bei Re-Renderings prüft React, ob sich a oder b geändert hat. Falls nicht, gibt es das gecachte Ergebnis zurück, ohne die Funktion erneut aufzurufen."
+          },
+          {
+            "title": "useCallback cached die Funktionsreferenz selbst",
+            "body": "useCallback(fn, [deps]) ist äquivalent zu useMemo(() => fn, [deps]). Anstatt den Rückgabewert zu cachen, cached es das Funktionsobjekt selbst. Dies ist wichtig, weil JavaScript bei jedem Rendering ein neues Funktionsobjekt erstellt — was die referenzielle Gleichheit für Kind-Komponenten-Props bricht."
+          },
+          {
+            "title": "React vergleicht Deps mit Object.is()",
+            "body": "React vergleicht jeden Dep-Wert mit Object.is() (strenge Gleichheit). Primitive Werte (Zahlen, Strings, Booleans) werden nach Wert verglichen. Objekte und Arrays werden nach Referenz verglichen — daher löst ein neues Objektliteral {} in Deps immer eine Neuberechnung aus."
+          },
+          {
+            "title": "Cache-Treffer: gecachten Wert zurückgeben",
+            "body": "Wenn alle Deps gleich den Deps des vorherigen Renderings sind, gibt React sofort den memoiserten Wert zurück, ohne die Factory-Funktion aufzurufen. Die Komponente rendert dennoch — aber die teure Berechnung wird übersprungen."
+          },
+          {
+            "title": "Cache-Miss: neu berechnen und neuen Wert speichern",
+            "body": "Wenn sich ein Dep geändert hat, ruft React die Factory-Funktion erneut auf, speichert das neue Ergebnis und gibt es zurück. Der alte gecachte Wert wird verworfen."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "useMemo",
+            "icon": "💾",
+            "definition": "Cached den Rückgabewert einer Berechnung. Berechnet nur neu, wenn sich Deps ändern. Nützlich für teure Berechnungen, die von Props/Zustand abgeleitet werden."
+          },
+          {
+            "term": "useCallback",
+            "icon": "🔗",
+            "definition": "Cached eine Funktionsreferenz. Äquivalent zu useMemo(() => fn, deps). Entscheidend beim Übergeben von Callbacks an memoisierte Kind-Komponenten."
+          },
+          {
+            "term": "Referential Equality",
+            "icon": "⚖️",
+            "definition": "Zwei Objekte/Arrays sind nur gleich, wenn sie auf dieselbe Speicheradresse zeigen. {} === {} ist false. useMemo/useCallback erhalten die Identität über Renderings hinweg."
+          },
+          {
+            "term": "Dependency Array",
+            "icon": "📋",
+            "definition": "Das zweite Argument für useMemo/useCallback. React vergleicht diese Werte zwischen Renderings, um zu entscheiden, ob neu berechnet werden soll."
+          },
+          {
+            "term": "React.memo",
+            "icon": "🛡️",
+            "definition": "Higher-Order-Komponente, die die Render-Ausgabe einer Komponente memoisiert. Funktioniert am besten in Kombination mit useCallback zur Stabilisierung von Callback-Props."
+          }
+        ],
+        "codeLabel": "useMemo + useCallback zusammen einsetzen",
+        "whyItMatters": "Ohne Memoisierung erstellt jedes erneute Rendern der Elternkomponente neue Objekt-/Funktionsreferenzen, was dazu führt, dass mit React.memo umhüllte Kinder unnötigerweise neu gerendert werden. useMemo und useCallback erhalten die referenzielle Stabilität, machen React.memo effektiv und verhindern kaskadierende Re-Renderings in großen Komponentenbäumen.",
+        "pitfalls": [
+          "Memoisieren Sie nicht alles — useMemo und useCallback haben einen Preis (Speicher für den Cache, Vergleich bei jedem Rendering). Verwenden Sie sie nur für teure Berechnungen oder zur Stabilisierung von Props für memoisierte Kinder.",
+          "Objekt- oder Array-Literale im Deps-Array zu platzieren, untergräbt den Zweck: useMemo(() => x, [{}]) berechnet bei jedem Rendering neu, weil {} !== {} jedes Mal eine neue Referenz erstellt.",
+          "useMemo ist keine semantische Garantie — React kann gecachte Werte in Zukunft verwerfen (z.B. um Speicher für Offscreen-Komponenten freizugeben). Verlassen Sie sich nicht darauf für Seiteneffekte."
+        ]
+      }
+    },
+    "reactMemo": {
+      "title": "React.memo & Re-Renders",
+      "subtitle": "Wie React.memo flachen Vergleich nutzt, um das Rendering unveränderter Kindkomponenten zu überspringen.",
+      "explainer": {
+        "overview": "Standardmäßig rendert React eine Komponente immer dann neu, wenn ihr Elternteil neu rendert — unabhängig davon, ob sich die eigenen Props der Komponente geändert haben. React.memo ist eine Higher-Order-Komponente, die eine Funktionskomponente umhüllt und ihre Render-Ausgabe memoisiert. Es führt einen flachen Vergleich der vorherigen und neuen Props durch und überspringt das Re-Rendering, wenn sie gleich sind.",
+        "howItWorks": [
+          {
+            "title": "Re-Renderings der Elternkomponente lösen standardmäßig alle Kinder aus",
+            "body": "Wenn sich der Zustand einer Elternkomponente ändert, ruft React die Funktion der Elternkomponente auf. Dann verarbeitet es alle zurückgegebenen JSX-Kinder — ruft auch ihre Funktionen auf, selbst wenn ihre Props identisch sind. Dies kaskadiert den Baum hinunter."
+          },
+          {
+            "title": "React.memo umhüllt die Komponente mit einem Prop-Vergleich",
+            "body": "React.memo(Komponente) gibt eine neue Komponente zurück. Bevor die Funktion der Komponente aufgerufen wird, prüft React, ob die neuen Props flach gleich den vorherigen Props sind. Falls ja, verwendet React die vorherige Render-Ausgabe erneut — der Funktionsaufruf wird vollständig übersprungen."
+          },
+          {
+            "title": "Flacher Vergleich prüft jede Prop mit Object.is()",
+            "body": "Für jeden Prop-Schlüssel vergleicht React alteProp === neueProp. Primitive Werte (String, Zahl, Boolean) werden nach Wert verglichen. Objekte und Funktionen werden nach Referenz verglichen — ein neues Objektliteral {} in Props scheitert immer an der Gleichheitsprüfung."
+          },
+          {
+            "title": "Benutzerdefinierte Vergleichsfunktion für fein-granulare Kontrolle",
+            "body": "React.memo(Komponente, sindPropsGleich) akzeptiert ein zweites Argument — eine benutzerdefinierte Vergleichsfunktion. Geben Sie true zurück, um das Re-Rendering zu überspringen (Props sind gleich), false, um es zuzulassen. Nützlich für tiefe Gleichheitsprüfungen oder das Ignorieren bestimmter Props."
+          },
+          {
+            "title": "Kontextänderungen lösen weiterhin Re-Renderings aus",
+            "body": "React.memo überspringt nur Re-Renderings, die durch Prop-Änderungen verursacht werden. Wenn die Komponente useContext() aufruft, rendert sie weiterhin neu, wenn sich der Kontextwert ändert — unabhängig von React.memo."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "React.memo",
+            "icon": "🛡️",
+            "definition": "HOC, der die Render-Ausgabe einer Komponente memoisiert. Überspringt Re-Rendering, wenn Props flach gleich dem vorherigen Rendering sind."
+          },
+          {
+            "term": "Shallow Comparison",
+            "icon": "🔍",
+            "definition": "Vergleicht jede Prop mit Object.is(). Effektiv für Primitive. Objekte und Funktionen müssen dieselbe Referenz über Renderings hinweg beibehalten."
+          },
+          {
+            "term": "Render Bailout",
+            "icon": "⚡",
+            "definition": "Wenn React.memo feststellt, dass Props gleich sind, gibt es die vorherige Render-Ausgabe zurück und überspringt den Aufruf der Komponentenfunktion."
+          },
+          {
+            "term": "Referential Stability",
+            "icon": "⚓",
+            "definition": "Dieselbe Objekt-/Funktionsreferenz über Renderings hinweg beibehalten. Erforderlich damit React.memo korrekt mit nicht-primitiven Props funktioniert."
+          },
+          {
+            "term": "Unnecessary Re-render",
+            "icon": "♻️",
+            "definition": "Ein Re-Rendering, bei dem die Ausgabe identisch mit dem vorherigen Rendering ist. React.memo verhindert diese, wenn sich Props logisch nicht geändert haben."
+          }
+        ],
+        "codeLabel": "React.memo mit stabilen Props",
+        "whyItMatters": "In großen React-Bäumen mit komplexen Komponenten summieren sich unnötige Re-Renderings zu echten Leistungsproblemen — langsame Interaktionen, verlorene Frames, träge Animationen. React.memo ermöglicht es, gezielt bestimmte Komponenten am Re-Rendering zu hindern, teure Teilbäume stabil zu halten, während der Rest der App frei aktualisiert.",
+        "pitfalls": [
+          "React.memo ist nutzlos, wenn Sie neue Objekt-/Array-/Funktionsliterale direkt als Props übergeben — sie erstellen bei jedem Elternteil-Rendering neue Referenzen. Kombinieren Sie React.memo immer mit useMemo und useCallback.",
+          "Umhüllen Sie nicht jede Komponente mit React.memo — der Vergleich selbst hat einen Preis. Memoisieren Sie nur Komponenten, die tatsächlich teuer zu rendern sind oder sehr häufig rendern.",
+          "React.memo vergleicht Props, nicht Zustand oder Kontext. Eine memoisierte Komponente rendert weiterhin neu, wenn sich ihr eigener Zustand oder der genutzte Kontext aktualisiert."
+        ]
+      }
+    },
+    "contextApi": {
+      "title": "Context API",
+      "subtitle": "Wie React Werte ohne Prop-Drilling durch den Komponentenbaum übergibt.",
+      "explainer": {
+        "overview": "Die Context API ermöglicht die gemeinsame Nutzung von Daten im Komponentenbaum, ohne Props auf jeder Ebene weiterzureichen (Prop-Drilling). Eine Provider-Komponente umhüllt einen Teilbaum und stellt einen Wert bereit. Jede Nachfolger-Komponente kann diesen Wert mit useContext lesen — und wird automatisch neu gerendert, wenn sich der Wert ändert.",
+        "howItWorks": [
+          {
+            "title": "Einen Kontext mit createContext() erstellen",
+            "body": "React.createContext(Standardwert) erstellt ein Context-Objekt mit einem Provider und Consumer. Der Standardwert wird verwendet, wenn eine Komponente Kontext ohne passenden Provider über sich im Baum abruft."
+          },
+          {
+            "title": "Den Teilbaum mit einem Provider umhüllen",
+            "body": "Die Provider-Komponente akzeptiert eine value-Prop. Alle Komponenten im Teilbaum können auf diesen Wert zugreifen. Sie können mehrere Provider desselben Kontexts verschachteln — der nächste Vorfahren-Provider gewinnt."
+          },
+          {
+            "title": "Consumer lesen den Wert mit useContext()",
+            "body": "useContext(MeinKontext) gibt den aktuellen Kontextwert vom nächsten Provider über der aufrufenden Komponente zurück. Es abonniert die Komponente für Kontextänderungen."
+          },
+          {
+            "title": "Provider-Wertänderung löst alle Consumer aus",
+            "body": "Wenn sich die value-Prop des Providers ändert (nach Referenz), rendert React ALLE Komponenten neu, die useContext(MeinKontext) im Teilbaum aufrufen — unabhängig davon, ob sich der tatsächlich genutzte Wert geändert hat."
+          },
+          {
+            "title": "Komponenten zwischen Provider und Consumer werden NICHT neu gerendert",
+            "body": "Dies ist die wichtigste Effizienz: Zwischenkomponenten, die useContext nicht aufrufen, werden nicht neu gerendert. Kontext überspringt sie. Nur tatsächliche Consumer werden neu gerendert."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "createContext",
+            "icon": "🏭",
+            "definition": "Erstellt ein Context-Objekt. Nimmt einen Standardwert an, der verwendet wird, wenn kein Provider über dem Consumer im Baum vorhanden ist."
+          },
+          {
+            "term": "Provider",
+            "icon": "📡",
+            "definition": "Sendet einen Wert an alle Nachfolger-Consumer. Verschachtelte Provider überschreiben äußere. Der Wert sollte memoisiert sein, um unnötige Re-Renderings zu verhindern."
+          },
+          {
+            "term": "useContext",
+            "icon": "🔌",
+            "definition": "Hook, der eine Komponente für einen Kontext abonniert. Rendert neu, wenn sich der Kontextwert ändert."
+          },
+          {
+            "term": "Context Propagation",
+            "icon": "🌊",
+            "definition": "Kontext springt direkt zu Consumern — Zwischenkomponenten rendern nicht neu, es sei denn, sie rufen auch useContext auf."
+          },
+          {
+            "term": "Reference Equality",
+            "icon": "⚖️",
+            "definition": "React vergleicht Kontextwerte mit Object.is(). Das Übergeben eines neuen Objektliterals {} bei jedem Rendering löst das Neu-Rendering aller Consumer aus, selbst wenn der Inhalt identisch ist."
+          }
+        ],
+        "codeLabel": "Kontext einrichten und verwenden",
+        "whyItMatters": "Kontext löst Prop-Drilling — das Weiterreichen von Props durch viele Komponentenebenen, nur um Daten an ein tief verschachteltes Kind zu liefern. Kontext eignet sich am besten für wirklich globale oder weit geteilte Daten (Authentifizierung, Theme, Locale). Für häufig ändernde Werte bevorzugen Sie Zustand oder Redux, um zu vermeiden, dass jeder Consumer bei jeder Änderung neu gerendert wird.",
+        "pitfalls": [
+          "Ein neues Objekt- oder Array-Literal direkt an Provider value={} zu übergeben, bewirkt, dass ALLE Consumer bei jedem Elternteil-Rendering neu rendern. In useMemo einwickeln oder in eine Ref auslagern.",
+          "Kontext ist keine State-Management-Lösung — es ist ein Datentransport. Für komplexen Zustand mit vielen Updates kombinieren Sie Kontext mit useReducer oder verwenden Sie einen externen Store.",
+          "useContext liest nur vom nächsten Provider — nicht von einem bestimmten. Wenn Sie mehrere Provider desselben Kontexts haben, gewinnt immer der nächste Vorfahre."
+        ]
+      }
+    },
+    "eventSystem": {
+      "title": "Ereignissystem & SyntheticEvents",
+      "subtitle": "Reacts Ereignisdelegation, synthetisches Ereignis-Wrapping und Bubbling von der Wurzel.",
+      "explainer": {
+        "overview": "React fügt Event-Listener nicht direkt an DOM-Elemente an. Stattdessen verwendet es Event-Delegation — ein einziger Listener wird am Root-Container angebracht (dem div, wo ReactDOM.createRoot() aufgerufen wurde). Wenn ein natives Ereignis bis zur Wurzel hochblubbert, fängt React es ab, hüllt es in ein SyntheticEvent-Objekt ein und löst es durch den React-Komponentenbaum aus.",
+        "howItWorks": [
+          {
+            "title": "React registriert einen Root-Listener pro Ereignistyp",
+            "body": "Wenn Sie onClick={handleClick} in JSX schreiben, ruft React addEventListener nicht auf diesem DOM-Knoten auf. Stattdessen registriert es einen einzigen Listener am Root-Container für 'click'-Ereignisse — dies geschieht einmal für die gesamte App, nicht einmal pro Komponente."
+          },
+          {
+            "title": "Native Ereignisse blubbern zur Wurzel hoch",
+            "body": "Wenn Sie auf eine Schaltfläche klicken, feuert der Browser ein natives click-Ereignis auf der Schaltfläche, das durch den echten DOM-Baum zur Dokument-Wurzel hochblubbert — wo Reacts Listener wartet."
+          },
+          {
+            "title": "React erstellt einen SyntheticEvent-Wrapper",
+            "body": "React hüllt das native Ereignis in ein SyntheticEvent ein — ein browserübergreifend normalisiertes Ereignisobjekt, das unabhängig vom Browser dieselbe API bereitstellt. In älteren React-Versionen wurden SyntheticEvents für die Leistung gepoolt und wiederverwendet."
+          },
+          {
+            "title": "React simuliert Bubbling durch den Fiber-Baum",
+            "body": "React durchläuft den Fiber-Baum vom Zielelement bis zur Wurzel und ruft alle onClick- (oder andere Ereignis-) Handler auf, die es an jedem Fiber findet. Dies simuliert Browser-Bubbling, aber in Reacts virtuellem Baum."
+          },
+          {
+            "title": "Die Capture-Phase läuft zuerst (von oben nach unten)",
+            "body": "Genau wie native Ereignisse unterstützt React Capture-Phase-Handler über onClickCapture. Diese werden von oben nach unten ausgeführt (Wurzel → Ziel), bevor Bubble-Phase-Handler von unten nach oben ausgeführt werden (Ziel → Wurzel)."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Event Delegation",
+            "icon": "🎯",
+            "definition": "Ein Listener an der Wurzel verarbeitet alle Ereignisse dieses Typs. Viel effizienter als das Anbringen von Listenern an jedem interaktiven Element."
+          },
+          {
+            "term": "SyntheticEvent",
+            "icon": "🎁",
+            "definition": "Reacts browserübergreifender Ereignis-Wrapper. Normalisiert Inkonsistenzen zwischen Browsern. Bietet die nativeEvent-Eigenschaft für den Rohzugang."
+          },
+          {
+            "term": "Bubbling Phase",
+            "icon": "⬆️",
+            "definition": "Ereignis wird vom Zielelement aufwärts durch Vorfahren-Elemente weitergegeben. Standardphase für die meisten React-Event-Handler."
+          },
+          {
+            "term": "Capture Phase",
+            "icon": "⬇️",
+            "definition": "Ereignis wird von der Wurzel abwärts zum Ziel weitergegeben, bevor es hochblubbert. onClickCapture für die Capture-Phase verwenden."
+          },
+          {
+            "term": "stopPropagation()",
+            "icon": "🚧",
+            "definition": "Stoppt die Weitergabe des Ereignisses durch Reacts simulierten Baum. Stoppt das native Ereignis NICHT, es sei denn, es wird auf e.nativeEvent aufgerufen."
+          }
+        ],
+        "codeLabel": "Event-Delegation in Aktion",
+        "whyItMatters": "Event-Delegation macht React hocheffizient — egal wie viele Schaltflächen in Ihrer App vorhanden sind, es gibt nur einen nativen Event-Listener pro Ereignistyp. Es bedeutet auch, dass React Ereignisse auch für dynamisch hinzugefügte Komponenten abfangen und verarbeiten kann, und es ermöglicht Reacts synthetischem Ereignissystem, konsistent in allen Browsern zu funktionieren.",
+        "pitfalls": [
+          "In React 17+ werden Ereignisse an den Root-Container statt an document delegiert. Das bedeutet, dass manuell aufgerufenes document.addEventListener NACH Reacts Handlern ausgeführt wird (nicht davor wie in React 16).",
+          "e.stopPropagation() stoppt Reacts simuliertes Bubbling, aber das native Ereignis hat die Wurzel bereits erreicht. Um die native Weitergabe zu stoppen, verwenden Sie e.nativeEvent.stopImmediatePropagation().",
+          "SyntheticEvent-Eigenschaften werden in älteren React-Versionen nach dem Zurückgeben des Event-Handlers auf null gesetzt (Event-Pooling). Greifen Sie synchron auf Eigenschaften zu oder rufen Sie e.persist() in React 16 auf."
+        ]
+      }
+    },
+    "refsDom": {
+      "title": "Refs & DOM-Zugriff",
+      "subtitle": "Wie useRef veränderliche Werte über Renders hinweg beibehält und direkten DOM-Zugriff ermöglicht.",
+      "explainer": {
+        "overview": "useRef gibt ein veränderliches Objekt { current: Wert } zurück, das für die gesamte Lebensdauer der Komponente bestehen bleibt. Anders als Zustand löst das Mutieren von ref.current KEIN Re-Rendering aus. React verwendet Refs auch als Notausstieg für direkten DOM-Zugriff — nach der Commit-Phase setzt React ref.current auf den tatsächlichen DOM-Knoten und ermöglicht so imperativen Zugriff auf die Browser-API.",
+        "howItWorks": [
+          {
+            "title": "useRef erstellt eine persistente veränderliche Box",
+            "body": "Beim ersten Rendering erstellt useRef(Initialwert) das Objekt { current: Initialwert } und speichert es in der Hooks-Liste des Fibers. Bei jedem nachfolgenden Rendering gibt React dasselbe Objekt zurück — so zeigt ref.current immer auf dieselbe Box."
+          },
+          {
+            "title": "ref.current mutieren ist ein Seiteneffekt — kein Re-Rendering",
+            "body": "React verfolgt keine ref.current-Mutationen. Wenn Sie ref.current = 5 schreiben, hat React keine Ahnung davon und wird kein Re-Rendering einplanen. Dies macht Refs ideal für Werte, die Sie beibehalten, aber nicht anzeigen möchten."
+          },
+          {
+            "title": "DOM-Refs: React füllt ref.current nach dem Commit",
+            "body": "Wenn Sie eine Ref an ein JSX-Element übergeben (<input ref={meinRef} />), setzt React ref.current nicht während der Render-Phase. Es wartet bis zur Commit-Phase — nachdem der DOM-Knoten existiert — und setzt dann ref.current = domKnoten."
+          },
+          {
+            "title": "Beim Unmount wird ref.current auf null zurückgesetzt",
+            "body": "Wenn die Komponente unmountet, setzt React ref.current = null, bevor Bereinigungseffekte ausgeführt werden. Dies verhindert, dass Ihre Effekte auf einen abgehängten DOM-Knoten zugreifen."
+          },
+          {
+            "title": "forwardRef leitet Refs durch Komponentengrenzen weiter",
+            "body": "Standardmäßig können Refs nicht an Funktionskomponenten angehängt werden. Verwenden Sie forwardRef, um eine ref-Prop zu akzeptieren und sie an ein DOM-Element weiterzuleiten oder imperative Methoden über useImperativeHandle bereitzustellen."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "{ current }",
+            "icon": "📦",
+            "definition": "Das Ref-Objekt. React gibt Ihnen dasselbe Objekt bei jedem Rendering. Mutieren Sie current frei — kein Re-Rendering wird ausgelöst."
+          },
+          {
+            "term": "DOM Ref",
+            "icon": "🖱️",
+            "definition": "Übergeben Sie eine Ref an ein JSX-Element, um den zugrunde liegenden DOM-Knoten in ref.current nach dem Commit zu erhalten. Nützlich für Fokus, Scrollen und Messungen."
+          },
+          {
+            "term": "forwardRef",
+            "icon": "➡️",
+            "definition": "Umhüllt eine Funktionskomponente, um eine ref-Prop zu akzeptieren und sie an ein inneres Element weiterzuleiten oder über useImperativeHandle bereitzustellen."
+          },
+          {
+            "term": "useImperativeHandle",
+            "icon": "🎛️",
+            "definition": "Passt an, was der Elternteil sieht, wenn er auf die Ref eines Kindes zugreift. Anstatt des DOM-Knotens können Sie bestimmte Methoden bereitstellen."
+          },
+          {
+            "term": "Ref vs State",
+            "icon": "⚖️",
+            "definition": "Zustand für Werte verwenden, die die Benutzeroberfläche beeinflussen (löst Re-Rendering aus). Refs für Werte verwenden, die das Rendering nicht beeinflussen: Timer, DOM-Knoten, vorherige Werte, Flags."
+          }
+        ],
+        "codeLabel": "Häufige Ref-Muster",
+        "whyItMatters": "Refs sind Reacts offizieller Notausstieg für imperativen Code. Sie ermöglichen die Überbrückung von Reacts deklarativer Welt mit Browser-APIs, die imperative Aufrufe erfordern (Fokus, Scrollen, Animationen, DOM-Bibliotheken von Drittanbietern). Sie lösen auch das Stale-Closure-Problem in Effects — indem eine Ref mit dem neuesten Zustand synchron gehalten wird, kann man in lang laufenden asynchronen Operationen sicher auf aktuelle Werte zugreifen.",
+        "pitfalls": [
+          "Lesen oder schreiben Sie ref.current nicht während des Renderings — Refs sind nicht reaktiv, sodass React nicht neu rendert, wenn sich der Wert ändert, was zu veralteter Benutzeroberfläche führt.",
+          "Vermeiden Sie es, Refs übermäßig zu verwenden, um Re-Renderings zu vermeiden. Wenn ein Wert in der Benutzeroberfläche angezeigt werden muss, sollte er Zustand sein. Refs sind nur für Seiteneffekte und imperative DOM-Operationen.",
+          "Auf ref.current vor dem Mount der Komponente zuzugreifen (z.B. in einem useState-Initialisierer) wird null sein — React setzt DOM-Refs erst nach der Commit-Phase."
+        ]
+      }
+    },
+    "keysLists": {
+      "title": "Schlüssel & Listen-Rendering",
+      "subtitle": "Wie die Key-Prop React ermöglicht, Listenelemente zu identifizieren und DOM-Mutationen zu minimieren.",
+      "explainer": {
+        "overview": "Wenn React eine Liste von Elementen rendert, muss es wissen, welche Elemente sich zwischen Renderings geändert haben, hinzugefügt oder entfernt wurden. Ohne die key-Prop verwendet React positionsbasiertes Zuordnen — Element an Index 0 wird Element an Index 0 zugeordnet. Mit Keys kann React Elemente über Renderings hinweg nach stabiler Identität zuordnen, was effiziente Verschiebungen anstelle von Zerstören-und-Neuerstellen ermöglicht.",
+        "howItWorks": [
+          {
+            "title": "React vergleicht alte und neue Kind-Arrays",
+            "body": "Wenn Ihre Liste neu rendert, hat React zwei Arrays von Kind-Elementen: die alten und die neuen. Es muss sie zuordnen, um zu entscheiden, was aktualisiert, eingefügt und gelöscht werden soll."
+          },
+          {
+            "title": "Ohne Keys: positionsbasiertes Zuordnen",
+            "body": "React ordnet Elemente nach ihrer Indexposition zu. Wenn die Liste [A, B, C] zu [B, A, C] wird (neu geordnet), sieht React, dass sich Position 0 von A zu B und Position 1 von B zu A geändert hat — was zwei Updates und möglichen Zustandsverlust verursacht."
+          },
+          {
+            "title": "Mit Keys: identitätsbasiertes Zuordnen",
+            "body": "React erstellt eine Zuordnung von Key zu Fiber. [A, B, C] wird zu [B, A, C] als 'key=b von Position 1 zu 0 verschoben, key=a von 1 zu 0 verschoben' gesehen. React verschiebt die vorhandenen DOM-Knoten — kein Zerstören/Erstellen-Zyklus."
+          },
+          {
+            "title": "Fehlende Keys lösen die Reconciler-Warnung aus",
+            "body": "React protokolliert 'Each child in a list should have a unique key prop', wenn es Listen ohne Keys erkennt. Dies ist eine Leistungswarnung — Ihre App funktioniert weiterhin, rendert aber weniger effizient."
+          },
+          {
+            "title": "Key-Änderungen erzwingen Unmount + Remount",
+            "body": "Das Ändern des Keys einer Komponente teilt React mit: 'Dies ist eine völlig andere Instanz'. React hebt die alte Komponente auf (führt alle Bereinigungen aus) und mountet eine neue. Dies ist nützlich, um den Komponentenzustand absichtlich zurückzusetzen."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Stable Key",
+            "icon": "🔑",
+            "definition": "Ein Key, der ein Element über Renderings hinweg identifiziert — typischerweise eine Datenbank-ID oder ein Slug. Muss unter Geschwistern eindeutig sein."
+          },
+          {
+            "term": "Index as Key",
+            "icon": "⚠️",
+            "definition": "Array-Index als Key zu verwenden ist nur für statische, nicht neu ordnende Listen sicher. Bei dynamischen Listen verursacht es Fehler, wenn Elemente neu geordnet werden."
+          },
+          {
+            "term": "DOM Reuse",
+            "icon": "♻️",
+            "definition": "Wenn React ein altes und neues Element nach Key zuordnet, verwendet es den vorhandenen DOM-Knoten wieder und aktualisiert nur geänderte Attribute."
+          },
+          {
+            "term": "Component Reset via Key",
+            "icon": "🔄",
+            "definition": "Das absichtliche Ändern der key-Prop einer Komponente setzt sie zurück — nützlich zum Zurücksetzen des Formular-Zustands beim Wechsel zwischen Elementen."
+          }
+        ],
+        "codeLabel": "Keys in der Praxis",
+        "whyItMatters": "Keys sind Reacts Hinweis zum Zuordnen alter und neuer Listenelemente. Ein guter Key bedeutet, dass React DOM-Knoten wiederverwenden kann (schnell), den Komponentenzustand erhalten kann (korrekt) und minimale Updates auslöst (effizient). Ein schlechter Key (oder kein Key) bedeutet, dass React entweder viel mehr Arbeit als nötig leisten oder den Komponentenzustand unerwartet verlieren muss.",
+        "pitfalls": [
+          "Verwenden Sie niemals Math.random() oder Date.now() als Keys — sie ändern sich bei jedem Rendering und zwingen jedes Listenelement, bei jedem Rendering unmountet und remountet zu werden.",
+          "Keys müssen unter Geschwistern eindeutig sein, nicht global. Zwei verschiedene Listen können dieselben Key-Werte wiederverwenden.",
+          "Die key-Prop ist besonders — sie wird nicht als Prop an die Komponente übergeben. Wenn Sie die ID innerhalb der Komponente benötigen, übergeben Sie sie auch als separate Prop."
+        ]
+      }
+    },
+    "errorBoundaries": {
+      "title": "Fehlergrenzen",
+      "subtitle": "Wie React Fehler im Komponentenbaum abfängt und eine Fallback-Benutzeroberfläche rendert.",
+      "explainer": {
+        "overview": "Fehlergrenzen sind React-Klassen-Komponenten, die JavaScript-Fehler überall in ihrem Kind-Komponentenbaum abfangen, diese Fehler protokollieren und eine Fallback-Benutzeroberfläche anstelle des Absturzes der gesamten Anwendung anzeigen. Sie funktionieren wie ein JavaScript-catch{}-Block, aber für den Komponentenbaum. Eine Fehlergrenze fängt Fehler während des Renderings, in Lifecycle-Methoden und in Konstruktoren des gesamten Baums darunter ab.",
+        "howItWorks": [
+          {
+            "title": "Eine Kind-Komponente wirft einen Fehler während des Renderings",
+            "body": "Wenn eine Komponente im Teilbaum während des Renderings (oder in einer Lifecycle-Methode) wirft, beginnt React, den Fehler durch den Fiber-Baum nach oben weiterzugeben und sucht nach der nächsten Fehlergrenze."
+          },
+          {
+            "title": "React durchläuft den Fiber-Baum auf der Suche nach einer Grenze",
+            "body": "React durchläuft aufwärts durch übergeordnete Fibers. Wenn es eine Klassen-Komponente findet, die getDerivedStateFromError oder componentDidCatch implementiert, stoppt es dort. Wenn es die Wurzel erreicht, ohne eine zu finden, hebt die gesamte App auf."
+          },
+          {
+            "title": "getDerivedStateFromError aktualisiert den Grenzzustand",
+            "body": "React ruft getDerivedStateFromError(fehler) auf der Grenzklasse auf. Diese statische Methode gibt neuen Zustand zurück (z.B. { hasError: true }), der bewirkt, dass die Grenze mit der Fallback-Benutzeroberfläche neu rendert."
+          },
+          {
+            "title": "componentDidCatch protokolliert den Fehler",
+            "body": "Nachdem die Fallback-Benutzeroberfläche angezeigt wird, ruft React componentDidCatch(fehler, fehlerInfo) auf — ein guter Ort, um den Fehler an einen Logging-Dienst wie Sentry zu senden."
+          },
+          {
+            "title": "Fehlergrenze rendert Fallback-Benutzeroberfläche",
+            "body": "Die Grenzkomponente prüft ihren Zustand (hasError) und rendert entweder die Kinder (normal) oder ein Fallback-JSX-Element. Der Rest der App außerhalb der Grenze funktioniert weiterhin normal."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "getDerivedStateFromError",
+            "icon": "🛡️",
+            "definition": "Statische Klassenmethode. Wird während der Render-Phase aufgerufen, wenn ein Kind wirft. Gibt neuen Zustand zurück, um Fallback-Rendering auszulösen."
+          },
+          {
+            "term": "componentDidCatch",
+            "icon": "📊",
+            "definition": "Instanzmethode. Wird während der Commit-Phase nach dem Rendern des Fallbacks aufgerufen. Für Fehler-Logging verwenden. Empfängt Fehler + Komponentenstapel."
+          },
+          {
+            "term": "Error Propagation",
+            "icon": "⬆️",
+            "definition": "Fehler blubbern durch den Fiber-Baum zur nächsten Grenze, genauso wie Ausnahmen durch Aufrufstapel hochblubbert."
+          },
+          {
+            "term": "Recovery / Reset",
+            "icon": "🔄",
+            "definition": "Grenzen können durch Ändern ihrer key-Prop zurückgesetzt werden, was React veranlasst, den gesamten Teilbaum frisch unmounten und remounten."
+          }
+        ],
+        "codeLabel": "Eine Fehlergrenze implementieren",
+        "whyItMatters": "Ohne Fehlergrenzen stürzt ein einzelner unbehandelter Render-Fehler Ihre gesamte React-App ab und zeigt einen leeren Bildschirm. Fehlergrenzen ermöglichen es Ihnen, Fehler auf isolierte Abschnitte der Benutzeroberfläche zu begrenzen — der Rest der App funktioniert weiter. Dies ist entscheidend für Produktions-Apps, bei denen man nicht jeden Edge-Case vorhersehen kann.",
+        "pitfalls": [
+          "Fehlergrenzen fangen KEINE Fehler in Event-Handlern ab (verwenden Sie dort try/catch), in asynchronem Code (setTimeout, Promises) oder beim server-seitigen Rendering.",
+          "Fehlergrenzen müssen Klassen-Komponenten sein — es gibt kein Hook-Äquivalent. Verwenden Sie eine Bibliothek wie 'react-error-boundary' für einen hook-freundlichen Wrapper.",
+          "Eine Fehlergrenze kann ihre eigenen Fehler nicht abfangen — nur Fehler in ihren Kindern. Umhüllen Sie Grenzen immer mit einer weiteren Grenze."
+        ]
+      }
+    },
+    "portals": {
+      "title": "React-Portale",
+      "subtitle": "Rendering von Kindern außerhalb der übergeordneten DOM-Hierarchie bei Beibehaltung des React-Event-Bubblings.",
+      "explainer": {
+        "overview": "ReactDOM.createPortal(kinder, domKnoten) rendert einen React-Teilbaum in einen anderen DOM-Knoten als den, in dem der Elternteil rendert. Obwohl die Komponente an einem anderen Ort im DOM erscheint (z.B. ein Modal auf Body-Ebene), bleibt sie ein Kind im React-Komponentenbaum. Das bedeutet, dass Kontext, Ereignisse und React-Lifecycle genau so funktionieren, als ob das Portal eingebettet wäre.",
+        "howItWorks": [
+          {
+            "title": "React rendert das Portal in einen angegebenen DOM-Knoten",
+            "body": "createPortal(kinder, document.getElementById('modal-root')) weist React an, Kinder in #modal-root anstatt in den DOM-Teilbaum des Elternteils zu rendern. Die DOM-Ausgabe ist vollständig getrennt vom DOM des Elternteils."
+          },
+          {
+            "title": "Die Komponente bleibt ein React-Kind des Elternteils",
+            "body": "Trotz des Renderings an anderer Stelle im DOM ist die Portal-Komponente konzeptionell ein Kind der Komponente, die es rendert. Es erhält dieselben Kontextwerte, dieselben React-Props und nimmt am selben Fiber-Baum teil."
+          },
+          {
+            "title": "Ereignisse blubbern durch den React-Baum, nicht den DOM-Baum",
+            "body": "Wenn Sie innerhalb eines Portals klicken, blubbert das Click-Ereignis durch Reacts Komponentenbaum zum Elternteil — auch wenn im DOM der Knoten des Portals außerhalb des DOM-Teilbaums des Elternteils liegt. Reacts synthetisches Ereignissystem operiert auf dem Fiber-Baum, nicht dem DOM-Baum."
+          },
+          {
+            "title": "Kontext fließt durch den React-Baum in Portale",
+            "body": "Eine Portal-Komponente kann Kontextwerte von einem Provider lesen, der ein Vorfahre in Reacts Komponentenbaum ist, auch wenn das Portal in einen völlig anderen DOM-Knoten rendert."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "createPortal",
+            "icon": "🌀",
+            "definition": "ReactDOM.createPortal(kinder, domKnoten). Rendert React-Kinder in domKnoten anstatt in den DOM-Container des Elternteils."
+          },
+          {
+            "term": "React Tree vs DOM Tree",
+            "icon": "🌳",
+            "definition": "Zwei verschiedene Hierarchien. Der React-Baum regelt Kontext, Ereignisse und Props. Der DOM-Baum regelt visuelles Layout und CSS-Vererbung."
+          },
+          {
+            "term": "Event Bubbling",
+            "icon": "⬆️",
+            "definition": "Portal-Ereignisse blubbern durch den React-Komponentenbaum (nicht DOM-Baum), sodass Eltern-Komponenten Ereignisse von Portal-Kindern empfangen."
+          },
+          {
+            "term": "Modal/Tooltip Pattern",
+            "icon": "💬",
+            "definition": "Häufigster Portal-Anwendungsfall: Modals und Tooltips auf document.body rendern, um overflow:hidden oder z-index-Clipping von Vorfahren-Elementen zu vermeiden."
+          }
+        ],
+        "codeLabel": "createPortal für ein Modal",
+        "whyItMatters": "Portale lösen ein grundlegendes CSS-Problem: Modals, Tooltips und Dropdowns müssen visuell aus ihren übergeordneten Containern 'entkommen'. Vorfahren-CSS wie overflow:hidden, z-index-Stapelkontexte und transform-Eigenschaften können absolut positionierte Kinder beschneiden oder repositionieren. Durch das Rendern auf document.body umgehen Portale all diese Einschränkungen, während Reacts Komponentenmodell erhalten bleibt.",
+        "pitfalls": [
+          "Der Portal-Ziel-DOM-Knoten muss existieren, bevor das Portal rendert. Verwenden Sie ein statisches Element in Ihrem HTML oder erstellen Sie es in einem useEffect, bevor das Portal gerendert wird.",
+          "Portal-Event-Bubbling überrascht Entwickler — ein Klick innerhalb eines Portals löst onClick-Handler auf React-Eltern-Komponenten aus (auch wenn diese Eltern das Portal nicht im DOM enthalten). Verwenden Sie stopPropagation, wenn nötig.",
+          "Portale erben kein CSS von ihrem React-Elternteil, da sie an einem anderen DOM-Ort rendern. Globales CSS oder eine CSS-in-JS-Lösung, die Stile einfügt, ist erforderlich."
+        ]
+      }
+    },
+    "suspense": {
+      "title": "Suspense & React.lazy",
+      "subtitle": "Fallback-Rendering, Code-Splitting und Streaming-SSR mit Suspense-Grenzen.",
+      "explainer": {
+        "overview": "Suspense ist ein Mechanismus, der Komponenten erlaubt, auf etwas zu 'warten', bevor sie rendern. Wenn eine Komponente nicht bereit ist (ein Lazy-Import wurde nicht geladen oder ein Datenabruf wurde nicht aufgelöst), wirft sie ein Promise. React fängt dieses geworfene Promise ab, findet die nächste Suspense-Grenze im Baum, zeigt dessen Fallback-Benutzeroberfläche und rendert den Teilbaum automatisch neu, wenn das Promise aufgelöst wurde.",
+        "howItWorks": [
+          {
+            "title": "React.lazy() erstellt eine lazy-geladene Komponente",
+            "body": "React.lazy(() => import('./MeineKomponente')) hüllt einen dynamischen Import in einen speziellen Wrapper ein. Wenn React es zum ersten Mal rendern versucht, wurde der Import noch nicht aufgelöst, also wirft der Lazy-Wrapper ein Promise."
+          },
+          {
+            "title": "Geworfene Promises blubbern zur nächsten Suspense-Grenze hoch",
+            "body": "Während der Render-Phase fängt React geworfene Promises ab (nicht geworfene Fehler — die gehen zu Fehlergrenzen). Es durchläuft den Fiber-Baum nach oben, um den nächsten <Suspense>-Vorfahren zu finden, und rendert dessen fallback-Prop anstelle des ausgesetzten Teilbaums."
+          },
+          {
+            "title": "React abonniert das Promise",
+            "body": "React hängt einen .then()-Handler an das geworfene Promise. Wenn das Promise aufgelöst wird (das Modul geladen, oder Daten eingetroffen sind), rendert React den ausgesetzten Teilbaum von Grund auf neu, diesmal mit dem aufgelösten Wert."
+          },
+          {
+            "title": "Concurrent Mode: Suspense ohne Fallback-Flackern",
+            "body": "Im Concurrent Mode kann React 'versuchen', einen ausgesetzten Teilbaum zu rendern, ohne ihn im DOM zu committen. Wenn er aussetzt, zeigt React weiterhin den alten Inhalt (kein Flash zum Fallback), bis das Promise aufgelöst wird, dann tauscht es den neuen Inhalt atomisch ein."
+          },
+          {
+            "title": "Streaming SSR: Server sendet HTML in Chunks",
+            "body": "Mit Next.js/React 18 Streaming sendet der Server sofort die HTML-Shell mit Suspense-Fallbacks. Wenn jeder asynchrone Datenabruf auf dem Server aufgelöst wird, streamt React den gefüllten HTML-Chunk zum Browser und ersetzt den Fallback inline."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "React.lazy()",
+            "icon": "📦",
+            "definition": "Hüllt einen dynamischen Import ein, um eine lazy-geladene Komponente zu erstellen. Beim ersten Rendering wird ein Promise geworfen. Nach der Auflösung rendert React mit dem geladenen Modul neu."
+          },
+          {
+            "term": "Suspense Boundary",
+            "icon": "🛡️",
+            "definition": "<Suspense fallback={<Spinner/>}> fängt geworfene Promises von beliebigen Nachfahren ab. Zeigt Fallback während des Wartens, enthüllt Kinder, wenn sie bereit sind."
+          },
+          {
+            "term": "Thrown Promise",
+            "icon": "🚀",
+            "definition": "Der Mechanismus, mit dem Komponenten signalisieren, dass sie nicht bereit sind. Jede Komponente (nicht nur Lazy-Komponenten) kann ein Promise werfen, um Suspense auszulösen — so integrieren sich Datenabruf-Bibliotheken wie React Query."
+          },
+          {
+            "term": "Streaming SSR",
+            "icon": "🌊",
+            "definition": "Server sendet HTML progressiv. Shell rendert sofort mit Fallbacks. Wenn asynchrone Arbeit abgeschlossen ist, streamt React gefüllte Inhalt-Chunks zum Browser."
+          },
+          {
+            "term": "SuspenseList",
+            "icon": "📋",
+            "definition": "Koordiniert die Enthüllungsreihenfolge mehrerer Suspense-Grenzen. Kann 'together' (alle auf einmal enthüllen) oder 'forwards'/'backwards' (in Reihenfolge enthüllen) erzwingen."
+          }
+        ],
+        "codeLabel": "Suspense für Code-Splitting und Datenabruf",
+        "whyItMatters": "Suspense vereint drei zuvor separate Probleme — Code-Splitting, Ladezustände und Server-Streaming — unter einem deklarativen Modell. Anstatt isLoading-Flags in jeder Komponente zu verfolgen, deklarieren Sie eine Grenze und einen Fallback, und React übernimmt die Orchestrierung. Dies führt zu erheblich einfacherem Datenabruf-Code und eliminiert Fehler beim Verwalten von Ladezuständen.",
+        "pitfalls": [
+          "Suspense fängt keine Fehler ab — nur geworfene Promises. Umhüllen Sie Suspense mit einer Fehlergrenze, um Fetch-Fehler ordnungsgemäß zu behandeln.",
+          "Bei jedem Rendering ein neues Promise-Objekt zu werfen, verursacht eine Endlosschleife — React wird das aufgelöste Promise nie sehen. Bibliotheken cachen Promises, damit dasselbe Objekt geworfen wird, bis es aufgelöst wird.",
+          "In React 18+ ist das Umhüllen der Wurzel in eine Suspense-Grenze nicht genug für Streaming SSR. Sie müssen Grenzen auf Komponentenebene platzieren, wo asynchrone Arbeit stattfindet, damit React jeden Abschnitt unabhängig streamen kann."
+        ]
+      }
+    },
+    "concurrentRendering": {
+      "title": "Concurrent-Rendering",
+      "subtitle": "Wie React 18 Time-Slicing und Prioritätslanes nutzt, um die UI reaktionsfähig zu halten.",
+      "explainer": {
+        "overview": "Concurrent Rendering ist React 18s Fähigkeit, mehrere Versionen der Benutzeroberfläche gleichzeitig vorzubereiten und lang laufende Renderings zu unterbrechen, um dringendere Updates zu verarbeiten. Anstatt dass Rendering ein einziger synchroner Vorgang ist, der den Haupt-Thread blockiert, kann React jetzt Render-Arbeit mitten im Baum pausieren, dem Browser die Kontrolle übergeben, dringende Updates verarbeiten und dann die pausierte Arbeit fortsetzen oder verwerfen.",
+        "howItWorks": [
+          {
+            "title": "Die Fiber-Architektur ermöglicht Unterbrechbarkeit",
+            "body": "Reacts Fiber-Reconciler stellt jede Komponente als kleine Arbeitseinheit (einen Fiber) dar. Die Render-Phase verarbeitet einen Fiber nach dem anderen und prüft nach jeder Einheit, ob höher-priorisierte Arbeit eingetroffen ist. Falls ja, kann es pausieren und später weitermachen."
+          },
+          {
+            "title": "Time-Slicing: React übergibt dem Browser alle ~5ms die Kontrolle",
+            "body": "Reacts Scheduler unterteilt Render-Arbeit in kleine Chunks. Nach jedem Chunk gibt es die Kontrolle zurück an den Browser — was Eingabeereignisse, Animationen und Paints ermöglicht. Dies verhindert, dass die Benutzeroberfläche während langer Renderings einfriert."
+          },
+          {
+            "title": "Prioritätslanes weisen Updates Dringlichkeit zu",
+            "body": "React 18 verwendet ein 'Lanes'-Modell, um Updates nach Priorität zu klassifizieren: SyncLane (Benutzereingabe, muss sofort erfolgen), InputContinuousLane (fortlaufende Gesten), DefaultLane (normale Zustandsupdates), TransitionLane (nicht-dringende UI-Übergänge)."
+          },
+          {
+            "title": "Höherprioritäre Updates unterbrechen niederprioritäre",
+            "body": "Wenn ein hochprioritäres Update eintrifft, während React an einem niederprioritären Rendering arbeitet, pausiert React die niederprioritäre Arbeit, verarbeitet das hochprioritäre Update vollständig (einschließlich Commit) und setzt dann die niederprioritäre Arbeit fort oder startet sie neu."
+          },
+          {
+            "title": "Verworfene Renderings haben keine sichtbaren Seiteneffekte",
+            "body": "Da die Render-Phase rein ist (keine Seiteneffekte), kann React teilweise abgeschlossene Renderings sicher verwerfen und neu starten, ohne den Anwendungszustand zu beschädigen. Seiteneffekte finden nur in der Commit-Phase statt, die nie unterbrochen wird."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Time Slicing",
+            "icon": "⏱️",
+            "definition": "Render-Arbeit in ~5ms-Chunks aufteilen und dem Browser zwischen Chunks die Kontrolle übergeben. Hält die Benutzeroberfläche während teurer Renderings reaktionsfähig."
+          },
+          {
+            "term": "Priority Lanes",
+            "icon": "🛣️",
+            "definition": "Ein Bitmask-System, das Updates von SyncLane (dringendste) bis OffscreenLane (am wenigsten dringend) klassifiziert. Bestimmt die Planungsreihenfolge."
+          },
+          {
+            "term": "Scheduler",
+            "icon": "📅",
+            "definition": "Reacts interner Aufgabenplaner. Verwaltet eine Prioritätswarteschlange von Render-Aufgaben und entscheidet, woran als nächstes basierend auf Priorität und Fristen gearbeitet wird."
+          },
+          {
+            "term": "startTransition",
+            "icon": "🔀",
+            "definition": "API zum Markieren eines Zustandsupdates als nicht-dringenden Übergang. Teilt React mit, dass diese Arbeit für dringendere Updates unterbrochen werden kann."
+          },
+          {
+            "term": "useTransition",
+            "icon": "🕐",
+            "definition": "Hook, der startTransition plus ein isPending-Boolean bereitstellt, das anzeigt, ob ein Übergang in Bearbeitung ist."
+          }
+        ],
+        "codeLabel": "startTransition für nicht-dringende Updates",
+        "whyItMatters": "Vor React 18 würde jedes Zustandsupdate, das ein langsames Rendering auslöste, die gesamte Benutzeroberfläche einfrieren, bis das Rendering abgeschlossen war. Concurrent Rendering bedeutet, dass das Tippen in ein Eingabefeld, Scrollen und Klicken auf Schaltflächen reaktionsfähig bleiben, auch während React ein komplexes Update im Hintergrund berechnet. Dies ist das Fundament von Suspense, Streaming SSR und React Server Components.",
+        "pitfalls": [
+          "startTransition macht langsame Renderings nicht schnell — es macht sie nur nicht-blockierend. Wenn Ihr Rendering langsam ist, optimieren Sie es mit Memoisierung oder Virtualisierung.",
+          "Render-Phase-Code kann jetzt mehrmals ausgeführt werden (React kann ein pausiertes Rendering neu starten). Stellen Sie sicher, dass Ihre Render-Funktionen wirklich rein sind und keine Seiteneffekte haben.",
+          "Nicht alle React 18-Features sind standardmäßig concurrent. Sie müssen createRoot() (nicht das ältere ReactDOM.render()) verwenden, um Concurrent-Features zu aktivieren."
+        ]
+      }
+    },
+    "transitions": {
+      "title": "Übergänge (useTransition)",
+      "subtitle": "Prioritätsbasierte Updates — dringendes vs. nicht-dringendes Rendering mit startTransition.",
+      "explainer": {
+        "overview": "useTransition ist ein React 18-Hook, mit dem Sie Zustandsupdates als 'nicht-dringende Übergänge' markieren können. Dringende Updates (Tippen, Klicken) werden sofort verarbeitet und nie unterbrochen. Übergangs-Updates haben niedrigere Priorität — wenn ein dringendes Update eintrifft, während ein Übergang in Bearbeitung ist, unterbricht React den Übergang, erledigt die dringende Arbeit und startet dann den Übergang neu. Dies hält die Benutzeroberfläche reaktionsfähig, auch während schwerer Re-Renderings.",
+        "howItWorks": [
+          {
+            "title": "React 18 fügt seinem Scheduler Prioritätslanes hinzu",
+            "body": "Der React-Scheduler weist jedem Update eine Prioritätslane zu: SyncLane (dringend, nicht batchbar), InputContinuousLane (Ziehen/Scrollen), DefaultLane (normales setState) und TransitionLane (useTransition / startTransition). Höherprioritäre Lanes verdrängen immer niederprioritäre."
+          },
+          {
+            "title": "startTransition markiert Updates als niederprioritär",
+            "body": "Einen setState-Aufruf in startTransition(callback) einzuwickeln, teilt React mit: 'Dieses Update ist ein Übergang — es kann unterbrochen werden'. React plant es in einer TransitionLane ein und hält die aktuelle Benutzeroberfläche sichtbar, bis der Übergang abgeschlossen ist."
+          },
+          {
+            "title": "Dringendes Update unterbricht einen laufenden Übergang",
+            "body": "Wenn der Benutzer ein weiteres Zeichen tippt, während eine 5000-Elemente-Liste als Übergang neu rendert, pausiert React das Übergangs-Rendering mitten im Baum, verarbeitet sofort das Tippen (dringend), aktualisiert die Eingabe und startet dann den Übergang mit dem neuen Eingabewert von vorne."
+          },
+          {
+            "title": "isPending zeigt an, dass ein Übergang in Bearbeitung ist",
+            "body": "useTransition gibt [isPending, startTransition] zurück. isPending ist true, während React den Übergang verarbeitet. Verwenden Sie es, um eine subtile Ladeanzeige zu zeigen, ohne die Benutzeroberfläche zu blockieren."
+          },
+          {
+            "title": "useDeferredValue verzögert einen abgeleiteten Wert",
+            "body": "Eine Alternative zu startTransition: useDeferredValue(wert) gibt eine verzögerte Kopie des Werts zurück, die während Übergängen hinterherhinkt. Die Benutzeroberfläche rendert zuerst mit dem alten verzögerten Wert (schnell), dann rendert sie mit dem neuen Wert erneut, wenn React Zeit hat."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Transition Lane",
+            "icon": "🛤️",
+            "definition": "Eine niederprioritäre Scheduler-Lane für Übergangs-Updates. Kann von jeder höherprioritären Arbeit (Benutzereingabe, synchrone Updates) verdrängt werden."
+          },
+          {
+            "term": "startTransition()",
+            "icon": "🚦",
+            "definition": "Markiert die setState-Aufrufe in seinem Callback als nicht-dringend. Als eigenständiger Import oder vom useTransition-Hook verfügbar."
+          },
+          {
+            "term": "isPending",
+            "icon": "⏳",
+            "definition": "Boolean von useTransition. True, während React das Übergangs-Update noch verarbeitet. Zum Anzeigen eines Spinners ohne Blockierung der Eingabe verwenden."
+          },
+          {
+            "term": "useDeferredValue",
+            "icon": "🕐",
+            "definition": "Gibt eine verzögerte Kopie eines Werts zurück. Rendert zuerst mit dem veralteten Wert (sofort), rendert mit dem frischen Wert erneut, wenn inaktiv. Nützlich zum Filtern großer Listen."
+          },
+          {
+            "term": "Interruption & Restart",
+            "icon": "🔄",
+            "definition": "Wenn ein dringendes Update mitten in einem Übergang eintrifft, verwirft React das laufende Übergangs-Rendering und startet es nach Erledigung der dringenden Arbeit frisch neu."
+          }
+        ],
+        "codeLabel": "useTransition für einen Suchfilter",
+        "whyItMatters": "Vor Übergängen renderte React alle Zustandsupdates mit derselben Priorität — ein schweres Listen-Re-Rendering konnte die Eingabe für Hunderte von Millisekunden einfrieren. Übergänge ermöglichen es, React explizit mitzuteilen: 'Der Benutzer braucht das Eingabefeld sofort, aber die Ergebnisliste kann einen Moment warten'. Dies ist der Unterschied zwischen einer trägen App und einer flüssigen, wenn teure Renderings verarbeitet werden.",
+        "pitfalls": [
+          "startTransition funktioniert NICHT mit asynchronem Code im Callback. Nur synchrone setState-Aufrufe, die direkt in startTransition eingewickelt sind, werden als Übergänge markiert.",
+          "Übergänge können synchrone Renderings nicht unterbrechen. Wenn eine Komponente aufgrund einer schweren Schleife in der Render-Funktion (nicht asynchron) langsam rendert, helfen Übergänge nicht — Sie brauchen useMemo oder Virtualisierung.",
+          "Markieren Sie nicht jedes Zustandsupdate als Übergang — es fügt Planungsaufwand hinzu. Reservieren Sie Übergänge für wirklich schwere Renderings, bei denen die Latenz für Benutzer wahrnehmbar ist (>100ms)."
+        ]
+      }
+    },
+    "serverComponents": {
+      "title": "React-Server-Komponenten",
+      "subtitle": "Server-/Client-Grenze, RSC-Payload-Streaming und Zero-Bundle-Server-Rendering.",
+      "explainer": {
+        "overview": "React Server Components (RSC) sind Komponenten, die ausschließlich auf dem Server laufen — sie werden nie an den Browser gesendet. Sie können direkt auf Datenbanken, Dateisysteme und serverseitige Geheimnisse zugreifen, ohne Client-Bundle-Kosten. Die RSC-Ausgabe ist kein HTML, sondern ein spezielles Wire-Format (RSC-Payload), das React auf dem Client verwendet, um den Komponentenbaum zu rekonstruieren, ohne den Server-Code erneut auszuführen.",
+        "howItWorks": [
+          {
+            "title": "Server-Komponenten rendern auf dem Server, erzeugen RSC-Payload",
+            "body": "Wenn eine Seite geladen wird, führt der Server Ihre Server-Komponenten aus und führt asynchrone Datenbankabfragen, Dateilesungen oder API-Aufrufe direkt aus. Die Ausgabe ist kein HTML — es ist ein serialisierter React-Elementbaum (der RSC-Payload) in einem benutzerdefinierten Streaming-Format."
+          },
+          {
+            "title": "Client-Komponenten sind Lücken im RSC-Payload",
+            "body": "Wenn der Server auf eine Client-Komponente trifft (mit 'use client' markiert), rendert er sie nicht. Stattdessen fügt er einen CLIENT_REFERENCE-Platzhalter im Payload mit der Modul-URL und den Props der Komponente ein. Der Client füllt diese Lücken, indem er die Client-Komponente im Browser ausführt."
+          },
+          {
+            "title": "RSC-Payload wird progressiv zum Client gestreamt",
+            "body": "Der Server streamt den RSC-Payload, sobald er jede asynchrone Operation abschließt. Reacts Client-Laufzeit empfängt Chunks und baut progressiv den Komponentenbaum auf — Server-Komponenten-Ausgabe zuerst, dann Client-Komponenten-Shells, dann Hydration."
+          },
+          {
+            "title": "Client hydriert nur die Client-Komponenten",
+            "body": "React auf dem Client nimmt den gestreamten RSC-Payload und verwendet ihn, um den vollständigen Komponentenbaum zu rekonstruieren. Nur Client-Komponenten werden hydriert (Event-Listener angehängt). Server-Komponenten-Ausgabe ist bereits final — keine erneute Ausführung auf dem Client."
+          },
+          {
+            "title": "Server Actions erlauben Client-zu-Server-Mutationen",
+            "body": "Mit 'use server' markierte Funktionen werden zu Server Actions — RPC-ähnlichen Funktionen, die der Client wie reguläre asynchrone Funktionen aufrufen kann. Intern sendet React eine POST-Anfrage an den Server mit den codierten Argumenten und streamt den neuen RSC-Payload zurück."
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "'use client'",
+            "icon": "💻",
+            "definition": "Direktive auf Dateiebene, die ein Modul und alle seine Imports als Client-Komponenten markiert. Erstellt eine Client-Grenze — alle Exporte können Hooks, Event-Handler und Browser-APIs verwenden."
+          },
+          {
+            "term": "'use server'",
+            "icon": "🖥️",
+            "definition": "Markiert eine Funktion als Server Action. Kann von Client-Komponenten über eine Netzwerkanfrage aufgerufen werden. Die Funktion läuft auf dem Server mit vollständigem serverseitigem Zugriff."
+          },
+          {
+            "term": "RSC Payload",
+            "icon": "📦",
+            "definition": "Ein kompaktes, streaming JSON-ähnliches Format, das den server-gerenderten Komponentenbaum beschreibt. Enthält CLIENT_REFERENCE-Lücken, wo Client-Komponenten stehen sollen. Kein HTML."
+          },
+          {
+            "term": "Zero Bundle Cost",
+            "icon": "🪶",
+            "definition": "Server-Komponenten erscheinen nie im Client-JS-Bundle. Eine Server-Komponente, die einen 500KB-Markdown-Parser importiert, fügt dem Client 0 Bytes hinzu."
+          },
+          {
+            "term": "Shared Components",
+            "icon": "🔄",
+            "definition": "Komponenten ohne 'use client' oder 'use server' können in beiden Kontexten verwendet werden. Sie laufen auf dem Server, wenn von einer Server-Komponente importiert, und auf dem Client, wenn von einer Client-Komponente importiert."
+          }
+        ],
+        "codeLabel": "Server- vs. Client-Komponenten-Muster",
+        "whyItMatters": "Server-Komponenten ändern die Leistungsgleichung grundlegend. Bisher musste jede Komponente, die Daten abrief, die Abruf-Bibliothek, die Datentransformationslogik und den Rendering-Code an den Client schicken. Mit RSC bleibt das alles auf dem Server. Der Client empfängt nur die finale gerenderte Ausgabe plus die interaktiven Inseln (Client-Komponenten). Dies führt zu dramatisch kleineren Bundles und schnellerer Time-to-Interactive.",
+        "pitfalls": [
+          "Server-Komponenten können useState, useEffect, useContext oder irgendeinen Hook nicht verwenden — diese sind client-only-Features. Wenn eine Server-Komponente Interaktivität benötigt, extrahieren Sie es in eine Client-Komponenten-Kind.",
+          "Sie können eine Server-Komponente nicht innerhalb einer Client-Komponente importieren. Die Grenze ist einseitig: Server-Komponenten können Client-Komponenten rendern, aber nicht umgekehrt. Übergeben Sie Server-Komponenten-Ausgabe stattdessen als Props (children) an Client-Komponenten.",
+          "Props, die von Server-Komponenten an Client-Komponenten übergeben werden, müssen serialisierbar sein (JSON-kompatibel). Funktionen, Klassen-Instanzen, Dates und Sets können die Server-/Client-Grenze nicht als Props überschreiten."
+        ]
+      }
+    }
+  }
+}

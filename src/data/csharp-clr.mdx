@@ -1,0 +1,31 @@
+# C# / CLR Internals
+
+## Common Language Runtime (CLR)
+
+The CLR is the virtual machine component of .NET that manages the execution of .NET programs. It provides services like memory management, type safety, exception handling, garbage collection, and JIT compilation.
+
+## Garbage Collection
+
+The .NET GC is a generational, mark-and-sweep collector with three generations:
+
+### Generations
+
+- **Gen 0** — Newly allocated objects. Collected most frequently. Most objects die here.
+- **Gen 1** — Objects that survived one Gen 0 collection. Acts as a buffer between short-lived and long-lived objects.
+- **Gen 2** — Long-lived objects. Collected least frequently (full GC).
+
+### Collection Phases
+
+1. **Mark** — Walk object roots and mark all reachable objects as alive
+2. **Sweep** — Remove unmarked (dead) objects
+3. **Compact** — Move surviving objects together to eliminate fragmentation
+4. **Promote** — Move surviving objects to the next generation
+
+## JIT Compilation
+
+The Just-In-Time compiler converts IL (Intermediate Language) to native machine code at runtime:
+
+1. C# source is compiled to IL by the Roslyn compiler (at build time)
+2. When a method is first called, the JIT compiles its IL to native code
+3. The native code is cached — subsequent calls skip compilation
+4. The JIT can apply optimizations based on the actual runtime environment

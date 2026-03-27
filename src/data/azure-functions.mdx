@@ -1,0 +1,26 @@
+# Azure Functions
+
+## What are Azure Functions?
+
+Azure Functions is a serverless compute service that lets you run event-triggered code without managing infrastructure. Functions scale automatically and you only pay for the compute time you consume.
+
+## Execution Lifecycle
+
+1. **Trigger** — An event occurs (HTTP request, queue message, timer, blob creation)
+2. **Host Startup** — If the function app is cold, the host process starts and loads dependencies
+3. **Input Bindings** — Declarative input bindings resolve data from connected services
+4. **Execution** — Your function code runs with the trigger data and bound inputs
+5. **Output Bindings** — Results are written to configured outputs (queues, blobs, databases)
+6. **Response** — The function returns a response and execution logs are flushed
+
+## Trigger Types
+
+- **HTTP Trigger** — REST API endpoints
+- **Timer Trigger** — Scheduled execution via CRON expressions
+- **Queue Trigger** — Process messages from Azure Storage Queues or Service Bus
+- **Blob Trigger** — React to new or updated blobs in Azure Storage
+- **Event Grid / Event Hub** — Process events at scale
+
+## Cold Start
+
+When a function app hasn't been invoked recently, it must cold start — allocating a new instance, loading the runtime, and initializing dependencies. This adds latency to the first request.

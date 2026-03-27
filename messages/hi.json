@@ -1,0 +1,1303 @@
+{
+  "nav": {
+    "react": "React",
+    "azureFunctions": "Azure Functions",
+    "csharpClr": "C# / CLR",
+    "fiberArchitecture": "Fiber आर्किटेक्चर",
+    "virtualDom": "वर्चुअल DOM और Diffing",
+    "reconciliation": "रिकन्सिलिएशन",
+    "renderingPipeline": "रेंडरिंग पाइपलाइन",
+    "componentLifecycle": "कॉम्पोनेंट लाइफसाइकल",
+    "hooksInternals": "Hooks की आंतरिक कार्यप्रणाली",
+    "useeffectLifecycle": "useEffect लाइफसाइकल",
+    "stateBatching": "स्टेट और बैचिंग",
+    "memoization": "मेमोइज़ेशन",
+    "reactMemo": "React.memo और री-रेंडर",
+    "contextApi": "Context API",
+    "eventSystem": "इवेंट सिस्टम",
+    "refsDom": "Refs और DOM",
+    "keysLists": "Keys और Lists",
+    "errorBoundaries": "एरर बाउंडरी",
+    "portals": "पोर्टल",
+    "suspense": "Suspense और Lazy",
+    "concurrentMode": "कंकरेंट रेंडरिंग",
+    "transitions": "ट्रांज़िशन",
+    "serverComponents": "सर्वर कॉम्पोनेंट"
+  },
+  "home": {
+    "title": "कैसे काम करता है",
+    "highlight": "काम करता है",
+    "subtitle": "तकनीक के अंदरूनी कामकाज को दृश्यात्मक और इंटरैक्टिव तरीके से समझें।",
+    "reactTitle": "React की आंतरिक कार्यप्रणाली",
+    "reactDesc": "Fiber आर्किटेक्चर, hooks लाइफसाइकल, रिकन्सिलिएशन और वर्चुअल DOM diffing।",
+    "javascriptTitle": "JavaScript Engine",
+    "javascriptDesc": "Event loop, closures, prototypal inheritance, promises, and V8 garbage collection.",
+    "csharpTitle": "C# / .NET Runtime",
+    "csharpDesc": "CLR architecture, JIT compilation, garbage collection, async state machines, and generics.",
+    "aspnetTitle": "ASP.NET Core",
+    "aspnetDesc": "Middleware pipeline, routing, authentication, model binding, and dependency injection.",
+    "efTitle": "Entity Framework Core",
+    "efDesc": "DbContext, change tracker, LINQ-to-SQL pipeline, migrations, and loading strategies.",
+    "azureTitle": "Azure Cloud",
+    "azureDesc": "Functions, App Service, Service Bus, Cosmos DB, Key Vault, and managed identity.",
+    "architectureTitle": "Architecture & Patterns",
+    "architectureDesc": "SOLID principles, clean architecture, DDD, CQRS, and Gang of Four design patterns.",
+    "microservicesTitle": "Microservices",
+    "microservicesDesc": "API gateway, circuit breaker, saga pattern, event-driven architecture, and containers.",
+    "testingTitle": "Testing Strategies",
+    "testingDesc": "Unit testing, Jest, xUnit, Playwright E2E, TDD, mocking, and contract testing.",
+    "systemdesignTitle": "System Design",
+    "systemdesignDesc": "Scalability, load balancing, caching, sharding, message queues, and CDN.",
+    "aimlTitle": "AI & Machine Learning",
+    "aimlDesc": "Neural networks, transformers, RAG, embeddings, AI agents, and model serving.",
+    "comingSoon": "Explore 98+ interactive visualizers across 11 technology tracks."
+  },
+  "common": {
+    "triggerRender": "रेंडर करें",
+    "reset": "रीसेट",
+    "play": "चलाएं",
+    "pause": "रोकें",
+    "howItWorks": "कैसे काम करता है",
+    "keyConcepts": "मुख्य अवधारणाएं",
+    "whyItMatters": "यह क्यों ज़रूरी है",
+    "commonPitfalls": "सामान्य गलतियां"
+  },
+  "pages": {
+    "fiberVisualizer": {
+      "title": "React Fiber विज़ुअलाइज़र",
+      "subtitle": "देखें कि React रिकन्सिलिएशन के दौरान depth-first search से Fiber ट्री को कैसे पार करता है।",
+      "explainer": {
+        "overview": "Fiber, React का आंतरिक रिकन्सिलिएशन इंजन है, जिसे React 16 में पेश किया गया था। आपके ऐप के प्रत्येक कॉम्पोनेंट का एक Fiber नोड होता है — एक JavaScript ऑब्जेक्ट जो कॉम्पोनेंट का प्रकार, उसके props, state, संबद्ध DOM नोड, और parent, child तथा sibling fibers के पॉइंटर संग्रहीत करता है। यह linked संरचना React को कई frames में काम को रोकने, फिर से शुरू करने और प्राथमिकता देने की अनुमति देती है।",
+        "howItWorks": [
+          {
+            "title": "हर कॉम्पोनेंट एक Fiber नोड से मैप होता है",
+            "body": "जब React आपके कॉम्पोनेंट ट्री को रेंडर करता है, तो वह प्रत्येक element के लिए एक Fiber नोड बनाता है। नोड में स्टोर होता है: type (function/class/string), props, state, effect hooks, और पिछले रेंडर से work-in-progress state।"
+          },
+          {
+            "title": "Fibers एक linked tree बनाते हैं, call stack नहीं",
+            "body": "एक recursive call stack (जिसे रोका नहीं जा सकता) के विपरीत, Fibers एक linked list के रूप में जुड़े होते हैं: प्रत्येक नोड में एक child pointer (पहला child), sibling pointer (अगला sibling), और return pointer (parent) होता है। इससे React ट्री को iteratively traverse कर सकता है।"
+          },
+          {
+            "title": "Depth-first traversal: begin work → complete work",
+            "body": "React fiber ट्री को depth-first walk करता है। यह नीचे जाते समय (parent → child) 'beginWork' और वापस ऊपर आते समय (child → parent) 'completeWork' कॉल करता है। यह two-pass approach React को bottom-up effect list बनाने देती है।"
+          },
+          {
+            "title": "Double buffering: current बनाम work-in-progress",
+            "body": "React एक साथ दो fiber trees बनाए रखता है: 'current' tree (जो स्क्रीन पर है) और 'work-in-progress' tree (जो बन रही है)। प्रत्येक fiber नोड में एक 'alternate' pointer होता है जो दूसरे tree में उसके समकक्ष को जोड़ता है।"
+          },
+          {
+            "title": "Commit के बाद, work-in-progress current बन जाता है",
+            "body": "जब commit phase पूरा होता है, React root के 'current' pointer को work-in-progress tree की ओर इंगित करके दोनों trees को atomically swap करता है। पुरानी current tree अगले रेंडर के लिए नई work-in-progress बन जाती है।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Fiber नोड",
+            "icon": "🧵",
+            "definition": "एक JS ऑब्जेक्ट जो एक कॉम्पोनेंट के लिए काम की एक इकाई दर्शाता है। इसमें type, key, ref, props, state, hooks list, effect tags, और tree pointers होते हैं।"
+          },
+          {
+            "term": "Work-in-Progress Tree",
+            "icon": "🌱",
+            "definition": "रिकन्सिलिएशन के दौरान बनाई जा रही fiber tree। commit phase के पूरा होने और current tree से swap होने तक user को दिखाई नहीं देती।"
+          },
+          {
+            "term": "beginWork / completeWork",
+            "icon": "🔽🔼",
+            "definition": "वे दो functions जिन्हें React fiber tree traverse करते समय कॉल करता है। beginWork नीचे जाते समय नोड को process करता है; completeWork वापस ऊपर आते समय उसे finalize करता है।"
+          },
+          {
+            "term": "Effect Tag",
+            "icon": "🏷️",
+            "definition": "एक fiber नोड पर bitmask flag जो दर्शाता है कि कौन सा DOM काम होना है: Placement (insert), Update (patch props), Deletion (remove)।"
+          },
+          {
+            "term": "Alternate Pointer",
+            "icon": "↔️",
+            "definition": "प्रत्येक fiber में एक 'alternate' field होती है जो दूसरे tree (current ↔ work-in-progress) में उसके समकक्ष को इंगित करती है। Double buffering को सक्षम करती है।"
+          }
+        ],
+        "codeLabel": "Fiber नोड आंतरिक रूप से कैसा दिखता है",
+        "whyItMatters": "Fiber आर्किटेक्चर ही React की concurrent features को संभव बनाता है। क्योंकि काम को एक data structure (call stack नहीं) के रूप में दर्शाया जाता है, React किसी भी fiber नोड पर रिकन्सिलिएशन रोक सकता है, user input जैसे high-priority tasks के लिए browser को control वापस दे सकता है, और जहाँ छोड़ा था वहाँ से फिर शुरू कर सकता है। यह Suspense, transitions और automatic batching की नींव है।",
+        "pitfalls": [
+          "React के internal fiber nodes को कभी सीधे पढ़ें या mutate न करें — ये private implementation details हैं जो React के versions के बीच बदल सकते हैं।",
+          "Depth-first traversal का अर्थ है कि deeply nested component trees browser को yield करने से पहले React का समय बढ़ाती हैं। जहाँ संभव हो, अपनी component hierarchy को flatten करें।",
+          "Fiber nodes renders के पार persist करते हैं (वे reuse होते हैं, recreate नहीं)। इसीलिए hooks काम करते हैं — useState function के अंदर नहीं बल्कि fiber नोड पर values स्टोर करता है।"
+        ]
+      }
+    },
+    "virtualDom": {
+      "title": "वर्चुअल DOM और Diffing",
+      "subtitle": "React कैसे एक वर्चुअल प्रतिनिधित्व बनाता है और न्यूनतम DOM परिवर्तन खोजने के लिए diff करता है।",
+      "explainer": {
+        "overview": "Virtual DOM एक lightweight JavaScript object tree है जो real DOM को mirror करता है। React दो copies रखता है: current tree और प्रत्येक render के दौरान बनाई गई 'work-in-progress' tree। real DOM को तुरंत छूने के बजाय, React दोनों virtual trees को diff करता है और ज़रूरी changes का minimum set compute करता है — फिर उन्हें एक single batch में apply करता है।",
+        "howItWorks": [
+          {
+            "title": "JSX, React.createElement() calls में compile होता है",
+            "body": "जब आप JSX लिखते हैं, तो Babel (या React compiler) इसे React.createElement(type, props, ...children) calls में transform करता है। ये plain JavaScript objects return करते हैं जिन्हें React elements कहा जाता है — real DOM nodes नहीं।"
+          },
+          {
+            "title": "React एक Virtual DOM tree बनाता है",
+            "body": "React.createElement() एक nested object tree return करता है जैसे { type: 'div', props: { className: 'box', children: [...] } }। यही Virtual DOM है — UI कैसा दिखना चाहिए इसका एक सस्ता in-memory विवरण।"
+          },
+          {
+            "title": "Update पर, React एक नई Virtual DOM tree बनाता है",
+            "body": "जब state या props बदलते हैं, React आपके component function को फिर से call करता है और नए desired UI को दर्शाती एक brand-new Virtual DOM tree बनाता है।"
+          },
+          {
+            "title": "Diffing algorithm पुराने और नए trees की तुलना करता है",
+            "body": "React का diffing algorithm (O(n) heuristic) दोनों trees को एक साथ walk करता है। यह मान लेता है कि अलग-अलग types के elements अलग-अलग trees बनाते हैं, और renders के पार list items को match करने के लिए key prop का उपयोग करता है।"
+          },
+          {
+            "title": "केवल अंतर real DOM पर apply होते हैं",
+            "body": "Diffing के बाद, React के पास mutations की एक list होती है: इस prop को update करो, इस node को insert करो, उस node को remove करो। ये commit phase में real DOM पर apply होते हैं — reflows और repaints को minimize करते हुए।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "React Element",
+            "icon": "📦",
+            "definition": "React.createElement() द्वारा return किया गया एक plain JS object। type, props, और children describe करता है। real DOM node नहीं।"
+          },
+          {
+            "term": "Diffing Algorithm",
+            "icon": "🔍",
+            "definition": "दो virtual trees की तुलना करने के लिए React का O(n) heuristic। मान लेता है कि same-position elements तब तक same type के हैं जब तक keys अलग न हों।"
+          },
+          {
+            "term": "Reconciliation",
+            "icon": "⚖️",
+            "definition": "पुराने और नए virtual trees की तुलना करने और ज़रूरी DOM operations का minimum set निर्धारित करने की प्रक्रिया।"
+          },
+          {
+            "term": "key prop",
+            "icon": "🔑",
+            "definition": "List items के लिए एक stable identity। React को old और new list elements को match करने देता है, भले ही उनकी positions बदल गई हों।"
+          },
+          {
+            "term": "Batched Updates",
+            "icon": "📦",
+            "definition": "React एक reconciliation pass से सभी DOM mutations collect करता है और उन्हें एक साथ apply करता है, browser reflows को कम करता है।"
+          }
+        ],
+        "codeLabel": "JSX से Virtual DOM तक",
+        "whyItMatters": "Direct DOM manipulation महंगा है क्योंकि browser को layout recalculate करना और repaint करना होता है। JavaScript में diffing (fast) करके और DOM writes (slow) को batch करके, React महंगे browser operations की संख्या minimize करता है। इसीलिए complex UIs के साथ भी React apps fast लगती हैं।",
+        "pitfalls": [
+          "Virtual DOM object को सीधे mutate न करें — React efficiently changes detect करने के लिए immutability मान लेता है।",
+          "Dynamic lists में array indices को keys के रूप में उपयोग करने से बचें। यदि list reorder होती है, React items को identity की बजाय position से match करेगा, जिससे अनावश्यक unmounts और remounts होंगे।",
+          "Virtual DOM free नहीं है — element objects बनाने की एक cost है। बहुत simple UIs जिनमें कोई state नहीं, plain HTML तेज़ हो सकता है।"
+        ]
+      }
+    },
+    "reconciliation": {
+      "title": "रिकन्सिलिएशन एल्गोरिदम",
+      "subtitle": "React पुराने और नए Fiber ट्री की तुलना करके अपडेट, इंसर्ट या डिलीट का निर्णय कैसे करता है।",
+      "explainer": {
+        "overview": "Reconciliation, React का वह algorithm है जो state या props बदलने पर UI को efficiently update करता है। पूरे DOM tree को फिर से render करने के बजाय, React पिछले virtual DOM tree की नई rendered tree से तुलना करता है और ज़रूरी operations की minimum संख्या compute करता है। यह O(n³) के बजाय O(n) समय में करने के लिए दो key heuristics का उपयोग करता है।",
+        "howItWorks": [
+          {
+            "title": "दो heuristics diffing को O(n) बनाते हैं",
+            "body": "React मान लेता है: (1) अलग-अलग types के elements पूरी तरह अलग trees बनाते हैं — इसलिए React पुराने subtree को unmount करता है और एक fresh one mount करता है। (2) Developer, key prop का उपयोग करके renders के पार stable identity hint कर सकता है।"
+          },
+          {
+            "title": "Same type → in place update",
+            "body": "जब दो elements का same type हो (जैसे दोनों <div>), React existing DOM node को रखता है और केवल changed attributes/props को update करता है। इससे DOM nodes को unnecessarily destroy और recreate करने से बचा जाता है।"
+          },
+          {
+            "title": "Different type → tear down और rebuild",
+            "body": "यदि type बदलता है (जैसे <div> → <span>), React पुरे old component tree को unmount करता है (सभी cleanups चलाते हुए) और new tree को fresh mount करता है। State खो जाती है।"
+          },
+          {
+            "title": "Lists stable identity के लिए keys का उपयोग करती हैं",
+            "body": "Children की lists के लिए, React key के द्वारा old और new items को match करता है। Keys के बिना, React position का उपयोग करता है — जो items reorder होने पर unnecessary unmounts कर सकता है। Keys React को existing DOM nodes को move करने देती हैं।"
+          },
+          {
+            "title": "Effects list track करती है कि क्या होना है",
+            "body": "जैसे-जैसे React दोनों trees walk करता है, यह एक 'effect list' बनाता है — काम करने वाले fibers की linked list (updates, insertions, deletions)। commit phase इस list को walk करके real DOM पर changes apply करता है।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Fiber",
+            "icon": "🧵",
+            "definition": "React के reconciliation engine में काम की एक इकाई। प्रत्येक component का एक fiber नोड होता है जो type, props, state, और parent/child/sibling fibers के pointers store करता है।"
+          },
+          {
+            "term": "Work-in-Progress Tree",
+            "icon": "🌳",
+            "definition": "Current fiber tree का एक clone जहाँ React reconciliation के दौरान changes apply करता है। commit phase पूरा होने के बाद ही 'current' बनता है।"
+          },
+          {
+            "term": "Effect List",
+            "icon": "📋",
+            "definition": "Pending DOM mutations वाले fibers की एक flat linked list, reconciliation के दौरान बनाई जाती है और commit phase के दौरान walk की जाती है।"
+          },
+          {
+            "term": "Bailout",
+            "icon": "⚡",
+            "definition": "जब React detect करता है कि fiber के props और context नहीं बदले हैं, तो वह उस subtree को render करना पूरी तरह skip कर सकता है — एक key performance optimization।"
+          }
+        ],
+        "codeLabel": "key reconciliation को कैसे affect करता है",
+        "whyItMatters": "Reconciliation React के declarative model को practical बनाता है। आप describe करते हैं कि UI कैसा दिखना चाहिए, और React ज़रूरी DOM changes का minimum set figure out करता है। Fiber architecture इसे interruptible बनाती है — React reconciliation को mid-tree pause कर सकता है और बाद में resume कर सकता है, जो Suspense और transitions जैसी concurrent features को enable करता है।",
+        "pitfalls": [
+          "Unstable keys (जैसे Math.random() या dynamic lists में array indices) का उपयोग करने से React हर render पर components को unmount और remount करता है, local state destroy हो जाती है।",
+          "Same position पर component का type बदलना (component A और B के बीच switch) हमेशा full unmount/remount का कारण बनेगा — भले ही वे same DOM output render करें।",
+          "Deeply nested conditional rendering component types बदल सकती है और unexpected unmounts trigger कर सकती है। Conditional component types के बजाय conditional props prefer करें।"
+        ]
+      }
+    },
+    "renderingPipeline": {
+      "title": "React रेंडरिंग पाइपलाइन",
+      "subtitle": "JSX से पिक्सल तक की पूरी यात्रा — रेंडर ट्रिगर करें और हर चरण देखें।",
+      "explainer": {
+        "overview": "हर बार जब React render करता है, यह एक predictable two-phase pipeline से गुज़रता है: Render Phase और Commit Phase। render phase pure और interruptible है — React आपके components call करता है और एक new fiber tree build करता है। commit phase synchronous और side-effectful है — React computed changes को real DOM पर apply करता है और effects fire करता है।",
+        "howItWorks": [
+          {
+            "title": "JSX को React.createElement() calls में transform किया जाता है",
+            "body": "Build time पर, JSX जैसे <Button color='blue'>Click</Button> → React.createElement(Button, { color: 'blue' }, 'Click') बन जाता है। यह एक plain object tree बनाता है — virtual DOM।"
+          },
+          {
+            "title": "Render Phase: React आपके components call करता है",
+            "body": "React fiber tree walk करते हुए प्रत्येक component function (या render() method) call करता है। यह phase pure है और कोई side effects नहीं बनाती — concurrent mode में React इसे किसी भी समय interrupt और restart कर सकता है।"
+          },
+          {
+            "title": "Reconciliation: पुरानी vs नई fiber tree को diff करना",
+            "body": "React नए output की पिछली fiber tree से तुलना करता है। यह प्रत्येक fiber को एक effect tag से mark करता है: Update, Placement (insert), या Deletion। परिणाम एक 'effect list' है — pending work वाले fibers की flat list।"
+          },
+          {
+            "title": "Commit Phase — beforeMutation: snapshot",
+            "body": "React class components पर getSnapshotBeforeUpdate() call करता है और passive effects schedule करता है। यह sub-phase किसी भी DOM mutations होने से पहले चलता है।"
+          },
+          {
+            "title": "Commit Phase — mutation: DOM changes apply करना",
+            "body": "React effect list walk करता है और सभी DOM mutations synchronously apply करता है: insertions, updates, deletions। इसके बाद, DOM नया UI reflect करता है।"
+          },
+          {
+            "title": "Commit Phase — layout: synchronous effects",
+            "body": "useLayoutEffect callbacks DOM mutation के बाद लेकिन browser paint से पहले synchronously चलते हैं। फिर browser paint करता है। अंत में, useEffect callbacks paint के बाद asynchronously चलते हैं।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Render Phase",
+            "icon": "🔄",
+            "definition": "Pure, side-effect-free phase जहाँ React components call करता है और नई fiber tree build करता है। Concurrent mode में interrupt हो सकती है।"
+          },
+          {
+            "term": "Commit Phase",
+            "icon": "✅",
+            "definition": "Synchronous phase जहाँ React DOM mutations apply करता है और lifecycle methods/effects fire करता है। Interrupt नहीं हो सकती।"
+          },
+          {
+            "term": "useLayoutEffect",
+            "icon": "⚡",
+            "definition": "DOM mutation के बाद, browser paint से पहले synchronously fire होता है। DOM measurements के लिए उपयोग करें। Painting block करता है।"
+          },
+          {
+            "term": "useEffect",
+            "icon": "🕐",
+            "definition": "Browser paint के बाद asynchronously fire होता है। Painting block नहीं करता — subscriptions, fetches, और non-visual side effects के लिए आदर्श।"
+          },
+          {
+            "term": "Double Render (Strict Mode)",
+            "icon": "🔁",
+            "definition": "Development में, React side effects detect करने के लिए render phase में components को दो बार render करता है। केवल एक commit होता है।"
+          }
+        ],
+        "codeLabel": "Effect timing reference",
+        "whyItMatters": "Pipeline को समझना आपको code को सही जगह रखने में मदद करता है। DOM measurements useLayoutEffect (paint से पहले) में होने चाहिए। Data fetching useEffect (paint के बाद, non-blocking) में जाना चाहिए। पहले render से पहले होने वाली initialization useState initializer या useMemo में जाती है। इसे गलत करने से visual flashes, layout jumps, या missed renders होते हैं।",
+        "pitfalls": [
+          "useEffect (paint के बाद) में DOM measurements रखने से flash होता है — browser एक बार wrong size के साथ paint करता है, फिर useEffect correct करता है और एक और paint trigger करता है। इसके बजाय useLayoutEffect उपयोग करें।",
+          "बिना dependency array के useEffect हर render के बाद चलता है। यह आमतौर पर एक bug है — आप शायद mount-only के लिए [] या controlled re-runs के लिए [specificDep] चाहते हैं।",
+          "Render phase में expensive synchronous work से बचें — यह main thread block करता है और paint delay करता है। Heavy computation को useMemo या web worker में move करें।"
+        ]
+      }
+    },
+    "componentLifecycle": {
+      "title": "कॉम्पोनेंट लाइफसाइकल",
+      "subtitle": "माउंट, अपडेट और अनमाउंट चरण — देखें कि हर चरण में कौन से hooks और effects चलते हैं।",
+      "explainer": {
+        "overview": "हर React component तीन lifecycle phases से गुज़रता है: Mount (DOM में पहला render), Update (state या prop changes के कारण re-renders), और Unmount (DOM से हटाना)। Hooks के साथ, ये phases class lifecycle methods के बजाय useEffect, useLayoutEffect, और cleanup functions के माध्यम से व्यक्त होती हैं।",
+        "howItWorks": [
+          {
+            "title": "Mount: component पहली बार render होता है",
+            "body": "React आपका function component call करता है, JSX evaluate करता है, और resulting DOM nodes insert करता है। useState initializers चलते हैं, useRef objects बनते हैं। DOM insertion के बाद, useLayoutEffect synchronously चलता है, फिर useEffect paint के बाद asynchronously चलता है।"
+          },
+          {
+            "title": "Update: state या props बदलने से re-render trigger होता है",
+            "body": "जब setState या एक नया prop आता है, React एक re-render queue करता है। Re-render के दौरान, hooks उसी order में call होते हैं जैसे mount पर। React नए vs पुराने output को compare करता है और DOM को patch करता है। Effects को फिर से चलाने से पहले, React पिछले render के effects से cleanup functions चलाता है।"
+          },
+          {
+            "title": "अगले effect run से पहले cleanup",
+            "body": "प्रत्येक effect के फिर से चलने से पहले (और unmount पर), React पिछले effect की cleanup function call करता है। यह timers clear करने, fetches cancel करने, और events से unsubscribe करने के लिए crucial है।"
+          },
+          {
+            "title": "Unmount: component tree से हटाया जाता है",
+            "body": "जब एक component हटाया जाता है (conditional render, route change, आदि), React सभी cleanup functions चलाता है — useEffect cleanup, फिर useLayoutEffect cleanup। DOM nodes document से remove होते हैं।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "useEffect(() => {}, [])",
+            "icon": "🏔️",
+            "definition": "Empty deps array: mount के बाद एक बार चलता है। Cleanup unmount पर चलती है। componentDidMount + componentWillUnmount के equivalent।"
+          },
+          {
+            "term": "useEffect(() => {}, [dep])",
+            "icon": "🔄",
+            "definition": "Mount के बाद AND जब भी dep बदलता है तब चलता है। Cleanup प्रत्येक re-run से पहले और unmount पर चलती है।"
+          },
+          {
+            "term": "useEffect(() => {})",
+            "icon": "♾️",
+            "definition": "No deps array: हर render के बाद चलता है। शायद ही कभी यही चाहते हैं — यदि state changes trigger करता है तो infinite loops का कारण बनता है।"
+          },
+          {
+            "term": "useLayoutEffect",
+            "icon": "⚡",
+            "definition": "useEffect के समान signature लेकिन DOM mutations के बाद, paint से पहले synchronously fire होता है। DOM measurements के लिए उपयोग करें।"
+          },
+          {
+            "term": "Cleanup Function",
+            "icon": "🧹",
+            "definition": "useEffect callback से return होने वाला function। React इसे अगले effect run से पहले और unmount पर call करता है।"
+          }
+        ],
+        "codeLabel": "Hooks के साथ complete lifecycle",
+        "whyItMatters": "Lifecycle timing को समझना सबसे common React bugs को prevent करता है: cleanup के बिना data fetching (unmounted component पर setState warnings का कारण), timers clear करना भूलना (memory leaks का कारण), और dependency array के गलत उपयोग से effects को बहुत बार या बहुत कम चलाना।",
+        "pitfalls": [
+          "useEffect से non-function return करना एक runtime error है। केवल undefined या एक cleanup function return करें।",
+          "Deps array में missing dependencies stale closures बनाती हैं — आपका effect एक पुरानी value capture करता है और कभी update नहीं होता। इसे catch करने के लिए ESLint exhaustive-deps rule उपयोग करें।",
+          "useEffect के अंदर बिना deps के unconditionally state set करने से infinite loop बनती है: render → effect → setState → render → effect → ..."
+        ]
+      }
+    },
+    "hooksVisualizer": {
+      "title": "React Hooks विज़ुअलाइज़र",
+      "subtitle": "देखें कि React hooks को linked list के रूप में कैसे manage करता है।",
+      "explainer": {
+        "overview": "Hooks को fiber नोड पर एक singly linked list के रूप में store किया जाता है। जब आपका component render होता है, React इस list को order में walk करता है — प्रत्येक hook call (useState, useEffect, useRef, आदि) को उसकी stored state से match करता है। इसीलिए Hooks के Rules exist हैं: यदि आप conditionally hooks call करते हैं, तो list order बदल जाता है और React गलत hook के लिए गलत state पढ़ता है।",
+        "howItWorks": [
+          {
+            "title": "पहला render: React hooks linked list build करता है",
+            "body": "प्रत्येक hook call (useState, useEffect, useRef, useMemo…) एक memoizedState field और एक next pointer के साथ एक 'Hook' object बनाता है। React प्रत्येक को call order में list में append करता है। List fiber नोड के memoizedState field पर store होती है।"
+          },
+          {
+            "title": "useState state value + update queue store करता है",
+            "body": "एक useState hook object store करता है: memoizedState (current value), queue (pending setState calls की linked list), और dispatch (वह setState function जो आप component में उपयोग करते हैं)। Dispatch function stable है — यह renders के बीच कभी नहीं बदलता।"
+          },
+          {
+            "title": "setState call करने से एक update enqueue होता है",
+            "body": "जब आप setState(newValue) call करते हैं, React state को immediately update नहीं करता। इसके बजाय, यह hook की queue में एक Update object append करता है और fiber का re-render schedule करता है। एक event handler में कई setState calls एक re-render में batch हो जाती हैं।"
+          },
+          {
+            "title": "Re-render: React update queue process करता है",
+            "body": "अगले render पर, React hooks list को फिर से walk करता है। प्रत्येक useState hook के लिए, यह सभी queued updates को order में process करता है (या useReducer के लिए reducer function call करता है)। अंतिम computed value नई memoizedState बन जाती है।"
+          },
+          {
+            "title": "useEffect hooks एक destroy + create function store करते हैं",
+            "body": "एक effect hook object store करता है: create (वह callback जो आपने pass किया), destroy (वह cleanup function जो उसने पिछली बार return की), deps (dependency array), और एक tag जो दर्शाता है कि यह useEffect है, useLayoutEffect है, या useInsertionEffect।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Hooks Linked List",
+            "icon": "🔗",
+            "definition": "Hooks fiber नोड पर singly linked list के रूप में store होते हैं। Call order = list order। Conditional hooks list को तोड़ देते हैं।"
+          },
+          {
+            "term": "memoizedState",
+            "icon": "💾",
+            "definition": "Hook object पर वह field जो current value store करती है। useState के लिए: state value। useRef के लिए: { current: value }। useMemo के लिए: cached result।"
+          },
+          {
+            "term": "Update Queue",
+            "icon": "📬",
+            "definition": "प्रत्येक hook object पर pending setState calls की एक circular linked list जो अगले render पर process होने की प्रतीक्षा करती है। Multiple updates एक queue flush में batch होते हैं।"
+          },
+          {
+            "term": "Dispatcher",
+            "icon": "🚦",
+            "definition": "React render phase के आधार पर hook implementation swap करता है। पहले render के दौरान: HooksDispatcherOnMount। Re-renders के दौरान: HooksDispatcherOnUpdate। इसीलिए hooks को components के बाहर call नहीं किया जा सकता।"
+          },
+          {
+            "term": "Rules of Hooks",
+            "icon": "📏",
+            "definition": "Hooks को केवल top level पर (conditionals/loops के अंदर नहीं) और केवल React functions से call करें। ये rules इसलिए exist करते हैं क्योंकि React hooks को linked list में उनकी position से identify करता है।"
+          }
+        ],
+        "codeLabel": "Hooks list आंतरिक रूप से कैसी दिखती है",
+        "whyItMatters": "Hooks internals को समझना explain करता है कि Rules of Hooks arbitrary restrictions नहीं बल्कि technical necessities क्यों हैं। यह यह भी explain करता है कि useState setter function हमेशा stable क्यों है (यह value से नहीं बल्कि queue से attached है), renders के पार hooks क्यों काम करते हैं (वे fiber पर persist होते हैं), और आप custom hooks क्यों build कर सकते हैं — वे सिर्फ ऐसे functions हैं जो दूसरे hooks call करते हैं, list में और nodes add करते हैं।",
+        "pitfalls": [
+          "if/else या loops के अंदर hooks call करने से hooks list और आपके hook calls के बीच mismatch होता है — React चुपचाप गलत hook के लिए गलत state पढ़ता है।",
+          "useState setter referentially stable (कभी नहीं बदलता) है, लेकिन state value नहीं है। Effects के अंदर closures render time पर value capture करते हैं — latest value हमेशा access करने के लिए functional update form setState(prev => prev + 1) उपयोग करें।",
+          "हर hook call की एक cost है (linked list traversal)। यदि render-heavy components में hook की value हर render पर ज़रूरी नहीं है तो unconditionally hooks call न करें — useMemo unnecessary recomputations skip करने में मदद कर सकता है।"
+        ]
+      }
+    },
+    "useeffectLifecycle": {
+      "title": "useEffect लाइफसाइकल",
+      "subtitle": "Effects कब चलते हैं, cleanup का समय और dependency tracking।",
+      "explainer": {
+        "overview": "useEffect, React components को external systems — browser APIs, third-party libraries, network requests, और subscriptions — के साथ synchronize करने का primary hook है। यह browser के screen paint करने के बाद चलता है, जिससे यह non-blocking होता है। प्रत्येक effect optionally एक cleanup function return करता है जिसे React effect फिर से चलाने से पहले और component unmount होने पर call करता है।",
+        "howItWorks": [
+          {
+            "title": "Effects browser paint के बाद चलते हैं",
+            "body": "React DOM mutations commit करता है, browser screen paint करता है, और फिर React asynchronously आपके useEffect callbacks चलाता है। यह order ensure करता है कि effects initial render को कभी block नहीं करते — user तुरंत content देखता है।"
+          },
+          {
+            "title": "Dependency array control करता है कि effects कब re-run हों",
+            "body": "React Object.is() equality का उपयोग करके current deps array की तुलना पिछले render के deps से करता है। यदि कोई dep बदला, effect re-run schedule होता है। No deps array = हर render के बाद चलो। Empty array [] = mount के बाद एक बार चलो।"
+          },
+          {
+            "title": "Cleanup अगले effect से पहले और unmount पर चलती है",
+            "body": "यदि आपका effect एक function return करता है, React उसे cleanup के रूप में store करता है। Effect को फिर से चलाने से पहले (क्योंकि कोई dep बदला), React पहले पिछली cleanup call करता है। Component unmount होने पर, React आखिरी cleanup call करता है।"
+          },
+          {
+            "title": "React 18 StrictMode development में effects दो बार चलाता है",
+            "body": "StrictMode में, React intentionally हर component को mount → unmount → remount करता है ताकि ऐसे effects surface हो सकें जो properly clean up नहीं करते। Double invocation केवल development में होता है। इसीलिए proper cleanup non-negotiable है।"
+          },
+          {
+            "title": "useLayoutEffect paint से पहले synchronously fire होता है",
+            "body": "useLayoutEffect में useEffect के समान semantics हैं लेकिन DOM mutations के बाद और browser paint से पहले synchronously fire होता है। इसे तब उपयोग करें जब आपके effect को DOM measurements read करने और user कुछ देखने से पहले corrections apply करने की ज़रूरत हो।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "deps Array",
+            "icon": "📋",
+            "definition": "Re-run frequency control करता है। [] = mount only। [a, b] = जब a या b बदले। No array = हर render। React Object.is() से compare करता है — objects/arrays को deps में डालने से बचें।"
+          },
+          {
+            "term": "Cleanup Function",
+            "icon": "🧹",
+            "definition": "आपके effect से return होने वाला function। Effect re-run (dep changed) से पहले और component unmount होने पर call होता है। Fetches cancel करने, timers clear करने, unsubscribe करने के लिए उपयोग होता है।"
+          },
+          {
+            "term": "Stale Closure",
+            "icon": "🕸️",
+            "definition": "जब एक effect पुराने render से state/props capture करता है लेकिन updated values पाने के लिए कभी re-run नहीं होता। Variable को deps में add करने या ref उपयोग करने से fix होता है।"
+          },
+          {
+            "term": "useLayoutEffect",
+            "icon": "⚡",
+            "definition": "DOM mutation के बाद, paint से पहले synchronously fire होता है। Painting block करता है — इसे fast रखें। DOM measurements (getBoundingClientRect, scroll position) के लिए उपयोग करें।"
+          },
+          {
+            "term": "useInsertionEffect",
+            "icon": "💉",
+            "definition": "किसी भी DOM mutation से पहले fire होता है। CSS-in-JS libraries के लिए intended है ताकि layout से पहले style rules synchronously inject कर सकें। General application code के लिए नहीं।"
+          }
+        ],
+        "codeLabel": "Effect patterns और उनकी cleanup",
+        "whyItMatters": "useEffect React में सबसे commonly misused hook है। Effects को सही करना — correct deps, proper cleanup, right timing — ऐसे apps build करने के लिए essential है जो memory leak न करें, extra network requests न करें, और stale data bugs न हों। Mental model shift है: 'effects synchronization mechanisms हैं', 'lifecycle events' नहीं। आप React को बता रहे हैं कि outside world के साथ sync में कैसे रहें, mount/update/unmount callbacks में hook नहीं कर रहे।",
+        "pitfalls": [
+          "Deps array में missing dependencies stale closures बनाती हैं जहाँ आपका effect हमेशा पुरानी values पढ़ता है। Effect के अंदर use होने वाली हर value को deps array में include करें, या ऐसी values के लिए ref उपयोग करें जो re-runs trigger नहीं करनी चाहिए।",
+          "Subscriptions और event listeners के लिए cleanup नहीं देने से memory leaks होते हैं। हर addEventListener का cleanup में एक corresponding removeEventListener होना चाहिए।",
+          "Deps array में object या array literal directly रखने से effect हर render पर re-run होता है: [{ id: 1 }] हर render पर एक नया object बनाता है (same value होने पर भी different reference)। Primitives destructure करें या references stabilize करने के लिए useMemo उपयोग करें।"
+        ]
+      }
+    },
+    "stateBatching": {
+      "title": "स्टेट बैचिंग",
+      "subtitle": "React कैसे परफॉर्मेंस के लिए कई setState calls को एक री-रेंडर में बदलता है।",
+      "explainer": {
+        "overview": "State batching का अर्थ है React same synchronous block से कई setState calls collect करता है और उन सभी को एक single re-render pass में process करता है। हर individual setState के बाद re-render करने के बजाय, React current 'batch' के अंत तक प्रतीक्षा करता है, सभी updates एक साथ apply करता है, और exactly एक बार render करता है। React 18 ने async code और native event listeners को भी cover करने के लिए automatic batching extend किया।",
+        "howItWorks": [
+          {
+            "title": "एक event handler में कई setState calls = एक render",
+            "body": "जब आप click handler के अंदर setA(1) और setB(2) call करते हैं, React setA के बाद immediately re-render नहीं करता। यह दोनों updates queue करता है और एक single re-render schedule करता है। आपका component एक बार दोनों नई values के साथ render होता है।"
+          },
+          {
+            "title": "React fiber के hook update queue पर updates queue करता है",
+            "body": "प्रत्येक setState call hook की circular queue में एक Update object append करता है। React fiber को pending work के रूप में mark करता है और queue flush करने के लिए microtask (या callback) schedule करता है — लेकिन current synchronous code finish होने के बाद ही।"
+          },
+          {
+            "title": "React 17 vs React 18: async batching",
+            "body": "React 17 में, batching केवल React event handlers के अंदर होती थी। setTimeout, Promises, या fetch callbacks के अंदर setState calls individual re-renders trigger करती थीं। React 18 सभी updates को automatically batch करता है, origin चाहे जो हो।"
+          },
+          {
+            "title": "flushSync() batching से opt out करता है",
+            "body": "यदि आपको synchronous DOM update चाहिए (जैसे state change के बाद layout measure करना), ReactDOM.flushSync(() => setState(...)) call करें। यह React को update immediately और synchronously flush करने के लिए force करता है, batching को bypass करते हुए।"
+          },
+          {
+            "title": "Functional updates correct order ensure करते हैं",
+            "body": "जब कई setState calls previous value पर depend करती हैं, functional form उपयोग करें: setState(prev => prev + 1)। React इन updates को queue order में apply करता है, इसलिए प्रत्येक update render time की value नहीं बल्कि पिछले update का result देखता है।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Automatic Batching",
+            "icon": "📦",
+            "definition": "React 18 feature: सभी setState calls batch होती हैं, setTimeout, Promises, और native event listeners के अंदर भी। Unnecessary re-renders कम करता है।"
+          },
+          {
+            "term": "Update Queue",
+            "icon": "📬",
+            "definition": "प्रत्येक hook object पर एक circular linked list जो pending setState calls store करती है। प्रत्येक batch के अंत में flush होती है — सभी updates order में apply होते हैं।"
+          },
+          {
+            "term": "flushSync()",
+            "icon": "⚡",
+            "definition": "React को pending state updates synchronously और immediately flush करने के लिए force करता है। Batching bypass करता है। केवल तब उपयोग करें जब state change के बाद DOM measurement की ज़रूरत हो।"
+          },
+          {
+            "term": "Functional Update",
+            "icon": "🔧",
+            "definition": "setState(prev => newValue)। Latest state value प्राप्त करने की guarantee, तब भी जब updates batch या asynchronously enqueue हों।"
+          },
+          {
+            "term": "Render Count",
+            "icon": "🔢",
+            "definition": "Batching render count कम करता है। Batching के बिना: N setState calls = N renders। Batching के साथ: N setState calls = 1 render।"
+          }
+        ],
+        "codeLabel": "React versions में Batching behavior",
+        "whyItMatters": "Batching React के सबसे important performance optimizations में से एक है। इसके बिना, एक single user interaction जो 3 state updates trigger करती है, 3 full render + reconcile + commit cycles का कारण बनती। Batching के साथ, यह हमेशा सिर्फ 1 होता है। React 18 का automatic batching async code के लिए विशेष रूप से valuable है — server responses, WebSocket messages, और timers अब renderer को thrash नहीं करते।",
+        "pitfalls": [
+          "setState के synchronous होने पर भरोसा न करें। flushSync के साथ भी, mid-render setState call करना forbidden है। Updated value को next render से पढ़ें, setState call करने के immediately बाद नहीं।",
+          "Direct-value form setState(count + 1) को एक batch में कई बार उपयोग करना एक bug है: प्रत्येक call same stale 'count' value पर close होती है। Accumulating updates के लिए हमेशा functional form setState(prev => prev + 1) उपयोग करें।",
+          "React event handler या lifecycle के अंदर flushSync development में throw करेगा। यह React को non-React code के साथ bridge करने के लिए intended है, React के अंदर synchronous state force करने के लिए नहीं।"
+        ]
+      }
+    },
+    "memoization": {
+      "title": "मेमोइज़ेशन (useMemo और useCallback)",
+      "subtitle": "React कैसे computed values और function references को cache करता है।",
+      "explainer": {
+        "overview": "Memoization एक caching technique है जहाँ React एक expensive computation का result store करता है और subsequent renders पर cached result return करता है — जब inputs नहीं बदले तो computation पूरी तरह skip करता है। useMemo computed values cache करता है। useCallback function references cache करता है। दोनों recompute करना है या नहीं यह decide करने के लिए dependency array उपयोग करते हैं।",
+        "howItWorks": [
+          {
+            "title": "useMemo एक function का return value cache करता है",
+            "body": "useMemo(() => expensiveComputation(a, b), [a, b]) पहले render पर function call करता है और result store करता है। Re-renders पर, React check करता है कि a या b बदला या नहीं। यदि नहीं, function को फिर call किए बिना cached result return करता है।"
+          },
+          {
+            "title": "useCallback function reference itself cache करता है",
+            "body": "useCallback(fn, [deps]) useMemo(() => fn, [deps]) के equivalent है। Return value cache करने के बजाय, यह function object cache करता है। यह important है क्योंकि JavaScript हर render पर एक नया function object बनाता है — जो child component props के लिए referential equality break करता है।"
+          },
+          {
+            "title": "React deps की तुलना Object.is() से करता है",
+            "body": "React Object.is() (strict equality) का उपयोग करके प्रत्येक dep value compare करता है। Primitive values (numbers, strings, booleans) value से compare होती हैं। Objects और arrays reference से compare होते हैं — इसलिए deps में एक नया object literal {} हमेशा recomputation trigger करता है।"
+          },
+          {
+            "title": "Cache hit: stored value return करें",
+            "body": "यदि सभी deps पिछले render के deps के equal हैं, React बिना factory function call किए immediately memoized value return करता है। Component still re-renders — लेकिन expensive computation skip होती है।"
+          },
+          {
+            "title": "Cache miss: recompute और new value store करें",
+            "body": "यदि कोई dep बदला, React factory function फिर से call करता है, नया result store करता है, और return करता है। Old cached value discard हो जाती है।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "useMemo",
+            "icon": "💾",
+            "definition": "एक computation का return value cache करता है। केवल deps बदलने पर recompute करता है। Props/state से derived expensive calculations के लिए useful।"
+          },
+          {
+            "term": "useCallback",
+            "icon": "🔗",
+            "definition": "एक function reference cache करता है। useMemo(() => fn, deps) के equivalent। Memoized child components को callbacks pass करते समय critical।"
+          },
+          {
+            "term": "Referential Equality",
+            "icon": "⚖️",
+            "definition": "दो objects/arrays तभी equal हैं जब वे same memory address को point करते हों। {} === {} false है। useMemo/useCallback renders के पार identity preserve करते हैं।"
+          },
+          {
+            "term": "Dependency Array",
+            "icon": "📋",
+            "definition": "useMemo/useCallback का दूसरा argument। React इन values को renders के बीच compare करता है यह decide करने के लिए कि recompute करना है या नहीं।"
+          },
+          {
+            "term": "React.memo",
+            "icon": "🛡️",
+            "definition": "Higher-order component जो component का render output memoize करता है। Callback props stabilize करने के लिए useCallback के साथ combine करने पर best काम करता है।"
+          }
+        ],
+        "codeLabel": "useMemo + useCallback मिलकर काम करते हुए",
+        "whyItMatters": "Memoization के बिना, हर parent re-render नए object/function references बनाता है, जिससे React.memo'd children unnecessarily re-render होते हैं। useMemo और useCallback referential stability preserve करते हैं, React.memo को effective बनाते हैं और large component trees में cascading re-renders prevent करते हैं।",
+        "pitfalls": [
+          "सब कुछ memoize न करें — useMemo और useCallback की एक cost है (cache के लिए memory, हर render पर comparison)। केवल expensive computations या memoized children के लिए props stabilize करने के लिए उपयोग करें।",
+          "Deps array में object या array literals include करने से purpose defeat हो जाता है: useMemo(() => x, [{}]) हर render पर recompute करता है क्योंकि {} !== {} हर बार एक नया reference बनाता है।",
+          "useMemo एक semantic guarantee नहीं है — React future में cached values discard कर सकता है (जैसे offscreen components के लिए memory free करने के लिए)। Side effects के लिए इस पर निर्भर न रहें।"
+        ]
+      }
+    },
+    "reactMemo": {
+      "title": "React.memo और री-रेंडर",
+      "subtitle": "React.memo कैसे shallow comparison से अनावश्यक री-रेंडर रोकता है।",
+      "explainer": {
+        "overview": "Default में, React एक component को तब भी re-render करता है जब उसका parent re-render होता है — भले ही component के अपने props बदले न हों। React.memo एक higher-order component है जो एक functional component को wrap करता है और उसके render output को memoize करता है। यह previous और new props का shallow comparison करता है, और यदि वे equal हैं तो re-rendering skip करता है।",
+        "howItWorks": [
+          {
+            "title": "Parent re-renders default में सभी children trigger करते हैं",
+            "body": "जब parent component की state बदलती है, React parent का function call करता है। फिर यह return किए गए सभी JSX children process करता है — उनके functions भी call करता है, भले ही उनके props identical हों। यह tree में cascade होता है।"
+          },
+          {
+            "title": "React.memo component को prop comparison के साथ wrap करता है",
+            "body": "React.memo(Component) एक नया component return करता है। Component का function call करने से पहले, React check करता है कि नए props पिछले props के shallowly equal हैं या नहीं। यदि हाँ, React previous render output reuse करता है — function call पूरी तरह skip करते हुए।"
+          },
+          {
+            "title": "Shallow comparison प्रत्येक prop को Object.is() से check करता है",
+            "body": "प्रत्येक prop key के लिए, React oldProp === newProp compare करता है। Primitives (string, number, boolean) value से compare होते हैं। Objects और functions reference से compare होते हैं — props में एक नया object literal {} हमेशा equality check fail करता है।"
+          },
+          {
+            "title": "Fine-grained control के लिए custom comparison function",
+            "body": "React.memo(Component, arePropsEqual) एक दूसरा argument accept करता है — एक custom comparison function। Re-render skip करने के लिए true return करें (props equal हैं), allow करने के लिए false। Deep equality checks या specific props ignore करने के लिए useful।"
+          },
+          {
+            "title": "Context changes still re-renders cause करते हैं",
+            "body": "React.memo केवल prop changes से caused re-renders skip करता है। यदि component useContext() call करता है, तो यह still re-render होगा जब context value बदलती है — React.memo के बावजूद।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "React.memo",
+            "icon": "🛡️",
+            "definition": "HOC जो component का render output memoize करता है। Props पिछले render के shallowly equal होने पर re-render skip करता है।"
+          },
+          {
+            "term": "Shallow Comparison",
+            "icon": "🔍",
+            "definition": "Object.is() से प्रत्येक prop compare करता है। Primitives के लिए effective। Objects और functions को renders के पार same reference maintain करनी होगी।"
+          },
+          {
+            "term": "Render Bailout",
+            "icon": "⚡",
+            "definition": "जब React.memo determine करता है कि props equal हैं, यह previous render output return करता है और component function call skip करता है।"
+          },
+          {
+            "term": "Referential Stability",
+            "icon": "⚓",
+            "definition": "Renders के पार same object/function reference रखना। Non-primitive props के साथ React.memo को correctly काम करने के लिए required।"
+          },
+          {
+            "term": "Unnecessary Re-render",
+            "icon": "♻️",
+            "definition": "एक re-render जहाँ output पिछले render के identical है। React.memo इन्हें prevent करता है जब props logically नहीं बदले।"
+          }
+        ],
+        "codeLabel": "React.memo stable props के साथ",
+        "whyItMatters": "Complex components वाले large React trees में, unnecessary re-renders real performance problems में accumulate हो जाते हैं — slow interactions, dropped frames, laggy animations। React.memo आपको specific components को re-render होने से surgically prevent करने देता है, expensive subtrees को stable रखते हुए बाकी app freely update होती है।",
+        "pitfalls": [
+          "React.memo useless है यदि आप new object/array/function literals directly props में pass करते हैं — वे हर parent render पर नए references बनाते हैं। React.memo को हमेशा useMemo और useCallback के साथ pair करें।",
+          "हर component को React.memo से wrap न करें — comparison itself की एक cost है। केवल genuinely expensive components या बहुत frequently render होने वाले components को memoize करें।",
+          "React.memo props compare करता है, state या context नहीं। एक memoized component still re-renders करता है जब उसकी अपनी state बदलती है या consumed context update होती है।"
+        ]
+      }
+    },
+    "contextApi": {
+      "title": "Context API",
+      "subtitle": "React कैसे prop drilling के बिना component tree में values पहुंचाता है।",
+      "explainer": {
+        "overview": "Context API आपको component tree में हर स्तर पर props pass किए बिना data share करने देता है (prop drilling)। एक Provider component एक subtree को wrap करता है और एक value provide करता है। कोई भी descendant component useContext से उस value को access कर सकता है — और value बदलने पर automatically re-render होगा।",
+        "howItWorks": [
+          {
+            "title": "createContext() से context बनाएं",
+            "body": "React.createContext(defaultValue) एक Context object बनाता है जिसमें Provider और Consumer होते हैं। defaultValue तब उपयोग होती है जब कोई component tree में matching Provider के बिना context consume करे।"
+          },
+          {
+            "title": "Provider से subtree को wrap करें",
+            "body": "Provider component एक value prop accept करता है। Subtree के सभी components इस value को access कर सकते हैं। आप एक ही context के multiple Providers nest कर सकते हैं — सबसे नज़दीकी ancestor Provider जीतता है।"
+          },
+          {
+            "title": "Consumers, useContext() से value पढ़ते हैं",
+            "body": "useContext(MyContext) calling component के ऊपर सबसे नज़दीकी Provider से current context value return करता है। यह component को context changes के लिए subscribe करता है।"
+          },
+          {
+            "title": "Provider value बदलने पर सभी consumers re-render होते हैं",
+            "body": "जब Provider का value prop (reference से) बदलता है, React subtree में useContext(MyContext) call करने वाले सभी components को re-render करता है — चाहे उनकी consume की गई value actually बदली हो या नहीं।"
+          },
+          {
+            "title": "Provider और consumer के बीच के components re-render नहीं होते",
+            "body": "यही key efficiency है: intermediate components जो useContext call नहीं करते, re-render नहीं होते। Context उन्हें skip करता है। केवल actual consumers re-render होते हैं।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "createContext",
+            "icon": "🏭",
+            "definition": "एक context object बनाता है। एक default value लेता है जो तब उपयोग होती है जब tree में consumer के ऊपर कोई Provider न हो।"
+          },
+          {
+            "term": "Provider",
+            "icon": "📡",
+            "definition": "सभी descendant consumers को एक value broadcast करता है। Nested Providers बाहरी ones को override करते हैं। Unnecessary re-renders रोकने के लिए Value को memoize करना चाहिए।"
+          },
+          {
+            "term": "useContext",
+            "icon": "🔌",
+            "definition": "Hook जो एक component को context subscribe करता है। Context value बदलने पर re-render होता है।"
+          },
+          {
+            "term": "Context Propagation",
+            "icon": "🌊",
+            "definition": "Context सीधे consumers तक पहुंचता है — intermediate components तब तक re-render नहीं होते जब तक वे भी useContext call न करें।"
+          },
+          {
+            "term": "Reference Equality",
+            "icon": "⚖️",
+            "definition": "React context values को Object.is() से compare करता है। हर render पर नया object literal {} pass करने से सभी consumers re-render होते हैं, भले ही contents same हों।"
+          }
+        ],
+        "codeLabel": "Context setup और consumption",
+        "whyItMatters": "Context prop drilling को solve करता है — deeply nested child तक data पहुंचाने के लिए कई layers के components से props pass करना। लेकिन context वास्तव में global या widely-shared data (auth, theme, locale) के लिए सबसे अच्छा है। बार-बार बदलने वाली values के लिए, हर change पर हर consumer को re-render होने से बचाने के लिए Zustand या Redux prefer करें।",
+        "pitfalls": [
+          "Provider value={} में सीधे नया object या array literal pass करने से हर parent render पर सभी consumers re-render होते हैं। useMemo में wrap करें या ref में lift out करें।",
+          "Context एक state management solution नहीं है — यह एक data transport है। कई updates वाले complex state के लिए, context को useReducer के साथ combine करें या external store उपयोग करें।",
+          "useContext केवल सबसे नज़दीकी Provider से पढ़ता है — किसी specific one से नहीं। यदि एक ही context के multiple Providers हैं, तो सबसे नज़दीकी ancestor हमेशा जीतता है।"
+        ]
+      }
+    },
+    "eventSystem": {
+      "title": "इवेंट सिस्टम और SyntheticEvents",
+      "subtitle": "React का event delegation, synthetic event wrapping और root से bubbling।",
+      "explainer": {
+        "overview": "React, DOM elements पर directly event listeners attach नहीं करता। इसके बजाय, यह event delegation उपयोग करता है — root container (जहाँ ReactDOM.createRoot() call हुआ) पर एक single listener attach होता है। जब कोई भी native event root तक bubble करता है, React उसे intercept करता है, उसे SyntheticEvent object में wrap करता है, और React component tree में dispatch करता है।",
+        "howItWorks": [
+          {
+            "title": "React प्रत्येक event type के लिए एक root listener register करता है",
+            "body": "जब आप JSX में onClick={handleClick} लिखते हैं, React उस DOM node पर addEventListener call नहीं करता। इसके बजाय, यह root container पर 'click' events के लिए एक single listener register करता है — पूरे app के लिए एक बार, प्रत्येक component के लिए नहीं।"
+          },
+          {
+            "title": "Native events root तक bubble होते हैं",
+            "body": "जब आप button click करते हैं, browser button पर native click event fire करता है, जो real DOM tree से document root तक bubble करता है — जहाँ React का listener इंतज़ार कर रहा है।"
+          },
+          {
+            "title": "React एक SyntheticEvent wrapper बनाता है",
+            "body": "React native event को SyntheticEvent में wrap करता है — एक cross-browser normalized event object जो browser की परवाह किए बिना same API expose करता है। पुराने React versions में, SyntheticEvents performance के लिए pooled और reused होते थे।"
+          },
+          {
+            "title": "React fiber tree में bubbling simulate करता है",
+            "body": "React fiber tree को target element से root तक traverse करता है, प्रत्येक fiber पर onClick (या अन्य event) handlers call करता है। यह browser bubbling simulate करता है लेकिन React के virtual tree में।"
+          },
+          {
+            "title": "Capture phase पहले चलता है (top-down)",
+            "body": "Native events की तरह, React onClickCapture के ज़रिए capture phase handlers support करता है। ये top-down (root → target) fire होते हैं, bubble phase handlers के bottom-up (target → root) fire होने से पहले।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Event Delegation",
+            "icon": "🎯",
+            "definition": "Root पर एक listener उस type के सभी events handle करता है। हर interactive element पर listeners attach करने से बहुत अधिक efficient है।"
+          },
+          {
+            "term": "SyntheticEvent",
+            "icon": "🎁",
+            "definition": "React का cross-browser event wrapper। Browsers के बीच inconsistencies normalize करता है। Raw access के लिए nativeEvent property expose करता है।"
+          },
+          {
+            "term": "Bubbling Phase",
+            "icon": "⬆️",
+            "definition": "Event target element से ancestor elements तक ऊपर propagate होता है। अधिकांश React event handlers के लिए default phase।"
+          },
+          {
+            "term": "Capture Phase",
+            "icon": "⬇️",
+            "definition": "Event bubbling से पहले root से target तक नीचे propagate होता है। Capture phase के लिए onClickCapture उपयोग करें।"
+          },
+          {
+            "term": "stopPropagation()",
+            "icon": "🚧",
+            "definition": "Event को React के simulated tree में आगे propagate होने से रोकता है। Native event को नहीं रोकता जब तक e.nativeEvent पर call न हो।"
+          }
+        ],
+        "codeLabel": "Event delegation काम में",
+        "whyItMatters": "Event delegation React को highly efficient बनाता है — आपके app में चाहे जितने buttons हों, प्रत्येक event type के लिए केवल एक native event listener होता है। इसका अर्थ है React dynamically add किए गए components के events भी intercept और handle कर सकता है, और यह React के synthetic event system को सभी browsers में consistently काम करने देता है।",
+        "pitfalls": [
+          "React 17+ में, events document की बजाय root container पर delegate होते हैं। इसका अर्थ है manually document.addEventListener call करने पर React 16 की तरह पहले नहीं बल्कि React के handlers के बाद fire होगा।",
+          "e.stopPropagation() React के simulated bubbling को रोकता है, लेकिन native event already root तक पहुंच चुका है। Native propagation रोकने के लिए e.nativeEvent.stopImmediatePropagation() उपयोग करें।",
+          "पुराने React versions में SyntheticEvent properties event handler return होने के बाद nullify हो जाती हैं (event pooling)। Properties synchronously access करें या React 16 में e.persist() call करें।"
+        ]
+      }
+    },
+    "refsDom": {
+      "title": "Refs और DOM एक्सेस",
+      "subtitle": "useRef कैसे renders के बीच mutable values को बनाए रखता है और DOM access देता है।",
+      "explainer": {
+        "overview": "useRef एक mutable object { current: value } return करता है जो component के पूरे lifetime तक persist करता है। State के विपरीत, ref.current को mutate करने से re-render trigger नहीं होता। React refs को direct DOM access के लिए escape hatch के रूप में भी उपयोग करता है — commit phase के बाद, React ref.current को actual DOM node पर set करता है, जिससे आपको browser API का imperative access मिलता है।",
+        "howItWorks": [
+          {
+            "title": "useRef एक persistent mutable box बनाता है",
+            "body": "पहले render पर, useRef(initialValue) object { current: initialValue } बनाता है और fiber के hooks list पर store करता है। प्रत्येक subsequent render पर, React same object return करता है — इसलिए ref.current हमेशा same box को point करता है।"
+          },
+          {
+            "title": "ref.current mutate करना एक side effect है — कोई re-render नहीं",
+            "body": "React ref.current mutations track नहीं करता। जब आप ref.current = 5 लिखते हैं, React को पता नहीं चलता कि यह बदला और re-render schedule नहीं करेगा। यह refs को उन values के लिए ideal बनाता है जो persist करनी हैं लेकिन display नहीं करनी।"
+          },
+          {
+            "title": "DOM refs: React commit के बाद ref.current populate करता है",
+            "body": "जब आप JSX element को ref pass करते हैं (<input ref={myRef} />), React render phase के दौरान ref.current set नहीं करता। यह commit phase तक इंतज़ार करता है — DOM node exist होने के बाद — फिर ref.current = domNode set करता है।"
+          },
+          {
+            "title": "Unmount पर, ref.current वापस null हो जाता है",
+            "body": "जब component unmount होता है, React cleanup effects चलाने से पहले ref.current = null set करता है। यह आपके effects को detached DOM node access करने से रोकता है।"
+          },
+          {
+            "title": "forwardRef refs को component boundaries से pass करता है",
+            "body": "Default में, refs को function components से attach नहीं किया जा सकता। forwardRef का उपयोग करें ref prop accept करने और DOM element को forward करने के लिए, या useImperativeHandle के ज़रिए imperative methods expose करने के लिए।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "{ current }",
+            "icon": "📦",
+            "definition": "Ref object। React हर render पर same object देता है। current को freely mutate करें — कोई re-render नहीं होगा।"
+          },
+          {
+            "term": "DOM Ref",
+            "icon": "🖱️",
+            "definition": "JSX element को ref pass करने से commit के बाद ref.current में underlying DOM node मिलता है। Focus, scroll, और measurement के लिए useful।"
+          },
+          {
+            "term": "forwardRef",
+            "icon": "➡️",
+            "definition": "एक function component को wrap करता है ताकि ref prop accept करे और inner element को forward करे या useImperativeHandle के ज़रिए expose करे।"
+          },
+          {
+            "term": "useImperativeHandle",
+            "icon": "🎛️",
+            "definition": "Parent के लिए customize करता है कि वह child के ref access करने पर क्या देखे। DOM node की बजाय आप specific methods expose कर सकते हैं।"
+          },
+          {
+            "term": "Ref vs State",
+            "icon": "⚖️",
+            "definition": "UI को affect करने वाली values के लिए state उपयोग करें (re-render trigger करता है)। Rendering को affect न करने वाली values के लिए refs: timers, DOM nodes, previous values, flags।"
+          }
+        ],
+        "codeLabel": "Common ref patterns",
+        "whyItMatters": "Refs React का official escape hatch है imperative code के लिए। ये React की declarative दुनिया को browser APIs के साथ bridge करते हैं जिन्हें imperative calls चाहिए (focus, scroll, animations, third-party DOM libraries)। ये effects में stale closure problem भी solve करते हैं — latest state के साथ ref sync रखकर, आप long-running async operations के अंदर safely current values access कर सकते हैं।",
+        "pitfalls": [
+          "Rendering के दौरान ref.current read या write न करें — refs reactive नहीं हैं, इसलिए React value बदलने पर re-render नहीं करेगा, जिससे stale UI होगा।",
+          "Re-renders से बचने के लिए refs का overuse न करें। यदि कोई value UI में display होनी है, तो वह state होनी चाहिए। Refs केवल side effects और imperative DOM operations के लिए हैं।",
+          "Component mount होने से पहले ref.current access करना (जैसे useState initializer में) null होगा — React DOM refs केवल commit phase के बाद set करता है।"
+        ]
+      }
+    },
+    "keysLists": {
+      "title": "Keys और लिस्ट रेंडरिंग",
+      "subtitle": "key prop कैसे React को list items पहचानने और DOM mutations कम करने में मदद करता है।",
+      "explainer": {
+        "overview": "जब React elements की list render करता है, तो उसे जानना होता है कि renders के बीच कौन से items बदले, add हुए, या remove हुए। key prop के बिना, React position-based matching उपयोग करता है — index 0 का item, index 0 के item से map होता है। Keys के साथ, React renders के पार stable identity से items match कर सकता है, जिससे destroy-and-recreate की जगह efficient moves संभव होते हैं।",
+        "howItWorks": [
+          {
+            "title": "React पुराने और नए child arrays की तुलना करता है",
+            "body": "जब आपकी list re-render होती है, React के पास child elements के दो arrays होते हैं: पुराने और नए। इसे decide करना होता है कि क्या update करना है, क्या insert करना है, और क्या delete करना है।"
+          },
+          {
+            "title": "Keys के बिना: position-based matching",
+            "body": "React elements को उनकी index position से match करता है। यदि list [A, B, C] → [B, A, C] (reordered) हो जाए, React देखता है कि position 0, A से B बदला और position 1, B से A — जिससे दो updates और संभावित state loss होता है।"
+          },
+          {
+            "title": "Keys के साथ: identity-based matching",
+            "body": "React key से fiber का map बनाता है। [A, B, C] का [B, A, C] बनना इस तरह दिखता है: 'key=b, position 1 से 0 पर moved, key=a, 1 से 0 पर moved'। React existing DOM nodes move करता है — कोई destroy/create cycle नहीं।"
+          },
+          {
+            "title": "Missing keys reconciler warning trigger करती हैं",
+            "body": "React 'Each child in a list should have a unique key prop' log करता है जब वह बिना keys की lists detect करता है। यह एक performance warning है — आपका app काम करता रहता है लेकिन कम efficiently render होता है।"
+          },
+          {
+            "title": "Key बदलना unmount + remount force करता है",
+            "body": "किसी component की key बदलना React को बताता है 'यह बिल्कुल अलग instance है'। React पुराने component को unmount करेगा (सभी cleanups चलाते हुए) और एक fresh one mount करेगा। यह deliberately component state reset करने के लिए useful है।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Stable Key",
+            "icon": "🔑",
+            "definition": "एक key जो renders के पार एक item identify करती है — आमतौर पर database ID या slug। Siblings में unique होनी चाहिए।"
+          },
+          {
+            "term": "Index as Key",
+            "icon": "⚠️",
+            "definition": "Array index को key के रूप में उपयोग करना केवल static, non-reordering lists के लिए safe है। Dynamic lists के लिए, items reorder होने पर bugs आते हैं।"
+          },
+          {
+            "term": "DOM Reuse",
+            "icon": "♻️",
+            "definition": "जब React key से पुराने और नए element को match करता है, तो existing DOM node reuse करता है और केवल changed attributes update करता है।"
+          },
+          {
+            "term": "Component Reset via Key",
+            "icon": "🔄",
+            "definition": "किसी component की key prop intentionally बदलना उसे reset करता है — items के बीच switch करते समय form state reset करने के लिए useful।"
+          }
+        ],
+        "codeLabel": "Keys का practical उपयोग",
+        "whyItMatters": "Keys React का hint है पुराने और नए list items को match करने के लिए। एक अच्छी key का मतलब है React DOM nodes reuse कर सकता है (fast), component state preserve कर सकता है (correct), और minimal updates trigger कर सकता है (efficient)। एक बुरी key (या कोई key नहीं) का मतलब है React या तो ज़रूरत से बहुत ज़्यादा मेहनत करता है या unexpectedly component state खो देता है।",
+        "pitfalls": [
+          "Keys के रूप में Math.random() या Date.now() कभी उपयोग न करें — वे हर render पर बदलते हैं, जिससे हर list item हर render पर unmount और remount होती है।",
+          "Keys siblings में unique होनी चाहिए, globally नहीं। दो अलग-अलग lists same key values reuse कर सकती हैं।",
+          "key prop special है — यह component को prop के रूप में pass नहीं होती। यदि component के अंदर ID चाहिए, तो इसे एक अलग prop के रूप में भी pass करें।"
+        ]
+      }
+    },
+    "errorBoundaries": {
+      "title": "एरर बाउंडरी",
+      "subtitle": "React कैसे component tree में errors पकड़ता है और fallback UI दिखाता है।",
+      "explainer": {
+        "overview": "Error Boundaries, React class components हैं जो अपने child component tree में कहीं भी JavaScript errors catch करते हैं, उन errors को log करते हैं, और पूरी application crash होने की बजाय fallback UI display करते हैं। ये JavaScript के catch{} block की तरह काम करते हैं, लेकिन component tree के लिए। एक Error Boundary, rendering के दौरान, lifecycle methods में, और नीचे पूरे tree के constructors में errors catch करता है।",
+        "howItWorks": [
+          {
+            "title": "एक child component render के दौरान error throw करता है",
+            "body": "जब subtree का कोई component rendering (या lifecycle method में) throw करता है, React error को fiber tree में ऊपर propagate करना शुरू करता है, सबसे नज़दीकी Error Boundary ढूंढते हुए।"
+          },
+          {
+            "title": "React boundary ढूंढने के लिए fiber tree unwind करता है",
+            "body": "React parent fibers में ऊपर traverse करता है। यदि कोई class component मिलता है जो getDerivedStateFromError या componentDidCatch implement करता है, तो वहाँ रुक जाता है। यदि बिना कुछ मिले root तक पहुंच जाता है, तो पूरी app unmount हो जाती है।"
+          },
+          {
+            "title": "getDerivedStateFromError boundary state update करता है",
+            "body": "React boundary class पर getDerivedStateFromError(error) call करता है। यह static method नई state return करती है (जैसे { hasError: true }) जिससे boundary fallback UI के साथ re-render होती है।"
+          },
+          {
+            "title": "componentDidCatch error log करता है",
+            "body": "Fallback UI दिखाए जाने के बाद, React componentDidCatch(error, errorInfo) call करता है — error को Sentry जैसी logging service पर भेजने के लिए एक अच्छी जगह।"
+          },
+          {
+            "title": "Error Boundary fallback UI render करती है",
+            "body": "Boundary component अपनी state (hasError) check करता है और या तो children (normal) या एक fallback JSX element render करता है। Boundary के बाहर बाकी app normally काम करती रहती है।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "getDerivedStateFromError",
+            "icon": "🛡️",
+            "definition": "Static class method। Child throw करने पर render phase के दौरान call होता है। Fallback rendering trigger करने के लिए नई state return करता है।"
+          },
+          {
+            "term": "componentDidCatch",
+            "icon": "📊",
+            "definition": "Instance method। Fallback render होने के बाद commit phase के दौरान call होता है। Error logging के लिए उपयोग करें। Error + component stack receive करता है।"
+          },
+          {
+            "term": "Error Propagation",
+            "icon": "⬆️",
+            "definition": "Errors fiber tree में सबसे नज़दीकी boundary तक bubble होते हैं, जैसे exceptions call stacks में bubble होती हैं।"
+          },
+          {
+            "term": "Recovery / Reset",
+            "icon": "🔄",
+            "definition": "Boundaries को उनकी key prop बदलकर reset किया जा सकता है, जिससे React पूरे subtree को unmount और fresh remount करता है।"
+          }
+        ],
+        "codeLabel": "Error Boundary implement करना",
+        "whyItMatters": "Error boundaries के बिना, एक single unhandled render error पूरी React app crash कर देता है और blank screen दिखाता है। Error boundaries आपको failures को UI के isolated sections तक quarantine करने देते हैं — बाकी app काम करती रहती है। यह production apps के लिए critical है जहाँ आप हर edge case predict नहीं कर सकते।",
+        "pitfalls": [
+          "Error boundaries, event handlers में errors catch नहीं करतीं (वहाँ try/catch उपयोग करें), async code (setTimeout, Promises), या server-side rendering में।",
+          "Error boundaries class components होनी चाहिए — कोई hook equivalent नहीं है। Hook-friendly wrapper के लिए 'react-error-boundary' जैसी library उपयोग करें।",
+          "एक Error Boundary अपनी खुद की errors catch नहीं कर सकती — केवल अपने children में errors। Boundaries को हमेशा दूसरी boundary से wrap करें।"
+        ]
+      }
+    },
+    "portals": {
+      "title": "React पोर्टल",
+      "subtitle": "React event bubbling बनाए रखते हुए parent DOM से बाहर children render करना।",
+      "explainer": {
+        "overview": "ReactDOM.createPortal(children, domNode) एक React subtree को उस DOM node में render करता है जो parent के render होने वाले node से अलग होता है। भले ही component DOM में किसी अलग जगह दिखे (जैसे body स्तर पर एक modal), वह React component tree में child बना रहता है। इसका अर्थ है कि context, events और React lifecycle ठीक वैसे ही काम करते हैं जैसे portal inline हो।",
+        "howItWorks": [
+          {
+            "title": "React portal को एक निर्दिष्ट DOM node में render करता है",
+            "body": "createPortal(children, document.getElementById('modal-root')) React को बताता है कि children को parent के DOM subtree की बजाय #modal-root में render करें। DOM output, parent के DOM से पूरी तरह अलग होता है।"
+          },
+          {
+            "title": "Component फिर भी React में parent का child बना रहता है",
+            "body": "DOM में कहीं और render होने के बावजूद, portal component conceptually उस component का child है जो इसे render करता है। इसे वही context values, वही React props मिलते हैं और यह उसी fiber tree में भाग लेता है।"
+          },
+          {
+            "title": "Events, DOM tree नहीं बल्कि React tree से bubble होते हैं",
+            "body": "यदि आप portal के अंदर click करते हैं, तो click event React के component tree में parent तक bubble होती है — भले ही DOM में, portal का node parent के DOM subtree से बाहर हो। React का synthetic event system fiber tree पर काम करता है, DOM tree पर नहीं।"
+          },
+          {
+            "title": "Context, React tree से portals में flow करता है",
+            "body": "एक portal component, React के component tree में ancestor Provider से context values पढ़ सकता है, भले ही portal किसी पूरी तरह अलग DOM node में render हो।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "createPortal",
+            "icon": "🌀",
+            "definition": "ReactDOM.createPortal(children, domNode)। React children को parent के DOM container की बजाय domNode में render करता है।"
+          },
+          {
+            "term": "React Tree vs DOM Tree",
+            "icon": "🌳",
+            "definition": "दो अलग-अलग hierarchies। React tree, context, events और props को नियंत्रित करता है। DOM tree, visual layout और CSS inheritance को नियंत्रित करता है।"
+          },
+          {
+            "term": "Event Bubbling",
+            "icon": "⬆️",
+            "definition": "Portal events, React component tree (DOM tree नहीं) से bubble होती हैं, इसलिए parent components को portal children के events मिलते हैं।"
+          },
+          {
+            "term": "Modal/Tooltip Pattern",
+            "icon": "💬",
+            "definition": "Portal का सबसे सामान्य उपयोग: modals और tooltips को document.body पर render करना ताकि ancestor elements के overflow:hidden या z-index clipping से बचा जा सके।"
+          }
+        ],
+        "codeLabel": "modal के लिए createPortal",
+        "whyItMatters": "Portals एक मूलभूत CSS समस्या हल करते हैं: modals, tooltips और dropdowns को visually अपने parent containers से 'बाहर निकलना' होता है। overflow:hidden, z-index stacking contexts और transform properties जैसे ancestor CSS, absolutely-positioned children को clip या reposition कर सकते हैं। document.body पर render करके, portals इन सभी constraints को दरकिनार करते हैं और साथ ही React के component model को बनाए रखते हैं।",
+        "pitfalls": [
+          "Portal target DOM node, portal render होने से पहले exist करना चाहिए। अपने HTML में एक static element उपयोग करें या portal render करने से पहले useEffect में इसे बनाएं।",
+          "Portal event bubbling developers को चौंका देती है — portal के अंदर click, React parent components पर onClick handlers fire करेगा (भले ही वे parents DOM में portal को contain नहीं करते)। ज़रूरत पड़ने पर stopPropagation उपयोग करें।",
+          "Portals अपने React parent से CSS inherit नहीं करते क्योंकि वे एक अलग DOM location में render होते हैं। Global CSS या एक CSS-in-JS solution जो styles inject करे, ज़रूरी है।"
+        ]
+      }
+    },
+    "suspense": {
+      "title": "Suspense और React.lazy",
+      "subtitle": "Suspense boundaries के साथ fallback rendering, code splitting और streaming SSR।",
+      "explainer": {
+        "overview": "Suspense एक ऐसा mechanism है जो components को render होने से पहले कुछ 'प्रतीक्षा' करने देता है। जब कोई component तैयार नहीं होता (lazy import load नहीं हुआ, या data fetch resolve नहीं हुआ), तो वह एक Promise throw करता है। React इस thrown Promise को catch करता है, tree में सबसे नज़दीकी Suspense boundary ढूंढता है, उसका fallback UI दिखाता है, और Promise resolve होने पर subtree को automatically re-render करता है।",
+        "howItWorks": [
+          {
+            "title": "React.lazy() एक lazily-loaded component बनाता है",
+            "body": "React.lazy(() => import('./MyComponent')) एक dynamic import को एक special wrapper में लपेटता है। पहली बार React इसे render करने की कोशिश करता है, import() अभी resolve नहीं हुआ होता, इसलिए lazy wrapper एक Promise throw करता है।"
+          },
+          {
+            "title": "Thrown Promises, सबसे नज़दीकी Suspense तक bubble होते हैं",
+            "body": "Render phase के दौरान, React thrown Promises को catch करता है (thrown Errors नहीं — वे Error Boundaries के पास जाते हैं)। यह fiber tree में ऊपर traverse करके सबसे नज़दीकी <Suspense> ancestor ढूंढता है और suspended subtree की बजाय उसका fallback prop render करता है।"
+          },
+          {
+            "title": "React Promise को subscribe करता है",
+            "body": "React thrown Promise पर एक .then() handler जोड़ता है। जब Promise resolve होता है (module load हो जाता है, या data आ जाता है), React suspended subtree को scratch से re-render करता है, इस बार resolved value का उपयोग करके।"
+          },
+          {
+            "title": "Concurrent Mode: fallback flicker के बिना Suspense",
+            "body": "Concurrent mode में, React एक suspended subtree को DOM में commit किए बिना 'try' कर सकता है। यदि यह suspend होता है, React पुराना content दिखाता रहता है (fallback पर flash नहीं) जब तक Promise resolve न हो, फिर नए content को atomically swap करता है।"
+          },
+          {
+            "title": "Streaming SSR: server HTML को chunks में भेजता है",
+            "body": "Next.js/React 18 streaming के साथ, server तुरंत Suspense fallbacks के साथ HTML shell भेजता है। जैसे-जैसे server पर प्रत्येक async data fetch resolve होता है, React browser को filled-in HTML chunk stream करता है, fallback को inline replace करते हुए।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "React.lazy()",
+            "icon": "📦",
+            "definition": "एक lazily-loaded component बनाने के लिए dynamic import को wrap करता है। पहले render पर Promise throw करता है। Resolution पर, React loaded module के साथ re-render करता है।"
+          },
+          {
+            "term": "Suspense Boundary",
+            "icon": "🛡️",
+            "definition": "<Suspense fallback={<Spinner/>}> किसी भी descendant से thrown Promises catch करता है। प्रतीक्षा के दौरान fallback दिखाता है, तैयार होने पर children reveal करता है।"
+          },
+          {
+            "term": "Thrown Promise",
+            "icon": "🚀",
+            "definition": "वह mechanism जिसके द्वारा components signal करते हैं कि वे तैयार नहीं हैं। कोई भी component (केवल lazy नहीं) Suspense trigger करने के लिए Promise throw कर सकता है — इसी तरह React Query जैसी data-fetching libraries integrate होती हैं।"
+          },
+          {
+            "term": "Streaming SSR",
+            "icon": "🌊",
+            "definition": "Server HTML को progressively भेजता है। Shell तुरंत fallbacks के साथ render होता है। जैसे-जैसे async काम पूरा होता है, React filled content chunks browser को stream करता है।"
+          },
+          {
+            "term": "SuspenseList",
+            "icon": "📋",
+            "definition": "कई Suspense boundaries के reveal order को coordinate करता है। 'together' (एक साथ reveal) या 'forwards'/'backwards' (क्रम में reveal) enforce कर सकता है।"
+          }
+        ],
+        "codeLabel": "code splitting और data fetching के लिए Suspense",
+        "whyItMatters": "Suspense तीन पहले से अलग समस्याओं — code splitting, loading states और server streaming — को एक declarative model के तहत एकजुट करता है। हर component में isLoading flags track करने की बजाय, आप एक boundary और fallback declare करते हैं, और React orchestration संभालता है। इससे data-fetching code काफी सरल होता है और loading state management bugs समाप्त होती हैं।",
+        "pitfalls": [
+          "Suspense errors catch नहीं करता — केवल thrown Promises। Fetch failures को gracefully handle करने के लिए Suspense को Error Boundary से wrap करें।",
+          "हर render पर एक नया Promise object throw करने से infinite loop होती है — React उसी Promise को resolve होते कभी नहीं देखेगा। Libraries Promises को cache करती हैं ताकि resolve होने तक वही object throw हो।",
+          "React 18+ में, root को एक Suspense boundary से wrap करना streaming SSR के लिए पर्याप्त नहीं है। आपको boundaries को component level पर रखना होगा जहाँ async काम होता है ताकि React प्रत्येक section को independently stream कर सके।"
+        ]
+      }
+    },
+    "concurrentRendering": {
+      "title": "कंकरेंट रेंडरिंग",
+      "subtitle": "React 18 time slicing और priority lanes से UI को responsive कैसे रखता है।",
+      "explainer": {
+        "overview": "Concurrent rendering, React 18 की वह क्षमता है जो एक साथ UI के कई versions तैयार कर सकती है और urgent updates को handle करने के लिए लंबे time-consuming renders को interrupt कर सकती है। Rendering एक single synchronous operation की बजाय जो main thread को block करे, React अब render work को mid-tree pause कर सकता है, browser को yield कर सकता है, urgent updates handle कर सकता है, फिर paused work को resume या discard कर सकता है।",
+        "howItWorks": [
+          {
+            "title": "Fiber architecture interruptibility को सक्षम करता है",
+            "body": "React का Fiber reconciler प्रत्येक component को काम की एक छोटी unit (fiber) के रूप में represent करता है। Render phase एक समय में एक fiber process करता है, प्रत्येक unit के बाद check करता है कि क्या higher-priority काम आया है। यदि हाँ, तो यह pause कर सकता है और बाद में वापस आ सकता है।"
+          },
+          {
+            "title": "Time-slicing: React browser को हर ~5ms पर yield करता है",
+            "body": "React का scheduler render work को छोटे chunks में तोड़ता है। प्रत्येक chunk के बाद, यह browser को control वापस देता है — input events, animations और paints को होने देता है। इससे लंबे renders के दौरान UI freeze होने से बचता है।"
+          },
+          {
+            "title": "Priority lanes, updates को urgency assign करती हैं",
+            "body": "React 18, updates को priority द्वारा classify करने के लिए 'lanes' model उपयोग करता है: SyncLane (user input, तुरंत होना चाहिए), InputContinuousLane (ongoing gestures), DefaultLane (normal state updates), TransitionLane (non-urgent UI transitions)।"
+          },
+          {
+            "title": "Higher priority updates, lower priority ones को interrupt करते हैं",
+            "body": "यदि React एक low-priority render पर काम करते समय एक high-priority update आता है, तो React low-priority काम pause करता है, high-priority update को पूरी तरह process करता है (commit सहित), फिर low-priority काम को resume या restart करता है।"
+          },
+          {
+            "title": "Discarded renders के कोई visible side effects नहीं होते",
+            "body": "क्योंकि render phase pure है (कोई side effects नहीं), React आंशिक रूप से complete renders को safely discard कर सकता है और application state को corrupt किए बिना restart कर सकता है। Side effects केवल commit phase में होते हैं, जिसे कभी interrupt नहीं किया जाता।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Time Slicing",
+            "icon": "⏱️",
+            "definition": "Render work को ~5ms chunks में तोड़ना और chunks के बीच browser को yield करना। महंगे renders के दौरान UI को responsive रखता है।"
+          },
+          {
+            "term": "Priority Lanes",
+            "icon": "🛣️",
+            "definition": "एक bitmask system जो updates को SyncLane (सबसे urgent) से OffscreenLane (सबसे कम urgent) तक classify करता है। Scheduling order निर्धारित करता है।"
+          },
+          {
+            "term": "Scheduler",
+            "icon": "📅",
+            "definition": "React का internal task scheduler। Render tasks की एक priority queue manage करता है और priority और deadlines के आधार पर तय करता है कि आगे क्या करना है।"
+          },
+          {
+            "term": "startTransition",
+            "icon": "🔀",
+            "definition": "State update को non-urgent transition के रूप में mark करने का API। React को बताता है कि यह काम अधिक urgent updates के लिए interrupt किया जा सकता है।"
+          },
+          {
+            "term": "useTransition",
+            "icon": "🕐",
+            "definition": "Hook जो startTransition के साथ-साथ एक isPending boolean provide करता है जो दर्शाता है कि transition in progress है या नहीं।"
+          }
+        ],
+        "codeLabel": "non-urgent updates के लिए startTransition",
+        "whyItMatters": "React 18 से पहले, कोई भी state update जो slow render trigger करती थी, rendering पूरी होने तक पूरे UI को freeze कर देती थी। Concurrent rendering का अर्थ है कि input में typing, scrolling और buttons click करना responsive रहता है, भले ही React background में एक complex update compute कर रहा हो। यह Suspense, streaming SSR और React Server Components की नींव है।",
+        "pitfalls": [
+          "startTransition slow renders को fast नहीं बनाता — यह बस उन्हें non-blocking बनाता है। यदि आपका render slow है, तो memoization या virtualization से इसे optimize करें।",
+          "Render phase code अब कई बार run हो सकता है (React एक paused render restart कर सकता है)। सुनिश्चित करें कि आपके render functions वास्तव में pure हों, कोई side effects न हों।",
+          "सभी React 18 features default से concurrent नहीं हैं। Concurrent features enable करने के लिए आपको createRoot() उपयोग करना होगा (legacy ReactDOM.render() नहीं)।"
+        ]
+      }
+    },
+    "transitions": {
+      "title": "ट्रांज़िशन (useTransition)",
+      "subtitle": "Priority-based updates — startTransition से urgent और non-urgent rendering।",
+      "explainer": {
+        "overview": "useTransition एक React 18 hook है जो आपको state updates को 'non-urgent transitions' के रूप में mark करने देता है। Urgent updates (typing, clicking) तुरंत process होते हैं और कभी interrupt नहीं होते। Transition updates lower-priority होते हैं — यदि transition in progress होने के दौरान कोई urgent update आता है, तो React transition को interrupt करता है, urgent काम handle करता है, फिर transition को restart करता है। यह heavy re-renders के दौरान भी UI को responsive रखता है।",
+        "howItWorks": [
+          {
+            "title": "React 18 अपने scheduler में priority lanes जोड़ता है",
+            "body": "React scheduler प्रत्येक update को एक priority lane assign करता है: SyncLane (urgent, unbatchable), InputContinuousLane (drag/scroll), DefaultLane (normal setState), और TransitionLane (useTransition / startTransition)। Higher-priority lanes हमेशा lower ones को preempt करते हैं।"
+          },
+          {
+            "title": "startTransition updates को low priority mark करता है",
+            "body": "startTransition(callback) में setState call को wrap करना React को बताता है: 'यह update एक transition है — इसे interrupt किया जा सकता है'। React इसे TransitionLane में schedule करता है और transition complete होने तक current UI visible रखता है।"
+          },
+          {
+            "title": "Urgent update एक in-progress transition को interrupt करता है",
+            "body": "यदि user एक और character type करता है जबकि transition के रूप में 5000-item list re-render हो रही है, तो React transition render को mid-tree pause करता है, typing (urgent) को immediately process करता है, input update करता है, फिर transition को नई input value के साथ scratch से restart करता है।"
+          },
+          {
+            "title": "isPending दर्शाता है कि transition in-flight है",
+            "body": "useTransition [isPending, startTransition] return करता है। isPending true होता है जब React transition process कर रहा होता है। UI को block किए बिना एक subtle loading indicator दिखाने के लिए इसका उपयोग करें।"
+          },
+          {
+            "title": "useDeferredValue एक derived value को defer करता है",
+            "body": "startTransition का एक alternative: useDeferredValue(value), value की एक deferred copy return करता है जो transitions के दौरान पीछे रहती है। UI पहले पुराने deferred value के साथ render होता है (fast), फिर React के पास समय होने पर नई value के साथ re-render होता है।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "Transition Lane",
+            "icon": "🛤️",
+            "definition": "Transition updates के लिए एक low-priority scheduler lane। किसी भी higher-priority काम (user input, sync updates) द्वारा preempt किया जा सकता है।"
+          },
+          {
+            "term": "startTransition()",
+            "icon": "🚦",
+            "definition": "अपने callback के अंदर setState calls को non-urgent mark करता है। Standalone import के रूप में या useTransition hook से उपलब्ध।"
+          },
+          {
+            "term": "isPending",
+            "icon": "⏳",
+            "definition": "useTransition से Boolean। True जब React अभी भी transition update process कर रहा हो। Input block किए बिना spinner दिखाने के लिए उपयोग करें।"
+          },
+          {
+            "term": "useDeferredValue",
+            "icon": "🕐",
+            "definition": "एक value की deferred copy return करता है। पहले stale value के साथ render होता है (instant), idle होने पर fresh value के साथ re-render होता है। Large lists filter करने के लिए उपयोगी।"
+          },
+          {
+            "term": "Interruption & Restart",
+            "icon": "🔄",
+            "definition": "जब transition mid-way पर एक urgent update आता है, React in-progress transition render को discard करता है और urgent काम handle करने के बाद इसे fresh restart करता है।"
+          }
+        ],
+        "codeLabel": "search filter के लिए useTransition",
+        "whyItMatters": "Transitions से पहले, React सभी state updates को same priority पर render करता था — एक heavy list re-render, input को सैकड़ों milliseconds के लिए freeze कर सकती थी। Transitions आपको React को explicitly बताने देते हैं 'user को input instant लगना चाहिए, लेकिन results list एक moment ले सकती है'। यही अंतर है एक laggy app और एक smooth app में जब महंगे renders से deal करना हो।",
+        "pitfalls": [
+          "startTransition, callback के अंदर async code के साथ काम नहीं करता। केवल synchronous setState calls जो directly startTransition के अंदर wrapped हों, transitions के रूप में mark होती हैं।",
+          "Transitions, synchronous renders को interrupt नहीं कर सकते। यदि कोई component render function में heavy loop (async नहीं) के कारण slowly render होता है, तो transitions मदद नहीं करेंगे — आपको useMemo या virtualization चाहिए।",
+          "हर state update को transition mark न करें — यह scheduling overhead जोड़ता है। Transitions को केवल genuinely heavy renders के लिए reserve करें जहाँ latency user-perceptible हो (>100ms)।"
+        ]
+      }
+    },
+    "serverComponents": {
+      "title": "React सर्वर कॉम्पोनेंट",
+      "subtitle": "Server/client boundary, RSC payload streaming और zero-bundle server rendering।",
+      "explainer": {
+        "overview": "React Server Components (RSC) वे components हैं जो exclusively server पर चलते हैं — ये कभी browser को नहीं भेजे जाते। ये सीधे databases, file systems और server-only secrets को zero client bundle cost पर access कर सकते हैं। RSC output HTML नहीं बल्कि एक special wire format (RSC Payload) है जिसे client पर React, server code को re-run किए बिना component tree को reconstruct करने के लिए उपयोग करता है।",
+        "howItWorks": [
+          {
+            "title": "Server Components, server पर render होते हैं और RSC payload produce करते हैं",
+            "body": "जब एक page load होता है, server आपके Server Components run करता है, async database queries, file reads या API calls directly execute करता है। Output HTML नहीं है — यह एक custom streaming format में एक serialized React element tree (RSC Payload) है।"
+          },
+          {
+            "title": "Client Components, RSC payload में holes हैं",
+            "body": "जब server एक Client Component ('use client' से marked) encounter करता है, वह इसे render नहीं करता। इसके बजाय, यह payload में component के module URL और props के साथ एक CLIENT_REFERENCE placeholder insert करता है। Client इन holes को browser में Client Component run करके भरता है।"
+          },
+          {
+            "title": "RSC payload, client को progressively stream होता है",
+            "body": "Server RSC payload को stream करता है जैसे-जैसे वह प्रत्येक async operation complete करता है। Client का React runtime chunks receive करता है और progressively component tree build करता है — पहले Server Component output, फिर Client Component shells, फिर hydration।"
+          },
+          {
+            "title": "Client केवल Client Components को hydrate करता है",
+            "body": "Client पर React, streamed RSC payload लेता है और इसका उपयोग पूरे component tree को reconstruct करने के लिए करता है। केवल Client Components hydrate होते हैं (event listeners attach होते हैं)। Server Component output already final है — client पर कोई re-execution नहीं।"
+          },
+          {
+            "title": "Server Actions, client-to-server mutations allow करते हैं",
+            "body": "'use server' से marked functions Server Actions बन जाते हैं — RPC-style functions जिन्हें client regular async functions की तरह call कर सकता है। Under the hood, React server को encoded arguments के साथ एक POST request भेजता है और नया RSC payload stream करता है।"
+          }
+        ],
+        "keyConcepts": [
+          {
+            "term": "'use client'",
+            "icon": "💻",
+            "definition": "File-level directive जो एक module और उसके सभी imports को Client Components के रूप में mark करता है। एक client boundary बनाता है — सभी exports hooks, event handlers और browser APIs उपयोग कर सकते हैं।"
+          },
+          {
+            "term": "'use server'",
+            "icon": "🖥️",
+            "definition": "एक function को Server Action के रूप में mark करता है। Client Components से network request के ज़रिए call किया जा सकता है। Function, server पर full server-side access के साथ run होता है।"
+          },
+          {
+            "term": "RSC Payload",
+            "icon": "📦",
+            "definition": "Server-rendered component tree describe करने वाला एक compact streaming JSON-like format। CLIENT_REFERENCE holes include करता है जहाँ client components जाने चाहिए। HTML नहीं।"
+          },
+          {
+            "term": "Zero Bundle Cost",
+            "icon": "🪶",
+            "definition": "Server Components कभी client JS bundle में नहीं आते। एक Server Component जो 500KB markdown parser import करे, client को 0 bytes जोड़ता है।"
+          },
+          {
+            "term": "Shared Components",
+            "icon": "🔄",
+            "definition": "'use client' या 'use server' के बिना Components दोनों contexts में उपयोग किए जा सकते हैं। Server Component द्वारा import किए जाने पर server पर, और Client Component द्वारा import किए जाने पर client पर run होते हैं।"
+          }
+        ],
+        "codeLabel": "Server vs Client Component patterns",
+        "whyItMatters": "Server Components performance equation को मूलभूत रूप से बदलते हैं। पहले, कोई भी component जो data fetch करता था, उसे fetching library, data transformation logic और rendering code client को ship करना होता था। RSC के साथ, यह सब server पर रहता है। Client केवल final rendered output और interactive islands (Client Components) receive करता है। इससे bundles dramatically छोटे होते हैं और Time-to-Interactive तेज़ होता है।",
+        "pitfalls": [
+          "Server Components, useState, useEffect, useContext या किसी भी hook का उपयोग नहीं कर सकते — ये client-only features हैं। यदि किसी Server Component को interactivity चाहिए, तो इसे एक Client Component child में extract करें।",
+          "आप Client Component के अंदर एक Server Component import नहीं कर सकते। Boundary एक-दिशात्मक है: Server Components, Client Components render कर सकते हैं, लेकिन इसके विपरीत नहीं। Server Component output को props (children) के रूप में Client Components को pass करें।",
+          "Server Components से Client Components को pass किए गए props serializable (JSON-compatible) होने चाहिए। Functions, class instances, Dates और Sets server/client boundary को props के रूप में cross नहीं कर सकते।"
+        ]
+      }
+    }
+  }
+}
