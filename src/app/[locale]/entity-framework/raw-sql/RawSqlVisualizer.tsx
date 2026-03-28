@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import Panel from "@/app/_ui/Panel";
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Panel from '@/app/_ui/Panel';
 
-type ScenarioId = "simple" | "window" | "bulk";
-type ViewMode = "linq" | "raw";
+type ScenarioId = 'simple' | 'window' | 'bulk';
+type ViewMode = 'linq' | 'raw';
 
 interface Scenario {
   id: ScenarioId;
   label: string;
   tagline: string;
-  verdict: { linq: "preferred" | "viable" | "avoid"; raw: "preferred" | "viable" | "avoid" };
+  verdict: { linq: 'preferred' | 'viable' | 'avoid'; raw: 'preferred' | 'viable' | 'avoid' };
   linqCode: string;
   linqSql: string;
   linqNotes: string[];
@@ -23,10 +23,10 @@ interface Scenario {
 
 const SCENARIOS: Scenario[] = [
   {
-    id: "simple",
-    label: "Simple Query",
-    tagline: "LINQ wins — readable, type-safe, composable",
-    verdict: { linq: "preferred", raw: "avoid" },
+    id: 'simple',
+    label: 'Simple Query',
+    tagline: 'LINQ wins — readable, type-safe, composable',
+    verdict: { linq: 'preferred', raw: 'avoid' },
     linqCode: `// LINQ — clean, type-safe, composable
 var orders = await _dbContext.Orders
     .Where(o => o.CustomerId == customerId
@@ -52,10 +52,10 @@ ORDER BY o.[PlacedAt] DESC
 -- @p1 = 'Pending' (nvarchar)
 -- Query tagged: -- Orders:GetPendingByCustomer`,
     linqNotes: [
-      "Fully type-safe — refactoring Order.Status renames the query too",
-      "Composable — can chain .Skip/.Take for pagination",
-      "TagWith() label flows into SQL profiler and Application Insights",
-      "AsNoTracking() skips change tracker for read-only result",
+      'Fully type-safe — refactoring Order.Status renames the query too',
+      'Composable — can chain .Skip/.Take for pagination',
+      'TagWith() label flows into SQL profiler and Application Insights',
+      'AsNoTracking() skips change tracker for read-only result',
     ],
     rawCode: `// Raw SQL — unnecessary complexity for a simple filter
 var orders = await _dbContext.Orders
@@ -81,25 +81,25 @@ ORDER BY PlacedAt DESC
 -- EF still parameterizes FromSqlInterpolated values ✓
 -- But you lose all the LINQ composition benefits`,
     rawNotes: [
-      "No benefit over LINQ for this case",
-      "Column name typos fail at runtime, not compile time",
-      "Cannot chain .Include() without wrapping in a subquery",
-      "More code, less maintainability",
+      'No benefit over LINQ for this case',
+      'Column name typos fail at runtime, not compile time',
+      'Cannot chain .Include() without wrapping in a subquery',
+      'More code, less maintainability',
     ],
     flowSteps: [
-      "LINQ expression tree built",
-      "EF walks expression tree",
-      "SQL generated with parameters",
-      "SQL sent to database",
-      "Rows returned",
-      "Materialized to DTOs",
+      'LINQ expression tree built',
+      'EF walks expression tree',
+      'SQL generated with parameters',
+      'SQL sent to database',
+      'Rows returned',
+      'Materialized to DTOs',
     ],
   },
   {
-    id: "window",
-    label: "Window Function",
-    tagline: "Raw SQL wins — LINQ cannot express ROW_NUMBER / PARTITION BY",
-    verdict: { linq: "avoid", raw: "preferred" },
+    id: 'window',
+    label: 'Window Function',
+    tagline: 'Raw SQL wins — LINQ cannot express ROW_NUMBER / PARTITION BY',
+    verdict: { linq: 'avoid', raw: 'preferred' },
     linqCode: `// LINQ attempt — will NOT produce correct SQL
 // EF Core 9 cannot translate ROW_NUMBER() OVER()
 var ranked = await _dbContext.Customers
@@ -128,6 +128,11 @@ FROM [Customers] AS c
 -- No window function in generated SQL
 -- 250,000 rows loaded to application server
 -- MemoryOverflowException or 45-second timeout`,
+    linqNotes: [
+      'LINQ cannot express window functions at all',
+      'EF may attempt client-side evaluation — very bad for large datasets',
+      'No way to compute rank or quartiles in LINQ',
+    ],
     rawCode: `// Raw SQL with window functions — the right tool
 var ranked = await _dbContext.Database
     .SqlQueryRaw<CustomerRankDto>(
@@ -164,25 +169,25 @@ ORDER BY Rank
 -- 250 rows returned (top 250 only if you add TOP 250)
 -- Query plan: Stream Aggregate → Window Spool → Sort`,
     rawNotes: [
-      "Window functions computed on DB server — not in C#",
-      "Single SQL round-trip regardless of customer count",
-      "SqlQueryRaw<CustomerRankDto> maps columns to DTO by name",
-      "Results not change-tracked (DTOs, not entities)",
+      'Window functions computed on DB server — not in C#',
+      'Single SQL round-trip regardless of customer count',
+      'SqlQueryRaw<CustomerRankDto> maps columns to DTO by name',
+      'Results not change-tracked (DTOs, not entities)',
     ],
     flowSteps: [
-      "Raw SQL string defined",
-      "SqlQueryRaw<T>() called",
-      "SQL sent directly to DB",
-      "DB executes CTE + window functions",
-      "Result rows returned",
-      "EF maps columns → CustomerRankDto by name",
+      'Raw SQL string defined',
+      'SqlQueryRaw<T>() called',
+      'SQL sent directly to DB',
+      'DB executes CTE + window functions',
+      'Result rows returned',
+      'EF maps columns → CustomerRankDto by name',
     ],
   },
   {
-    id: "bulk",
-    label: "Bulk Operation",
-    tagline: "ExecuteUpdate wins — LINQ updates one entity at a time",
-    verdict: { linq: "avoid", raw: "preferred" },
+    id: 'bulk',
+    label: 'Bulk Operation',
+    tagline: 'ExecuteUpdate wins — LINQ updates one entity at a time',
+    verdict: { linq: 'avoid', raw: 'preferred' },
     linqCode: `// ❌ LINQ entity-by-entity update — never do this for bulk
 var abandonedOrders = await _dbContext.Orders
     .Where(o => o.Status == "Abandoned"
@@ -209,6 +214,12 @@ AND [RowVersion] = @p3  -- (if using concurrency tokens)
 -- Connection pool exhausted after ~1,000 in-flight
 -- Batch size default: 42 (EF groups them in batches)
 -- 180,000 / 42 = 4,286 batches = 4,286 round-trips`,
+    linqNotes: [
+      'Never update entities in a loop for bulk operations',
+      'Loads all matching entities into memory — OOM risk',
+      'Generates one UPDATE per entity — very slow',
+      'Batches reduce round-trips but still inefficient for large sets',
+    ],
     rawCode: `// ✅ ExecuteUpdateAsync — single SQL statement
 var archivedCount = await _dbContext.Orders
     .Where(o => o.Status == "Abandoned"
@@ -240,44 +251,44 @@ WHERE  [o].[Status] = N'Abandoned'
 -- ⚠ Note: Global query filters NOT applied
 -- ⚠ Note: SaveChanges interceptors NOT fired`,
     rawNotes: [
-      "One SQL statement for 180,000 rows",
-      "Zero entity allocations — no change tracker",
-      "Runs in 200ms vs 45 minutes for entity loop",
-      "Bypasses concurrency tokens — intentional for batch jobs",
+      'One SQL statement for 180,000 rows',
+      'Zero entity allocations — no change tracker',
+      'Runs in 200ms vs 45 minutes for entity loop',
+      'Bypasses concurrency tokens — intentional for batch jobs',
     ],
     flowSteps: [
-      "ExecuteUpdateAsync() called",
-      "LINQ Where translated to WHERE clause",
-      "SetProperty calls translated to SET clause",
-      "Single UPDATE sent to DB",
-      "rowsAffected count returned",
-      "No SaveChanges, no entities loaded",
+      'ExecuteUpdateAsync() called',
+      'LINQ Where translated to WHERE clause',
+      'SetProperty calls translated to SET clause',
+      'Single UPDATE sent to DB',
+      'rowsAffected count returned',
+      'No SaveChanges, no entities loaded',
     ],
   },
 ];
 
 const VERDICT_STYLES = {
-  preferred: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30",
-  viable: "bg-amber-500/15 text-amber-400 border border-amber-500/30",
-  avoid: "bg-red-500/10 text-red-400/70 border border-red-500/20",
+  preferred: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30',
+  viable: 'bg-amber-500/15 text-amber-400 border border-amber-500/30',
+  avoid: 'bg-red-500/10 text-red-400/70 border border-red-500/20',
 };
 
 const VERDICT_LABELS = {
-  preferred: "✓ Preferred",
-  viable: "~ Viable",
-  avoid: "✗ Avoid",
+  preferred: '✓ Preferred',
+  viable: '~ Viable',
+  avoid: '✗ Avoid',
 };
 
 export default function RawSqlVisualizer() {
-  const [scenarioId, setScenarioId] = useState<ScenarioId>("simple");
-  const [view, setView] = useState<ViewMode>("linq");
-  const [sqlTab, setSqlTab] = useState<"code" | "sql">("code");
+  const [scenarioId, setScenarioId] = useState<ScenarioId>('simple');
+  const [view, setView] = useState<ViewMode>('linq');
+  const [sqlTab, setSqlTab] = useState<'code' | 'sql'>('code');
 
   const scenario = SCENARIOS.find((s) => s.id === scenarioId)!;
-  const activeCode = view === "linq" ? scenario.linqCode : scenario.rawCode;
-  const activeSql = view === "linq" ? scenario.linqSql : scenario.rawSql;
-  const activeNotes = view === "linq" ? scenario.linqNotes : scenario.rawNotes;
-  const verdict = view === "linq" ? scenario.verdict.linq : scenario.verdict.raw;
+  const activeCode = view === 'linq' ? scenario.linqCode : scenario.rawCode;
+  const activeSql = view === 'linq' ? scenario.linqSql : scenario.rawSql;
+  const activeNotes = view === 'linq' ? scenario.linqNotes : scenario.rawNotes;
+  const verdict = view === 'linq' ? scenario.verdict.linq : scenario.verdict.raw;
 
   return (
     <div className="space-y-4">
@@ -286,13 +297,15 @@ export default function RawSqlVisualizer() {
         {SCENARIOS.map((s) => (
           <button
             key={s.id}
-            onClick={() => { setScenarioId(s.id); setView("linq"); setSqlTab("code"); }}
+            onClick={() => {
+              setScenarioId(s.id);
+              setView('linq');
+              setSqlTab('code');
+            }}
             className={`px-4 py-2 rounded-xl border text-sm font-mono transition-all ${
-              scenarioId === s.id
-                ? "border-amber-500/50 text-amber-400"
-                : "border-border bg-elevated text-text-secondary hover:text-text-primary"
+              scenarioId === s.id ? 'border-amber-500/50 text-amber-400' : 'border-border bg-elevated text-text-secondary hover:text-text-primary'
             }`}
-            style={scenarioId === s.id ? { backgroundColor: "rgba(245,158,11,0.08)" } : undefined}
+            style={scenarioId === s.id ? { backgroundColor: 'rgba(245,158,11,0.08)' } : undefined}
           >
             {s.label}
           </button>
@@ -308,9 +321,7 @@ export default function RawSqlVisualizer() {
           exit={{ opacity: 0 }}
           className="p-3 rounded-xl border border-border bg-elevated/50 flex items-center gap-3"
         >
-          <span className="text-lg">
-            {scenarioId === "simple" ? "💡" : scenarioId === "window" ? "📊" : "⚡"}
-          </span>
+          <span className="text-lg">{scenarioId === 'simple' ? '💡' : scenarioId === 'window' ? '📊' : '⚡'}</span>
           <p className="text-sm text-text-secondary">
             <span className="font-semibold text-text-primary">{scenario.label}: </span>
             {scenario.tagline}
@@ -321,39 +332,31 @@ export default function RawSqlVisualizer() {
       {/* LINQ vs Raw toggle + verdict */}
       <div className="flex items-center gap-3 flex-wrap">
         <div className="flex items-center gap-1 p-1 rounded-lg bg-elevated border border-border">
-          {(["linq", "raw"] as ViewMode[]).map((v) => (
+          {(['linq', 'raw'] as ViewMode[]).map((v) => (
             <button
               key={v}
               onClick={() => setView(v)}
               className={`px-4 py-1.5 rounded-md text-sm font-mono transition-all ${
-                view === v
-                  ? "bg-sky-500/20 text-sky-300 border border-sky-500/30"
-                  : "text-text-secondary hover:text-text-primary"
+                view === v ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30' : 'text-text-secondary hover:text-text-primary'
               }`}
             >
-              {v === "linq" ? "LINQ" : "Raw SQL"}
+              {v === 'linq' ? 'LINQ' : 'Raw SQL'}
             </button>
           ))}
         </div>
 
-        <span
-          className={`text-[11px] font-mono font-bold px-3 py-1 rounded-full ${VERDICT_STYLES[verdict]}`}
-        >
-          {VERDICT_LABELS[verdict]}
-        </span>
+        <span className={`text-[11px] font-mono font-bold px-3 py-1 rounded-full ${VERDICT_STYLES[verdict]}`}>{VERDICT_LABELS[verdict]}</span>
 
         <div className="flex items-center gap-1 p-0.5 rounded-lg bg-background/40 border border-border ml-auto">
-          {(["code", "sql"] as const).map((tab) => (
+          {(['code', 'sql'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setSqlTab(tab)}
               className={`px-3 py-1 rounded-md text-xs font-mono transition-all ${
-                sqlTab === tab
-                  ? "bg-elevated text-text-primary"
-                  : "text-text-secondary hover:text-text-primary"
+                sqlTab === tab ? 'bg-elevated text-text-primary' : 'text-text-secondary hover:text-text-primary'
               }`}
             >
-              {tab === "code" ? "C#" : "Generated SQL"}
+              {tab === 'code' ? 'C#' : 'Generated SQL'}
             </button>
           ))}
         </div>
@@ -363,8 +366,8 @@ export default function RawSqlVisualizer() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         <div className="xl:col-span-2">
           <Panel
-            title={sqlTab === "code" ? (view === "linq" ? "LINQ / C#" : "Raw SQL / C#") : "Generated SQL"}
-            accentColor={view === "linq" ? "#06B6D4" : "#f59e0b"}
+            title={sqlTab === 'code' ? (view === 'linq' ? 'LINQ / C#' : 'Raw SQL / C#') : 'Generated SQL'}
+            accentColor={view === 'linq' ? '#06B6D4' : '#f59e0b'}
           >
             <AnimatePresence mode="wait">
               <motion.pre
@@ -375,7 +378,7 @@ export default function RawSqlVisualizer() {
                 transition={{ duration: 0.15 }}
                 className="text-[11px] font-mono leading-relaxed overflow-auto max-h-[380px] text-text-secondary/90 whitespace-pre-wrap scrollbar-thin scrollbar-thumb-border"
               >
-                {sqlTab === "code" ? activeCode : activeSql}
+                {sqlTab === 'code' ? activeCode : activeSql}
               </motion.pre>
             </AnimatePresence>
           </Panel>
@@ -384,20 +387,12 @@ export default function RawSqlVisualizer() {
         {/* Notes + execution flow */}
         <div className="space-y-3">
           {/* Notes */}
-          <Panel title="Analysis" accentColor={verdict === "preferred" ? "#10B981" : verdict === "avoid" ? "#EF4444" : "#f59e0b"}>
+          <Panel title="Analysis" accentColor={verdict === 'preferred' ? '#10B981' : verdict === 'avoid' ? '#EF4444' : '#f59e0b'}>
             <div className="space-y-2">
               {activeNotes.map((note, i) => (
                 <div key={i} className="flex gap-2 text-[11px] text-text-secondary">
-                  <span
-                    className={
-                      verdict === "preferred"
-                        ? "text-emerald-400"
-                        : verdict === "avoid"
-                        ? "text-red-400"
-                        : "text-amber-400"
-                    }
-                  >
-                    {verdict === "preferred" ? "✓" : verdict === "avoid" ? "✗" : "~"}
+                  <span className={verdict === 'preferred' ? 'text-emerald-400' : verdict === 'avoid' ? 'text-red-400' : 'text-amber-400'}>
+                    {verdict === 'preferred' ? '✓' : verdict === 'avoid' ? '✗' : '~'}
                   </span>
                   <span className="leading-relaxed">{note}</span>
                 </div>
@@ -430,23 +425,16 @@ export default function RawSqlVisualizer() {
       {/* Quick reference strip */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[11px]">
         {[
-          { label: "FromSqlRaw()", note: "Fixed SQL + explicit params", safe: true },
-          { label: "FromSqlInterpolated()", note: "C# $\"\" → SQL params auto", safe: true },
-          { label: "ExecuteUpdateAsync()", note: "Bulk UPDATE, bypasses rowversion", safe: null },
-          { label: "SqlQueryRaw<T>()", note: "Any type, not just entities (EF8+)", safe: true },
+          { label: 'FromSqlRaw()', note: 'Fixed SQL + explicit params', safe: true },
+          { label: 'FromSqlInterpolated()', note: 'C# $"" → SQL params auto', safe: true },
+          { label: 'ExecuteUpdateAsync()', note: 'Bulk UPDATE, bypasses rowversion', safe: null },
+          { label: 'SqlQueryRaw<T>()', note: 'Any type, not just entities (EF8+)', safe: true },
         ].map((api) => (
-          <div
-            key={api.label}
-            className="p-2.5 rounded-lg border border-border bg-elevated/50"
-          >
+          <div key={api.label} className="p-2.5 rounded-lg border border-border bg-elevated/50">
             <div className="font-mono font-semibold text-text-primary mb-0.5">{api.label}</div>
             <div className="text-text-secondary/70">{api.note}</div>
-            {api.safe === true && (
-              <div className="mt-1 text-emerald-400/80 text-[10px]">✓ SQL injection safe</div>
-            )}
-            {api.safe === null && (
-              <div className="mt-1 text-amber-400/80 text-[10px]">⚠ bypasses EF safety nets</div>
-            )}
+            {api.safe === true && <div className="mt-1 text-emerald-400/80 text-[10px]">✓ SQL injection safe</div>}
+            {api.safe === null && <div className="mt-1 text-amber-400/80 text-[10px]">⚠ bypasses EF safety nets</div>}
           </div>
         ))}
       </div>
