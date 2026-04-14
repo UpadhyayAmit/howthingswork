@@ -51,9 +51,11 @@ export default async function LocaleLayout({ children, params }: Props) {
             </div>
 
             <main className="flex-1 flex flex-col relative overflow-hidden h-full">
-              <div className="flex-1 overflow-y-auto w-full p-4 pb-20 lg:p-10 lg:pb-24">
-                <div className="w-full h-full max-w-[100vw] overflow-x-hidden">{children}</div>
-                <SharedFooter />
+              <div className="flex-1 overflow-y-auto w-full">
+                <div className="flex flex-col min-h-full">
+                  <div className="flex-1 p-4 pb-6 lg:p-10 lg:pb-8 w-full max-w-[100vw] overflow-x-hidden">{children}</div>
+                  <SharedFooter />
+                </div>
               </div>
             </main>
           </ResizableLayout>

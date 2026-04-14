@@ -126,6 +126,7 @@ export default function AiMlPage() {
           groupColors={groupColors}
           title="AI/ML Concept Map"
           height={390}
+          layoutConfig={{ ranksep: 48, nodesep: 52 }}
         />
         <div className="space-y-12">
           {sections.map((section, si) => (
