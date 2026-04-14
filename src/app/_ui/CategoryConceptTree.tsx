@@ -13,6 +13,7 @@ import {
   Handle,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import dagre from "dagre";
 
 /* ─── Types ─── */
 export type NodeShape = "rectangle" | "rounded" | "pill" | "diamond" | "hexagon" | "circle";
@@ -315,51 +316,87 @@ export default function CategoryConceptTree({
   accentColor = "#06b6d4",
   groupColors = defaultGroupColors,
   title = "Concept Map",
-  height = 480,
+  height = 650, // Increased default height for larger visual logic
 }: Props) {
-  const rfNodes: Node[] = useMemo(
-    () =>
-      conceptNodes.map((n) => {
-        const color = n.group ? groupColors[n.group] || accentColor : accentColor;
-        const shape = n.shape || "rounded";
-        return {
-          id: n.id,
-          type: "concept",
-          position: { x: n.x, y: n.y },
-          data: { label: n.label, color, shape },
-        };
-      }),
-    [conceptNodes, accentColor, groupColors]
-  );
+  const { rfNodes, rfEdges } = useMemo(() => {
+    const initialNodes: Node[] = conceptNodes.map((n) => {
+      const color = n.group ? groupColors[n.group] || accentColor : accentColor;
+      const shape = n.shape || "rounded";
+      return {
+        id: n.id,
+        type: "concept",
+        position: { x: n.x, y: n.y }, // Will be overridden by dagre
+        data: { label: n.label, color, shape },
+      };
+    });
 
-  const rfEdges: Edge[] = useMemo(
-    () =>
-      conceptEdges.map((e, i) => {
-        const sourceNode = conceptNodes.find((n) => n.id === e.from);
-        const edgeColor = sourceNode?.group
-          ? groupColors[sourceNode.group] || accentColor
-          : accentColor;
+    const initialEdges: Edge[] = conceptEdges.map((e, i) => {
+      const sourceNode = conceptNodes.find((n) => n.id === e.from);
+      const edgeColor = sourceNode?.group
+        ? groupColors[sourceNode.group] || accentColor
+        : accentColor;
 
-        return {
-          id: `e-${e.from}-${e.to}-${i}`,
-          source: e.from,
-          target: e.to,
-          animated: true,
-          label: e.label,
-          labelStyle: { fontSize: 10, fill: "#9CA3AF", fontWeight: 500 },
-          labelBgStyle: { fill: "#0d1117", fillOpacity: 0.8 },
-          labelBgPadding: [4, 2] as [number, number],
-          style: { stroke: edgeColor, strokeWidth: 2, opacity: 0.6 },
-          markerEnd: {
-            type: MarkerType.ArrowClosed,
-            color: edgeColor,
-            width: 14,
-            height: 14,
-          },
-        };
-      }),
-    [conceptEdges, conceptNodes, accentColor, groupColors]
-  );
+      return {
+        id: `e-${e.from}-${e.to}-${i}`,
+        source: e.from,
+        target: e.to,
+        animated: e.animated ?? true,
+        label: e.label,
+        labelStyle: { fontSize: 10, fill: "#9CA3AF", fontWeight: 500 },
+        labelBgStyle: { fill: "#0d1117", fillOpacity: 0.8 },
+        labelBgPadding: [4, 2] as [number, number],
+        style: { stroke: edgeColor, strokeWidth: 2, opacity: 0.6 },
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          color: edgeColor,
+          width: 14,
+          height: 14,
+        },
+      };
+    });
+
+    // Apply auto layout with Dagre
+    const g = new dagre.graphlib.Graph();
+    // rankdir "TB" means Top-to-Bottom. Also increase separation slightly for readability
+    g.setGraph({ rankdir: "TB", ranksep: 110, nodesep: 90 });
+    g.setDefaultEdgeLabel(() => ({}));
+
+    // Setup node dimensions for the layout engine
+    initialNodes.forEach((node) => {
+      let w = 150;
+      let h = 80;
+      const shape = node.data.shape;
+      if (shape === "diamond" || shape === "circle") {
+        w = 120;
+        h = 120;
+      } else if (shape === "pill") {
+        w = 180;
+        h = 60;
+      }
+      g.setNode(node.id, { width: w, height: h });
+    });
+
+    initialEdges.forEach((edge) => {
+      g.setEdge(edge.source, edge.target);
+    });
+
+    // Calculate layout
+    dagre.layout(g);
+
+    // Apply new positions
+    const layoutedNodes = initialNodes.map((node) => {
+      const dbNode = g.node(node.id);
+      return {
+        ...node,
+        position: {
+          x: dbNode.x - dbNode.width / 2,
+          y: dbNode.y - dbNode.height / 2,
+        },
+      };
+    });
+
+    return { rfNodes: layoutedNodes, rfEdges: initialEdges };
+  }, [conceptNodes, conceptEdges, accentColor, groupColors]);
 
   // Build legend from groups
   const legend = useMemo(() => {
@@ -379,7 +416,7 @@ export default function CategoryConceptTree({
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const displayHeight = isMobile ? 420 : height;
+  const displayHeight = isMobile ? 550 : Math.max(height, 680);
 
   return (
     <div
