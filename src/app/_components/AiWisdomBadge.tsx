@@ -30,16 +30,16 @@ export default function AiWisdomBadge() {
           display: 'flex',
           alignItems: 'center',
           overflow: 'hidden',
-          width: hovered ? 218 : 44,
-          height: 44,
-          borderRadius: 22,
+          width: hovered ? 250 : 60,
+          height: 60,
+          borderRadius: 30,
           background: 'linear-gradient(135deg, #0f172a 0%, #1a1040 100%)',
           border: `1.5px solid ${hovered ? 'rgba(139,92,246,0.55)' : 'rgba(255,255,255,0.1)'}`,
           boxShadow: hovered ? '0 8px 32px rgba(139,92,246,0.3), 0 2px 8px rgba(0,0,0,0.6)' : '0 4px 20px rgba(0,0,0,0.45)',
           transition: 'width 0.35s cubic-bezier(0.4,0,0.2,1), border-color 0.3s, box-shadow 0.3s',
           textDecoration: 'none',
           cursor: 'pointer',
-          padding: '0 8px',
+          padding: '0 12px',
           gap: 10,
           whiteSpace: 'nowrap',
           flexShrink: 0,
@@ -50,8 +50,8 @@ export default function AiWisdomBadge() {
           src="/aiwisdom_icon.png"
           alt=""
           style={{
-            width: 28,
-            height: 28,
+            width: 36,
+            height: 36,
             objectFit: 'contain',
             flexShrink: 0,
           }}
@@ -70,7 +70,7 @@ export default function AiWisdomBadge() {
         >
           <span
             style={{
-              fontSize: 12,
+              fontSize: 13,
               fontWeight: 700,
               color: '#ffffff',
               lineHeight: 1.2,
